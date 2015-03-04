@@ -5,8 +5,6 @@ filetype plugin indent on
 "Show line number
 :set number
 
-"NERDTree
-
 ""Start NERDTree automatically
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -22,3 +20,10 @@ let g:airline#extensions#tabline#enabled = 1
 
 " Default settings
 set ts=2 sts=2 sw=2 expandtab
+
+"Indent guides
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+
+"Abbreviations
+ab pry require 'pry';binding.pry
