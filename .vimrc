@@ -25,5 +25,8 @@ set ts=2 sts=2 sw=2 expandtab
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
 
+" Automatically removing all trailing whitespace
+autocmd BufWritePre * :%s/\s\+$//e
+
 "Abbreviations
 ab pry require 'pry';binding.pry
