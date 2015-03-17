@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git submodule init && git submodule update
+
 files=( .vimrc .zshrc .gitconfig .gitignore_global .gemrc .alias )
 
 for filename in ${files[@]}
