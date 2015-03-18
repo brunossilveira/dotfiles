@@ -30,3 +30,5 @@ autocmd BufWritePre * :%s/\s\+$//e
 
 "Abbreviations
 ab pry require 'pry';binding.pry
+
+set wildignore=*.swp,*.bak,*.pyc,*.class
