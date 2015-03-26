@@ -83,3 +83,7 @@ eval "$(rbenv init -)"
 
 # Alias
 source $HOME/.alias
+
+
+# WINEEEEE
+export WINEARCH=win32

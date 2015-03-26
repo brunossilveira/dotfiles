@@ -32,3 +32,6 @@ autocmd BufWritePre * :%s/\s\+$//e
 ab pry require 'pry';binding.pry
 
 set wildignore=*.swp,*.bak,*.pyc,*.class
+
+set nobackup
+set noswapfile
