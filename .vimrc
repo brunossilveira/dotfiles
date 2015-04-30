@@ -17,6 +17,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 
 ""Smarter tab extension
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 
 " Default settings
 set ts=2 sts=2 sw=2 expandtab
@@ -35,3 +36,9 @@ set wildignore=*.swp,*.bak,*.pyc,*.class
 
 set nobackup
 set noswapfile
+
+" show when searching
+set incsearch
+
+" highlight all occurrences when searching
+set hlsearch
