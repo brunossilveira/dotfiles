@@ -42,3 +42,20 @@ set incsearch
 
 " highlight all occurrences when searching
 set hlsearch
+
+" Powerline
+set term=xterm-256color
+set termencoding=utf-8
+set fillchars+=stl:\ ,stlnc:\
+set encoding=utf-8
+set t_Co=256
+let g:Powerline_symbols = 'fancy'
+set guifont=Inconsolata\ for\ Powerline:h15
+
+" Mac
+if has("gui_running")
+  let s:uname = system("uname")
+  if s:uname == "Darwin\n"
+    set guifont=Inconsolata\ for\ Powerline:h15
+  endif
+endif
