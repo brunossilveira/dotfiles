@@ -52,6 +52,9 @@ set t_Co=256
 let g:Powerline_symbols = 'fancy'
 set guifont=Inconsolata\ for\ Powerline:h15
 
+" Treat hamlc as haml
+au BufRead,BufNewFile *.hamlc set ft=haml
+
 " Mac
 if has("gui_running")
   let s:uname = system("uname")
