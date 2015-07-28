@@ -1,5 +1,4 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/home/bruno/www/autocargo/app/assets/templates/geofences'
-let g:netrw_dirhist_2='/home/bruno/www/autocargo/app/assets/templates'
-let g:netrw_dirhist_3='/home/bruno/www/autocargo/app/assets/templates/references'
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/home/bruno/www/autocargo/app/views/reports'
+let g:netrw_dirhist_2='/home/bruno/www/autocargo/app/views/reports/total_km_driven_reports'
