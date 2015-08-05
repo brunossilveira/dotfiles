@@ -1,4 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =3
 let g:netrw_dirhist_1='/home/bruno/www/autocargo/app/views/reports'
-let g:netrw_dirhist_2='/home/bruno/www/autocargo/app/views/reports/total_km_driven_reports'
+let g:netrw_dirhist_2='/home/bruno/www/autocargo/app/views/reports/working_shift_reports'
+let g:netrw_dirhist_3='/home/bruno/www/kernel-registration-tool'

@@ -9,6 +9,9 @@ filetype plugin indent on
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
+""Show hidden files in NerdTree
+let NERDTreeShowHidden=1
+
 ""Ctrl N to open NerdTree
 map <C-n> :NERDTreeToggle<CR>
 
