@@ -87,3 +87,6 @@ source $HOME/.alias
 
 # WINEEEEE
 export WINEARCH=win32
+
+export NVM_DIR="/home/bruno/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
