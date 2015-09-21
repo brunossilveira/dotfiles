@@ -87,3 +87,5 @@ source $HOME/.alias
 
 # WINEEEEE
 export WINEARCH=win32
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
