@@ -22,6 +22,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
+""JSX Syntax
+let g:jsx_ext_required = 0
+
 " Default settings
 set ts=2 sts=2 sw=2 expandtab
 
