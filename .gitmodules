@@ -37,6 +37,9 @@
 [submodule ".vim/bundle/ag.vim"]
 	path = .vim/bundle/ag.vim
 	url = https://github.com/rking/ag.vim
-[submodule ".vim/vim-jsx"]
-	path = .vim/vim-jsx
+[submodule ".vim/bundle/ejs-syntax"]
+	path = .vim/bundle/ejs-syntax
+	url = https://github.com/nikvdp/ejs-syntax
+[submodule ".vim/bundle/vim-jsx"]
+	path = .vim/bundle/vim-jsx
 	url = https://github.com/mxw/vim-jsx

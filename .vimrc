@@ -9,6 +9,9 @@ filetype plugin indent on
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
+""Show hidden files in NerdTree
+let NERDTreeShowHidden=1
+
 ""Ctrl N to open NerdTree
 map <C-n> :NERDTreeToggle<CR>
 
@@ -51,6 +54,9 @@ set encoding=utf-8
 set t_Co=256
 let g:Powerline_symbols = 'fancy'
 set guifont=Inconsolata\ for\ Powerline:h15
+
+" Treat hamlc as haml
+au BufRead,BufNewFile *.hamlc set ft=haml
 
 " Mac
 if has("gui_running")

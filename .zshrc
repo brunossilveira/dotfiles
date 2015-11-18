@@ -59,7 +59,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
+export EDITOR='vim'
 # else
 #   export EDITOR='mvim'
 # fi
@@ -87,3 +87,7 @@ source $HOME/.alias
 
 # WINEEEEE
 export WINEARCH=win32
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+export NVM_DIR="/home/bruno/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
