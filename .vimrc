@@ -61,6 +61,16 @@ set guifont=Inconsolata\ for\ Powerline:h15
 " Treat hamlc as haml
 au BufRead,BufNewFile *.hamlc set ft=haml
 
+" unmapping arrow keys
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+
 " Mac
 if has("gui_running")
   let s:uname = system("uname")
