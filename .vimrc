@@ -5,19 +5,6 @@ filetype plugin indent on
 "Show line number
 :set number
 
-""Start NERDTree automatically
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-""Show hidden files in NerdTree
-let NERDTreeShowHidden=1
-
-""Ctrl N to open NerdTree
-map <C-n> :NERDTreeToggle<CR>
-
-""Close vim only if there is just a NerdTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
 ""Smarter tab extension
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1

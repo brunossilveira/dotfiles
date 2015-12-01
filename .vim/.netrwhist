@@ -1,17 +1,7 @@
 let g:netrw_dirhistmax  =10
-<<<<<<< HEAD
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/Users/brunosilveira/projects/mtg-board/src/components'
-let g:netrw_dirhist_2='/Users/brunosilveira/projects/mtg-board/src'
-let g:netrw_dirhist_3='/Users/brunosilveira/projects/mtg-board'
-=======
-let g:netrw_dirhist_cnt =8
-let g:netrw_dirhist_1='/home/bruno/www/autocargo-all/core/lib/autocargo/core'
-let g:netrw_dirhist_2='/home/bruno/www/autocargo-all/core/lib/autocargo/core/models'
-let g:netrw_dirhist_3='/home/bruno/www/autocargo-all/application/app/models'
-let g:netrw_dirhist_4='/home/bruno/www/autocargo-all/application/app/models/notifications'
-let g:netrw_dirhist_5='/home/bruno/www/autocargo-all/application/app/models'
-let g:netrw_dirhist_6='/home/bruno/www/autocargo-all/application/app'
-let g:netrw_dirhist_7='/home/bruno/www/autocargo-all/application/app/models'
-let g:netrw_dirhist_8='/home/bruno/www/autocargo-all/application/app/models/notifications'
->>>>>>> cdc9de1a9b9771f3db142dc74e574caf3f722299
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/home/bruno/dotfiles/.git/modules/.vim'
+let g:netrw_dirhist_2='/home/bruno/dotfiles/.git/modules'
+let g:netrw_dirhist_3='/home/bruno/dotfiles/.git'
+let g:netrw_dirhist_4='/home/bruno/dotfiles/.git/modules'
+let g:netrw_dirhist_5='/home/bruno/dotfiles/.git/modules/vim-jsx'
