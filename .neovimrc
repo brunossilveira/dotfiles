@@ -10,14 +10,25 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-markdown'
 Plug 'mileszs/ack.vim'
 Plug 'janko-m/vim-test'
+Plug 'scrooloose/syntastic'
+Plug 'kchmck/vim-coffee-script'
 
 call plug#end()
 
+set encoding=utf-8
+set mouse=a
+set nu
+syntax enable
 syntax on
 filetype plugin indent on
 
 "Show line number
 :set number
+
+au BufRead,BufNewFile Podfile set filetype=ruby
+au BufRead,BufNewFile Berksfile set filetype=ruby
+au BufRead,BufNewFile *.hamlc set filetype=haml
+au BufRead,BufNewFile *.ejs set filetype=html
 
 ""Smarter tab extension
 let g:airline#extensions#tabline#enabled = 1
@@ -49,3 +60,10 @@ set incsearch
 
 " highlight all occurrences when searching
 set hlsearch
+
+" ruby
+autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+
