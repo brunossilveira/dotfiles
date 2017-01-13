@@ -3,7 +3,7 @@
 curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-files=( .vimrc .neovimrc .zshrc .gitconfig .gitignore_global .gemrc .alias )
+files=( .vimrc .neovimrc .zshrc .gitconfig .gitignore_global .gemrc .alias .tmux.conf)
 
 for filename in ${files[@]}
 do
