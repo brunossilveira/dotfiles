@@ -12,6 +12,7 @@ Plug 'mileszs/ack.vim'
 Plug 'janko-m/vim-test'
 Plug 'scrooloose/syntastic'
 Plug 'kchmck/vim-coffee-script'
+Plug 'ngmy/vim-rubocop'
 
 call plug#end()
 
@@ -68,3 +69,5 @@ autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 
 :set background=dark
+
+set clipboard=unnamed
