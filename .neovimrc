@@ -9,6 +9,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-markdown'
 Plug 'mileszs/ack.vim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'janko-m/vim-test'
 Plug 'scrooloose/syntastic'
 Plug 'kchmck/vim-coffee-script'
@@ -22,6 +23,10 @@ set nu
 syntax enable
 syntax on
 filetype plugin indent on
+
+"ctrlp configs
+let g:ctrlp_max_files=0
+let g:ctrlp_max_depth=40
 
 "Show line number
 :set number
@@ -71,3 +76,7 @@ autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 :set background=dark
 
 set clipboard=unnamed
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
