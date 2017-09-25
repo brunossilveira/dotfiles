@@ -13,7 +13,6 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'janko-m/vim-test'
 Plug 'scrooloose/syntastic'
 Plug 'kchmck/vim-coffee-script'
-Plug 'ngmy/vim-rubocop'
 Plug 'neomake/neomake'
 
 call plug#end()
