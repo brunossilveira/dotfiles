@@ -1,0 +1,32 @@
+#!/bin/sh
+
+brew bundle --file=- <<EOF
+# Neovim
+brew "neovim"
+
+# Ruby things
+brew "rbenv"
+EOF
+
+fancy_echo "Cleaning up old Homebrew formulae ..."
+brew cleanup
+brew cask cleanup
+
+if [ -r "$HOME/.rcrc" ]; then
+  fancy_echo "Updating dotfiles ..."
+  rcup
+fi
+
+fancy_echo "Installing latest ruby with rbenv"
+
+rbenv install -l | awk -F '.' '
+   /^[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+[[:space:]]*$/ {
+      if ( ($1 * 100 + $2) * 100 + $3 > Max ) {
+         Max = ($1 * 100 + $2) * 100 + $3
+         Version=$0
+         }
+      }
+   END { rbenv install Version && rbenv global Version }'
+
+fancy_echo "Installing powerline things, remember to download the font"
+pip3 install --user powerline-status
