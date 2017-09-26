@@ -5,6 +5,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-endwise'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rake'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-markdown'
@@ -33,7 +34,9 @@ let g:ctrlp_max_depth=40
 
 au BufRead,BufNewFile Podfile set filetype=ruby
 au BufRead,BufNewFile Berksfile set filetype=ruby
+au BufRead,BufNewFile Berksfile set filetype=ruby
 au BufRead,BufNewFile *.hamlc set filetype=haml
+au BufRead,BufNewFile *.rake set filetype=ruby
 au BufRead,BufNewFile *.ejs set filetype=html
 
 ""Smarter tab extension
@@ -45,6 +48,10 @@ let g:jsx_ext_required = 0
 
 " Default settings
 set ts=2 sts=2 sw=2 expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
 
 "Indent guides
 let g:indent_guides_start_level = 2
@@ -78,7 +85,7 @@ autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 set clipboard=unnamed
 
 if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
+	let g:ackprg = 'ag --vimgrep'
 endif
 
 :set binary
