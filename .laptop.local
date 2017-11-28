@@ -4,6 +4,8 @@ brew bundle --file=- <<EOF
 brew "neovim"
 brew "rbenv"
 brew "htop"
+brew "ctags"
+brew "unused"
 EOF
 
 fancy_echo "Cleaning up old Homebrew formulae ..."
