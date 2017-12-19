@@ -1,0 +1,134 @@
+[user]
+  # Try per-repo .gitconfig instead
+  name = Bruno Silveira
+  email = djbrunosilveira@gmail.com
+[core]
+  editor = nvim
+  whitespace = trailing-space,cr-at-eol
+  excludesfile = ~/.gitignore
+  autocrlf = false
+  pager = diff-highlight | less -R --tabs=1,5
+[merge]
+  tool = opendiff
+  # Per @jferris: `ff = only` means Git will never implicitly do a merge commit, including while
+  # doing git pull. If I'm unexpectedly out of sync when I git pull, I get this
+  # message:
+  # fatal: Not possible to fast-forward, aborting.
+  # At that point, I know that I've forgotten to do something in my normal
+  # workflow, and I retrace my steps.
+  ff = only
+[diff]
+  # Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+  # instead of a/b/c/d as prefixes for patches
+  mnemonicprefix = true
+  # Turn on an experimental heuristic that should make the diff easier to read
+  compactionHeuristic = true
+[alias]
+  lg = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  st = status --short --branch
+  co = checkout
+  cm = commit -av
+  # "cherry-pick previous", e.g. the head of the branch we just left
+  cpp = cherry-pick HEAD@{1}
+  # Full commit messages without all the junk from `log --pretty=full`
+  full = log -1 --pretty='%C(red)%H%nAuthor: %C(green)%an%n%C(magenta)%s%n%b'
+  # No color, short messages
+  basic = log --pretty='%h %s'
+  # My default `git log` format without color
+  nocolor = log --pretty='%h%d %s [%an, %cr]'
+  unstage = reset HEAD
+  mm-safe = !bundle exec rake && git merge-to master
+  mm = merge-to master
+  up = !git fetch origin && git rebase origin/master
+  r = rebase -i origin/master
+  cp = cherry-pick
+  newauthor = commit --amend --reset-author -C HEAD
+  next = !git add . && git rebase --continue
+  pr = !git push -u && git create-pull-request
+  prf = !git pf -u && git create-pull-request
+  # The advantage of --force-with-lease over --force is that it won't push if
+  # you haven't already seen the ref you're overwriting. It avoids the race
+  # condition of accidentally "push -f"ing over a commit you haven't seen.
+  pf = push --force-with-lease
+  g = grep --extended-regexp --break --heading --line-number
+  ss = !git shalector | xargs git show
+  safe = !mkdir .git/safe
+
+  # Check out a pull request by number: g co-pr 123
+  co-pr = !sh -c 'git fetch origin pull/$1/head:pr/$1 && git checkout pr/$1' -
+
+  # Typos
+  pul = pull
+  psuh = push
+[format]
+  # git log uses --pretty format by default, so this changes the default
+  # format. It looks like this:
+  pretty = %C(magenta reverse)%h%C(reset) %C(blue)%s %C(magenta)[%an, %cr]%C(auto)%d
+[svn]
+  authorsfile = ~/.git-author
+
+[push]
+  # Push current branch (and ONLY current branch) even if you've never pushed it
+  # before.
+  default = current
+[status]
+  # In `git status`, show all files underneath a new directory when the
+  # directory is untracked. Or, in other words, don't show untracked directories
+  # as a single line.
+  showUntrackedFiles = all
+[rerere]
+  enabled = 1
+[credential]
+  helper = osxkeychain
+[commit]
+  template = ~/.git-template/gitmessage
+  verbose = true
+[grep]
+  # http://travisjeffery.com/b/2012/02/search-a-git-repo-like-a-ninja/
+  extendRegexp = true
+  lineNumber = true
+[fetch]
+  prune = true
+[gh]
+  autoUpdate = never
+[color]
+  # Color everything.
+  ui = auto
+[color "diff"]
+  # Color syntax: <foreground> <background>
+  # So "normal red" is normal foreground, red background
+  # BUT bold is a modifier, so "bold green red" means
+  #   "bold green" foreground, red background
+  whitespace = red reverse
+  plain = black
+  meta = cyan
+  frag = magenta bold
+  old = red
+  new = green
+  commit = yellow
+[color "status"]
+  # Options:
+  # header: the header text of the status message
+  # added/updated: added but not committed
+  # changed: changed but not added in the index
+  # untracked
+  # nobranch: the color the "no branch" warning is shown in (default red)
+  added = yellow # files deleted with "git rm" are this color too
+  changed = green # deleted items NOT done with "git rm" are this color too
+  untracked = cyan
+[init]
+  templatedir = ~/.git-template
+[github]
+  username = brunossilveira
+  user = brunossilveira
+[pager]
+  diff = diff-highlight | less
+  log = diff-highlight | less
+  show = diff-highlight | less
+[interactive]
+  diffFilter = diff-highlight
+[rebase]
+  autosquash = true
+  # Automatically stash before rebasing. This makes it possible to rebase with
+  # changes in the repo.
+  autostash = true
