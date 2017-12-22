@@ -1,0 +1,3 @@
+DOTFILES_DIRS=$HOME/code/personal/dotfiles
+EXCLUDES="system README.md Brewfile install.sh setup"
+TAGS="git ruby"
