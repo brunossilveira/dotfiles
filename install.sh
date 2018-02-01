@@ -36,6 +36,8 @@ if is_osx; then
     quietly_brew_bundle "$brewfile"
   done
 
+  pip3 install neovim
+
   info "Checking for command-line tools..."
   if ! command -v xcodebuild > /dev/null; then
     xcode-select --install
@@ -44,9 +46,9 @@ fi
 
 if ! echo "$SHELL" | grep -Fq zsh; then
   info "Your shell is not Zsh. Changing it to Zsh..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   chsh -s /bin/zsh
 fi
-
 
 info "Linking dotfiles into ~..."
 # Before `rcup` runs, there is no ~/.rcrc, so we must tell `rcup` where to look.

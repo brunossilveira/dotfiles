@@ -6,9 +6,6 @@ tap 'homebrew/services'
 # Old versions of some packages
 tap 'homebrew/versions'
 
-# Find my most-used CLI commands
-brew 'most-used'
-
 brew 'coreutils'
 
 # Use version 3.4+ for colorful diffs with --color
@@ -48,7 +45,10 @@ brew 'elasticsearch'
 brew 'tldr'
 
 brew 'node'
+brew 'nvim'
 brew 'yarn'
 brew 'nvm'
 brew "unused"
 brew "htop"
+brew 'tmux'
+brew 'python3'
