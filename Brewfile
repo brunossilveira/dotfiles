@@ -52,3 +52,5 @@ brew "unused"
 brew "htop"
 brew 'tmux'
 brew 'python3'
+brew 'ack'
+brew 'hub'

@@ -69,3 +69,5 @@ tags
 
 # From the Haskell Stack tool
 .stack-work
+
+config/database.yml

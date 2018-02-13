@@ -19,9 +19,13 @@ alias ga="git add"
 alias gai="git add --interactive"
 alias gcp="git rev-parse HEAD | xargs echo -n | pbcopy"
 
-# Ruby
+# Heroku
 alias h=heroku
+alias hcs="heroku run rails console -a rebelyoga-staging"
+alias hcp="heroku run rails console -a rebelyoga-production"
 alias hsso="heroku login --sso"
+
+# Ruby
 alias migrate="be rake db:migrate db:test:prepare"
 alias rollback="be rake db:rollback"
 alias remigrate="migrate && rake db:rollback && migrate"
