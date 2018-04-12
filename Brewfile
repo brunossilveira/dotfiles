@@ -48,7 +48,6 @@ brew 'node'
 brew 'nvim'
 brew 'yarn'
 brew 'nvm'
-brew "unused"
 brew "htop"
 brew 'tmux'
 brew 'python3'
