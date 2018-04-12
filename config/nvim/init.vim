@@ -64,8 +64,8 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 
-" show when searching
-set incsearch
+" Set the title of the iterm tab
+set title titlestring=%t
 
 " highlight all occurrences when searching
 set hlsearch
