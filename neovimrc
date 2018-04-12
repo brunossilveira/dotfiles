@@ -29,6 +29,8 @@ Plug 'fukayatsu/vim-diary'
 " Arduino
 Plug 'stevearc/vim-arduino'
 
+Plug 'elixir-editors/vim-elixir'
+
 call plug#end()
 
 " on opening the file, clear search-highlighting
