@@ -29,7 +29,8 @@ Plug 'fukayatsu/vim-diary'
 " Arduino
 Plug 'stevearc/vim-arduino'
 
-Plug 'elixir-editors/vim-elixir'
+Plug 'sheerun/vim-polyglot'
+Plug 'slashmili/alchemist.vim'
 
 call plug#end()
 
@@ -112,6 +113,9 @@ set ts=2 sts=2 sw=2 expandtab
 "Indent guides
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
+
+" Elixir - Alchemist
+let g:alchemist_tag_disable = 1
 
 " Automatically removing all trailing whitespace
 autocmd BufWritePre * :%s/\s\+$//e
