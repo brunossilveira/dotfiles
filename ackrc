@@ -3,4 +3,5 @@
 --ignore-dir=vendor
 --ignore-dir=.idea
 --ignore-dir=nbproject
+--ignore-file=is:tags
 --sort-files
