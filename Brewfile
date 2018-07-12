@@ -3,6 +3,9 @@
 # Lets us do `brew services restart postgres`, etc
 tap 'homebrew/services'
 
+# Unused
+tap 'joshuaclayton/formulae'
+
 # Old versions of some packages
 tap 'homebrew/versions'
 
@@ -54,3 +57,4 @@ brew 'python3'
 brew 'ack'
 brew 'hub'
 brew 'elixir'
+brew 'unused'
