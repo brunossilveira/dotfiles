@@ -24,7 +24,7 @@ Plug 'janko-m/vim-test'
 Plug 'kchmck/vim-coffee-script'
 Plug 'neomake/neomake'
 Plug 'duggiefresh/vim-easydir'
-Plug 'fukayatsu/vim-diary'
+Plug 'JamshedVesuna/vim-markdown-preview'
 
 " Arduino
 Plug 'stevearc/vim-arduino'
@@ -186,3 +186,9 @@ endfunction
 " _after_ loading plugins.
 syntax enable
 filetype plugin indent on
+
+let vim_markdown_preview_github=1
+
+" Vim Notes
+let g:notes_directories = ['~/notes/personal', '~/notes/work']
+let g:notes_suffix = '.md'

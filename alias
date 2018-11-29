@@ -9,15 +9,17 @@ alias df="df -h"
 alias sed="sed -E"
 alias grep="egrep --color=auto"
 
+# Git
 alias gd="git diff"
+
 # Grep with grouped output like Ack
 alias gg="git g"
 alias amend="git commit --amend -Chead"
 alias amend-new="git commit --amend"
-
 alias ga="git add"
 alias gai="git add --interactive"
 alias gcp="git rev-parse HEAD | xargs echo -n | pbcopy"
+alias gpr="git pull-request -a brunossilveira"
 
 # Heroku
 alias h=heroku
@@ -37,3 +39,6 @@ alias unfuck-gemfile="git checkout HEAD -- Gemfile.lock"
 # Bundler
 alias be="bundle exec"
 alias tagit='/usr/local/bin/ctags -R'
+
+# Typos
+alias vim="nvim"

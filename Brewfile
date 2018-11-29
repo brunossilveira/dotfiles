@@ -6,6 +6,9 @@ tap 'homebrew/services'
 # Unused
 tap 'joshuaclayton/formulae'
 
+# Code Climate
+tap 'codeclimate/formulae'
+
 # Old versions of some packages
 tap 'homebrew/versions'
 
@@ -51,10 +54,12 @@ brew 'node'
 brew 'nvim'
 brew 'yarn'
 brew 'nvm'
-brew "htop"
+brew 'htop'
 brew 'tmux'
 brew 'python3'
 brew 'ack'
 brew 'hub'
 brew 'elixir'
 brew 'unused'
+brew 'grip'
+brew 'codeclimate'
