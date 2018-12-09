@@ -5,7 +5,6 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'itchyny/lightline.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-rails'
@@ -25,6 +24,7 @@ Plug 'kchmck/vim-coffee-script'
 Plug 'neomake/neomake'
 Plug 'duggiefresh/vim-easydir'
 Plug 'JamshedVesuna/vim-markdown-preview'
+Plug '/usr/local/opt/fzf'
 
 " Arduino
 Plug 'stevearc/vim-arduino'
@@ -88,10 +88,6 @@ augroup END
 nnoremap Y "*yiW
 
 let mapleader = ","
-
-"ctrlp configs
-let g:ctrlp_max_files=0
-let g:ctrlp_max_depth=40
 
 au BufRead,BufNewFile Podfile set filetype=ruby
 au BufRead,BufNewFile Berksfile set filetype=ruby
@@ -192,3 +188,12 @@ let vim_markdown_preview_github=1
 " Vim Notes
 let g:notes_directories = ['~/notes/personal', '~/notes/work']
 let g:notes_suffix = '.md'
+
+" FZF mapings
+nmap <C-p> :FZF<CR>
+map <leader>cv :FZF app/views<cr>
+map <leader>ct :FZF app/controllers<cr>
+map <leader>cm :FZF app/models<cr>
+map <leader>cp :FZF app/presenters<cr>
+map <leader>cs :FZF spec<cr>
+map <leader>cl :FZF lib<cr>

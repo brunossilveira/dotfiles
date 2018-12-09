@@ -42,3 +42,6 @@ alias tagit='/usr/local/bin/ctags -R'
 
 # Typos
 alias vim="nvim"
+
+# Docker
+alias up='docker-compose stop && rm tmp/pids/server.pid; docker-compose build web && docker-compose run web rails db:drop db:create db:schema:load db:seed && docker-compose up -d'

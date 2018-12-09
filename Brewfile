@@ -40,26 +40,16 @@ brew 'parity'
 # Fast, hip replacement for grep
 brew 'ripgrep'
 
-# Official AWS CLI
-brew 'awscli'
-
-# Like search, but more elastic
-brew 'elasticsearch'
-
 # https://tldr.sh/
 # Man pages, but with practical examples.
 brew 'tldr'
 
 brew 'node'
-brew 'nvim'
 brew 'yarn'
-brew 'nvm'
 brew 'htop'
 brew 'tmux'
 brew 'python3'
 brew 'ack'
-brew 'hub'
-brew 'elixir'
 brew 'unused'
 brew 'grip'
 brew 'codeclimate'
