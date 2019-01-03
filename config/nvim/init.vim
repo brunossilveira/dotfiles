@@ -19,12 +19,12 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-dispatch'
 Plug 'mileszs/ack.vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'janko-m/vim-test'
 Plug 'kchmck/vim-coffee-script'
 Plug 'neomake/neomake'
 Plug 'duggiefresh/vim-easydir'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug '/usr/local/opt/fzf'
+Plug 'stulzer/vim-vroom'
 
 " Arduino
 Plug 'stevearc/vim-arduino'
@@ -135,8 +135,11 @@ let g:deoplete#enable_at_startup = 1
 call neomake#configure#automake('w')
 let g:neomake_open_list = 2
 
-map <Leader>t :w<cr>:call RunCurrentSpecFile()<CR>
-map <Leader>o :w<cr>:call RunNearestSpec()<CR>
+" vim-vroom configuration
+let g:vroom_use_terminal = 1
+let g:vroom_command_prefix="docker-compose run web"
+map <leader>t :VroomRunNearestTest<cr>
+map <leader>o :VroomRunTestFile<cr>
 
 let g:rspec_command = "!clear && bin/rspec {spec}"
 let g:rspec_runner = "os_x_iterm2"
