@@ -70,8 +70,6 @@ installApp "zip" "Bartender" "Bartender 3.app" "https://www.macbartender.com/Dem
 installApp "dmg" "Spotify" "Spotify.app" "http://download.spotify.com/Spotify.dmg" "" "" ""
 installApp "dmg" "Slack" "Slack.app" "https://slack.com/ssb/download-osx" "" "" ""
 installApp "dmg" "WhatsApp" "WhatsApp.app" "https://web.whatsapp.com/desktop/mac/files/WhatsApp.dmg" "" "" ""
-installApp "zip" "smcfancontrol" "smcFanControl.app" "https://dw.uptodown.com/dwn/F2Wpz4LWvvjuPlt_1aUs9Ry2rSjQ9POp4B9TfkhYplHDrd8uuFnTIbnmGwOZPMfE7dwVC3J5YOcRECUqoRTbnv15VlcBb9R-aTQACZl4uqaqQNfUH9MxM-RLFj14T1S1/UTt46jcI2BPS6bMUzL5Wrhug0fBowVPluNSPUxhzjc9SU536u-TgY34rQA0LrVLBiQbq1rvJu0qvIY6_4LQEINu_nFUZDqlgfMIX-cRCVXaewxToTdQrUVmxxK2_SY2u/nnyyBCWM5MPlWJg0tZWHZmIlEmkPTzUSQHARBYRDX6Qxq0rIovmpv-6dSF7cBs_fhoxs_CwrxK9q4rUsdxTF-CnhMmE1aRf89ePS089vPIE5lCMdjFDfINPBkI5RFWjQ/0RsKh5p4iQdcxQ7PRcpr76mMvP6m1Y4LJjcKpVdyivY=/" "" "" ""
-installApp "zip" "Lastpass" "LastPass Installer.app" "https://download.cloud.lastpass.com/mac/lpmacosx.zip" "" "" ""
 installApp "dmg" "Hazel" "Install Hazel.app" "https://www.noodlesoft.com/Products/Hazel/download" "" "" ""
 installApp "zip" "Focus" "Focus.app" "https://heyfocus.com/uploads/Focus-1.9.9.zip" "" "" ""
 
