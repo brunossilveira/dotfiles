@@ -122,9 +122,9 @@
   username = brunossilveira
   user = brunossilveira
 [pager]
-  diff = diff-highlight | less
-  log = diff-highlight | less
-  show = diff-highlight | less
+  diff = diff-so-fancy | less
+  log = diff-so-fancy | less
+  show = diff-so-fancy | less
 	branch = false
 [interactive]
   diffFilter = diff-highlight

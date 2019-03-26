@@ -9,9 +9,6 @@ tap 'joshuaclayton/formulae'
 # Code Climate
 tap 'codeclimate/formulae'
 
-# Old versions of some packages
-tap 'homebrew/versions'
-
 brew 'coreutils'
 
 # Use version 3.4+ for colorful diffs with --color
@@ -54,3 +51,4 @@ brew 'unused'
 brew 'grip'
 brew 'codeclimate'
 brew 'rbenv'
+brew 'diff-so-fancy'
