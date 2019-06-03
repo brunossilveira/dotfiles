@@ -130,3 +130,7 @@ for app in Safari Finder Dock Mail SystemUIServer; do killall "$app" >/dev/null 
 echo "Disable smart quotes and smart dashes as they're annoying when typing code"
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+echo "Increases the time the menu bar shows when mouse is at the top of the screen"
+defaults write com.citrix.receiver.nomas MenuBarAutoShowDelayEnabled -bool YES
+defaults write com.citrix.receiver.nomas MenuBarAutoShowDelay -float 3.0

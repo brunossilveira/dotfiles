@@ -4,7 +4,7 @@ set nocompatible
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'itchyny/lightline.vim'
-Plug 'vim-airline/vim-airline'
+Plug 'powerline/powerline'
 Plug 'vim-ruby/vim-ruby'
 Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-rails'
@@ -17,7 +17,7 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-dispatch'
-Plug 'mileszs/ack.vim'
+Plug 'jremmen/vim-ripgrep'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'kchmck/vim-coffee-script'
 Plug 'neomake/neomake'
@@ -25,17 +25,24 @@ Plug 'duggiefresh/vim-easydir'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug '/usr/local/opt/fzf'
 Plug 'stulzer/vim-vroom'
+Plug 'craigemery/vim-autotag'
 
-" Arduino
-Plug 'stevearc/vim-arduino'
+" Automatic formatting files
+Plug 'sbdchd/neoformat'
 
 Plug 'sheerun/vim-polyglot'
 Plug 'slashmili/alchemist.vim'
+
+" Javascript
+Plug 'flowtype/vim-flow'
 
 call plug#end()
 
 " on opening the file, clear search-highlighting
 autocmd BufReadCmd set nohlsearch
+
+" Format js files
+autocmd BufWritePre *.js Neoformat
 
 " Without this, the next line copies a bunch of netrw settings like `let
 " g:netrw_dirhistmax` to the system clipboard.
