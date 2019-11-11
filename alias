@@ -20,6 +20,7 @@ alias ga="git add"
 alias gai="git add --interactive"
 alias gcp="git rev-parse HEAD | xargs echo -n | pbcopy"
 alias gpr="hub pull-request --no-edit -a brunossilveira"
+alias most-commited="{ git log --pretty='' --name-only --after="1 year" & git log --pretty='' --name-only --after="3 month" & git log --pretty='' --name-only --after="1 month"; } | sort | uniq -c | sort -n"
 
 # Heroku
 alias h=heroku

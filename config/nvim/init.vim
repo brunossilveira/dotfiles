@@ -26,6 +26,7 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 Plug '/usr/local/opt/fzf'
 Plug 'stulzer/vim-vroom'
 Plug 'craigemery/vim-autotag'
+Plug 'elzr/vim-json'
 
 " Automatic formatting files
 Plug 'sbdchd/neoformat'
@@ -144,7 +145,6 @@ let g:neomake_open_list = 2
 
 " vim-vroom configuration
 let g:vroom_use_terminal = 1
-let g:vroom_command_prefix="docker-compose run web"
 map <leader>t :VroomRunNearestTest<cr>
 map <leader>o :VroomRunTestFile<cr>
 

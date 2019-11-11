@@ -64,7 +64,6 @@ source $ZSH/oh-my-zsh.sh
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
 export EDITOR='nvim'
-export RUBYOPT=rubygems
 
 # else
 #   export EDITOR='mvim'
@@ -139,6 +138,10 @@ function g {
   fi
 }
 
+function branchify {
+  git checkout -b $1 && git reset master --hard HEAD~
+}
+
 # Usage: changes d038ff1 5d7f017
 function changes() {
   git log $1..$2 --pretty=format:'*%s*%n%b' --no-merges
@@ -159,6 +162,9 @@ compdef g=git
 # Hub alias
 eval "$(hub alias -s)"
 
+# Env variables
+source $HOME/.env
+
 # Ignore some folders on FZF search
 export FZF_DEFAULT_COMMAND='ag --nocolor --ignore tmp --ignore node_modules --ignore spec/vcr_cassettes -g ""'
 
@@ -166,6 +172,8 @@ export FZF_DEFAULT_COMMAND='ag --nocolor --ignore tmp --ignore node_modules --ig
 # created (i.e., after all zle -N calls and after running compinit), because it
 # has to know about them to highlight them.
 source ~/.zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[[ -z "$TMUX" ]] && exec tmux
 
 # `print_exit_value` shows a message with the exit code when a command returns
 # with a non-zero exit code.
