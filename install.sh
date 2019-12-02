@@ -61,6 +61,24 @@ if [ ! -d ~/.zsh-plugins/zsh-syntax-highlighting ]; then
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh-plugins/zsh-syntax-highlighting
 fi
 
+info "Installing tmux pugin manager..."
+if [ ! -d ~/.tmux/plugins/tmp ]; then
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
+
+info "Installing powerline..."
+if [ ! -d /usr/local/bin/powerline ]; then
+  pip3 install powerline-status
+fi
+
+info "Installing oh my zsh..."
+if [ ! -d ~/.oh_my_zsh ]; then
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+info "Installing wd..."
+curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh
+
 info "Running all setup scripts..."
 for setup in tag-*/setup; do
   dir=$(basename "$(dirname "$setup")")
