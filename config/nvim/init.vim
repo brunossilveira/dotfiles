@@ -11,6 +11,7 @@ Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-haml'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-bundler'
 Plug 'tommcdo/vim-fubitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
@@ -20,7 +21,6 @@ Plug 'tpope/vim-dispatch'
 Plug 'jremmen/vim-ripgrep'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'kchmck/vim-coffee-script'
-Plug 'neomake/neomake'
 Plug 'duggiefresh/vim-easydir'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug '/usr/local/opt/fzf'
@@ -28,14 +28,19 @@ Plug 'stulzer/vim-vroom'
 Plug 'craigemery/vim-autotag'
 Plug 'elzr/vim-json'
 
-" Automatic formatting files
+" Asynchronous Lint Engine
+Plug 'dense-analysis/ale'
 Plug 'sbdchd/neoformat'
+
+"Lightline for ALE
+Plug 'maximbaz/lightline-ale'
 
 Plug 'sheerun/vim-polyglot'
 Plug 'slashmili/alchemist.vim'
 
 " Javascript
 Plug 'flowtype/vim-flow'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 call plug#end()
 
@@ -104,9 +109,8 @@ au BufRead,BufNewFile *.hamlc set filetype=haml
 au BufRead,BufNewFile *.rake set filetype=ruby
 au BufRead,BufNewFile *.ejs set filetype=html
 
-""Smarter tab extension
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
+""Set Colors
+set termguicolors
 
 ""JSX Syntax
 let g:jsx_ext_required = 0
@@ -139,16 +143,17 @@ endif
 
 let g:deoplete#enable_at_startup = 1
 
-" Calls neomake when saving file and opens up the list automatically
-call neomake#configure#automake('w')
-let g:neomake_open_list = 2
+"" Change deoplete default colors
+highlight Pmenu ctermbg=8 guibg=white
 
 " vim-vroom configuration
 let g:vroom_use_terminal = 1
+let g:vroom_command_prefix="docker-compose run backend"
+let g:vroom_spec_command="rspec --format documentation"
 map <leader>t :VroomRunNearestTest<cr>
 map <leader>o :VroomRunTestFile<cr>
 
-let g:rspec_command = "!clear && bin/rspec {spec}"
+let g:rspec_command = "!clear && bin/rspec --format documentation {spec}"
 let g:rspec_runner = "os_x_iterm2"
 
 " STATUSLINE
@@ -176,6 +181,20 @@ let g:lightline.component_visible_condition.readonly = '(&filetype!="help"&& &re
 let g:lightline.component_visible_condition.fugitive = '(exists("*fugitive#head") && ""!=fugitive#head())'
 let g:lightline.tabline.right = [] " Disable the 'X' on the far right
 
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \ }
+
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \ }
+
+let g:lightline.active.right = [['lineinfo'], ['percent'], [ 'linter_checking', 'linter_errors', 'linter_warnings' ]]
+
 function! LightLineFilename()
   let git_root = fnamemodify(fugitive#extract_git_dir(expand("%:p")), ":h")
 
@@ -187,6 +206,19 @@ function! LightLineFilename()
     return expand("%:p")
   endif
 endfunction
+
+" ALE
+" Only runs lint when saving
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0
+" Navigates through errors
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 2
+let g:ale_list_window_size = 5
 
 " vim-plug loads all the filetype, syntax and colorscheme files, so turn them on
 " _after_ loading plugins.

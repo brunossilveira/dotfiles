@@ -60,6 +60,7 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/g
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
+source ~/.secrets/vars
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -173,10 +174,12 @@ export FZF_DEFAULT_COMMAND='ag --nocolor --ignore tmp --ignore node_modules --ig
 # has to know about them to highlight them.
 source ~/.zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-[[ -z "$TMUX" ]] && exec tmux
-
 # `print_exit_value` shows a message with the exit code when a command returns
 # with a non-zero exit code.
 # However, zsh-syntax-highlighting somehow unsets this options option, so we
 # must set it after sourcing zsh-syntax-highlighting.
 setopt print_exit_value
+export PATH=/Users/brunosilveira/.pyenv/versions/3.7.2/bin:$PATH
+
+# added by travis gem
+[ -f /Users/brunosilveira/.travis/travis.sh ] && source /Users/brunosilveira/.travis/travis.sh

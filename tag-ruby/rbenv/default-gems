@@ -1,2 +1,7 @@
 bundler
 awesome_print
+brakeman
+rufo
+reek
+rails_best_practices
+debride
