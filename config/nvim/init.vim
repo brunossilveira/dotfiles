@@ -148,7 +148,6 @@ highlight Pmenu ctermbg=8 guibg=white
 
 " vim-vroom configuration
 let g:vroom_use_terminal = 1
-let g:vroom_command_prefix="docker-compose run backend"
 let g:vroom_spec_command="rspec --format documentation"
 map <leader>t :VroomRunNearestTest<cr>
 map <leader>o :VroomRunTestFile<cr>
@@ -196,7 +195,7 @@ let g:lightline.component_type = {
 let g:lightline.active.right = [['lineinfo'], ['percent'], [ 'linter_checking', 'linter_errors', 'linter_warnings' ]]
 
 function! LightLineFilename()
-  let git_root = fnamemodify(fugitive#extract_git_dir(expand("%:p")), ":h")
+  let git_root = fnamemodify(FugitiveExtractGitDir(expand("%:p")), ":h")
 
   if expand("%:t") == ""
     return "[No Name]"

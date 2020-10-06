@@ -45,16 +45,13 @@ DISABLE_AUTO_TITLE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby postgres rails rake rake-fast rbenv tmux tmuxinator bundler bgnotify osx wd fzf)
+plugins=(git ruby postgres rails rake rake-fast rbenv tmux tmuxinator bundler bgnotify osx wd fzf zsh-autosuggestions)
 
 # User configuration
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-
-# Powerline
-. /usr/local/lib/python3.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -127,6 +124,8 @@ PATH=$HOME/.bin:$PATH
 eval "$(rbenv init - --no-rehash)"
 PATH=./bin/stubs:$PATH
 
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+
 # }}}
 
 # By itself: run `git status`
@@ -146,6 +145,10 @@ function branchify {
 # Usage: changes d038ff1 5d7f017
 function changes() {
   git log $1..$2 --pretty=format:'*%s*%n%b' --no-merges
+}
+
+function git-find-deleted-line {
+  git log -c -S $1 $2
 }
 
 # Homebrew {{{
@@ -179,7 +182,6 @@ source ~/.zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # However, zsh-syntax-highlighting somehow unsets this options option, so we
 # must set it after sourcing zsh-syntax-highlighting.
 setopt print_exit_value
-export PATH=/Users/brunosilveira/.pyenv/versions/3.7.2/bin:$PATH
 
 # added by travis gem
 [ -f /Users/brunosilveira/.travis/travis.sh ] && source /Users/brunosilveira/.travis/travis.sh
