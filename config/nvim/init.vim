@@ -23,8 +23,7 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'kchmck/vim-coffee-script'
 Plug 'duggiefresh/vim-easydir'
 Plug 'JamshedVesuna/vim-markdown-preview'
-Plug '/usr/local/opt/fzf'
-Plug 'stulzer/vim-vroom'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'craigemery/vim-autotag'
 Plug 'elzr/vim-json'
 
@@ -238,3 +237,5 @@ map <leader>cm :FZF app/models<cr>
 map <leader>cp :FZF app/presenters<cr>
 map <leader>cs :FZF spec<cr>
 map <leader>cl :FZF lib<cr>
+
+let g:fzf_layout = { 'down': '~25%' }
