@@ -124,7 +124,7 @@ PATH=$HOME/.bin:$PATH
 eval "$(rbenv init - --no-rehash)"
 PATH=./bin/stubs:$PATH
 
-export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
 # }}}
 

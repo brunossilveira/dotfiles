@@ -6,7 +6,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'itchyny/lightline.vim'
 Plug 'powerline/powerline'
 Plug 'vim-ruby/vim-ruby'
-Plug 'thoughtbot/vim-rspec'
+Plug 'vim-test/vim-test'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-haml'
@@ -17,6 +17,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-dispatch'
 Plug 'jremmen/vim-ripgrep'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -40,6 +41,9 @@ Plug 'slashmili/alchemist.vim'
 " Javascript
 Plug 'flowtype/vim-flow'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" Godot
+Plug 'habamax/vim-godot'
 
 call plug#end()
 
@@ -96,6 +100,10 @@ augroup myfiletypes
 	autocmd VimResized * wincmd =
 augroup END
 
+" Disables Q and q:
+map q: <Nop>
+nnoremap Q <nop>
+
 " Big Yank to clipboard
 nnoremap Y "*yiW
 
@@ -145,14 +153,12 @@ let g:deoplete#enable_at_startup = 1
 "" Change deoplete default colors
 highlight Pmenu ctermbg=8 guibg=white
 
-" vim-vroom configuration
-let g:vroom_use_terminal = 1
-let g:vroom_spec_command="rspec --format documentation"
-map <leader>t :VroomRunNearestTest<cr>
-map <leader>o :VroomRunTestFile<cr>
+" vim-test
+nmap <Leader>t :TestNearest<CR>
+nmap <Leader>o :TestFile<CR>
 
-let g:rspec_command = "!clear && bin/rspec --format documentation {spec}"
-let g:rspec_runner = "os_x_iterm2"
+let test#strategy = "neovim"
+let test#neovim#term_position = "bot 20"
 
 " STATUSLINE
 " always display status line
@@ -214,7 +220,7 @@ let g:ale_lint_on_enter = 0
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
+let g:ale_set_quickfix = 0
 let g:ale_open_list = 2
 let g:ale_list_window_size = 5
 
@@ -239,3 +245,7 @@ map <leader>cs :FZF spec<cr>
 map <leader>cl :FZF lib<cr>
 
 let g:fzf_layout = { 'down': '~25%' }
+
+" Godot
+
+let g:godot_executable = '/Applications/Godot.app'
