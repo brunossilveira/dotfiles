@@ -45,7 +45,7 @@ DISABLE_AUTO_TITLE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby postgres rails rake rake-fast rbenv tmux tmuxinator bundler bgnotify osx wd fzf zsh-autosuggestions)
+plugins=(git ruby postgres rails rake rake-fast rbenv tmux tmuxinator bundler bgnotify macos wd fzf zsh-autosuggestions)
 
 # User configuration
 
@@ -53,11 +53,11 @@ plugins=(git ruby postgres rails rake rake-fast rbenv tmux tmuxinator bundler bg
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+export FZF_BASE=/opt/homebrew/bin/fzf
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
-source ~/.secrets/vars
+#source ~/.secrets/vars
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -89,9 +89,12 @@ is_osx(){
   [ "$(uname -s)" = Darwin ]
 }
 
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+
 if is_osx; then
   # Add Homebrew to the path. This must be above rbenv path stuff.
   PATH=/usr/local/bin:/usr/local/sbin:$PATH
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # Heroku standalone client
@@ -163,9 +166,6 @@ fi
 source $HOME/.alias
 compdef g=git
 
-# Hub alias
-eval "$(hub alias -s)"
-
 # Env variables
 source $HOME/.env
 
@@ -185,3 +185,6 @@ setopt print_exit_value
 
 # added by travis gem
 [ -f /Users/brunosilveira/.travis/travis.sh ] && source /Users/brunosilveira/.travis/travis.sh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PATH="/opt/homebrew/opt/node@14/bin:$PATH"

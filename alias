@@ -19,16 +19,16 @@ alias amend-new="git commit --amend"
 alias ga="git add"
 alias gai="git add --interactive"
 alias gcp="git rev-parse HEAD | xargs echo -n | pbcopy"
-alias gpr="hub pull-request -d --no-edit -a brunossilveira"
+alias gpr="gh pr create --fill"
 alias most-commited="{ git log --pretty='' --name-only --after="1 year" & git log --pretty='' --name-only --after="3 month" & git log --pretty='' --name-only --after="1 month"; } | sort | uniq -c | sort -n"
 
 # Heroku
 alias h=heroku
-alias hcs="heroku run rails console -a rebelyoga-staging"
-alias hcp="heroku run rails console -a rebelyoga-production"
-alias hsso="heroku login --sso"
+alias hcs="heroku run rails console -a gq-staging -e DD_LOG_LEVEL=ERROR"
+alias hcp="heroku run rails console -a gq-production -e DD_LOG_LEVEL=ERROR"
 
 # Ruby
+alias test="be rails test"
 alias migrate="be rake db:migrate db:test:prepare"
 alias rollback="be rake db:rollback"
 alias remigrate="migrate && rake db:rollback && migrate"

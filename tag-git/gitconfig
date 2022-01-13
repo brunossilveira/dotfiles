@@ -26,7 +26,7 @@
 [alias]
   lg = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   st = status --short --branch
-  co = checkout
+	co = !sh -c \"git branch -a | grep -v remotes | grep $1 | xargs git checkout\"
   cm = commit -av
   # "cherry-pick previous", e.g. the head of the branch we just left
   cpp = cherry-pick HEAD@{1}

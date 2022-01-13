@@ -19,14 +19,16 @@ Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-dispatch'
-Plug 'jremmen/vim-ripgrep'
+Plug 'BurntSushi/ripgrep'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'kchmck/vim-coffee-script'
 Plug 'duggiefresh/vim-easydir'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'craigemery/vim-autotag'
 Plug 'elzr/vim-json'
+Plug 'github/copilot.vim'
 
 " Asynchronous Lint Engine
 Plug 'dense-analysis/ale'
@@ -223,6 +225,8 @@ let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 0
 let g:ale_open_list = 2
 let g:ale_list_window_size = 5
+let g:ale_linters = {'ruby': ['standardrb']}
+let g:ale_fixers = {'ruby': ['standardrb']}
 
 " vim-plug loads all the filetype, syntax and colorscheme files, so turn them on
 " _after_ loading plugins.
