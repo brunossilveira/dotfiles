@@ -180,4 +180,4 @@ setopt print_exit_value
 [ -f /Users/brunosilveira/.travis/travis.sh ] && source /Users/brunosilveira/.travis/travis.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export PATH="/opt/homebrew/opt/node@14/bin:$PATH"
+export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
