@@ -94,7 +94,7 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 if is_osx; then
   # Add Homebrew to the path. This must be above rbenv path stuff.
   PATH=/usr/local/bin:/usr/local/sbin:$PATH
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 # Heroku standalone client
@@ -103,16 +103,9 @@ PATH="/usr/local/heroku/bin:$PATH"
 # Node
 PATH=$PATH:/usr/local/share/npm/bin:.git/safe/../../node_modules/.bin/
 # NVM
-if [[ "$(basename "$PWD")" == "hired" ]]; then
-  mkdir -p ~/.nvm
-  export NVM_DIR="$HOME/.nvm"
-  nvm_sh="/usr/local/opt/nvm/nvm.sh"
-  [[ -r "$nvm_sh" ]] && . "$nvm_sh"
-  unset nvm_sh
-fi
-
-# Postgres.app
-PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # Haskell
 PATH=~/.local/bin:$PATH

@@ -63,7 +63,6 @@ installApp() {
 installApp "dmg" "Chrome" "Google Chrome.app" "https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg" "" "" ""
 installApp "dmg" "OmniFocus" "OmniFocus.app" "http://www.omnigroup.com/download/latest/omnifocus" "" "" ""
 installApp "zip" "Dash" "Dash.app" "http://london.kapeli.com/Dash.zip" "" "" ""
-installApp "dmg" "Docker" "Docker.app" "https://download.docker.com/mac/stable/Docker.dmg" "" "" ""
 installApp "zip" "iTerm2" "iTerm.app" "https://iterm2.com/downloads/stable/latest" "" "" ""
 installApp "zip" "Flux" "Flux.app" "https://justgetflux.com/mac/Flux.zip" "" "" "build"
 installApp "zip" "Bartender" "Bartender 3.app" "https://www.macbartender.com/Demo/Bartender%203.zip" "" "" ""
