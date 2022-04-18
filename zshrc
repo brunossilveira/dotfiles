@@ -93,8 +93,7 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 if is_osx; then
   # Add Homebrew to the path. This must be above rbenv path stuff.
-  PATH=/usr/local/bin:/usr/local/sbin:$PATH
-  eval "$(/usr/local/bin/brew shellenv)"
+  PATH=/opt/homebrew/bin:$PATH
 fi
 
 # Heroku standalone client
