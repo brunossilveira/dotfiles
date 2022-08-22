@@ -63,6 +63,8 @@ autocmd BufWritePre *.js Neoformat
 " I never use netrw, so disable its history.
 let g:netrw_dirhistmax = 0
 
+set foldmethod=syntax
+set foldlevel=1
 set encoding=utf-8
 set mouse=a
 set nu
@@ -228,8 +230,8 @@ let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 0
 let g:ale_open_list = 2
 let g:ale_list_window_size = 5
-let g:ale_linters = {'ruby': ['standardrb'], 'markdown': ['languagetool'] }
-let g:ale_fixers = {'ruby': ['standardrb']}
+let g:ale_linters = {'ruby': ['rubocop'], 'markdown': ['languagetool'] }
+let g:ale_fixers = {'ruby': ['rubocop']}
 
 " vim-plug loads all the filetype, syntax and colorscheme files, so turn them on
 " _after_ loading plugins.
