@@ -21,7 +21,7 @@ brew 'ctags'
 brew 'neovim'
 
 # Fast GitHub client, used in git-create-pull-request
-brew 'hub'
+brew 'gh'
 
 # Don't install completions, in favor of using Zsh's (better) git completions
 brew 'git', args: ['--without-completions']
@@ -32,7 +32,6 @@ brew 'fzf'
 # thoughtbot stuff like rcm
 tap 'thoughtbot/formulae'
 brew 'rcm'
-brew 'parity'
 
 # Fast, hip replacement for grep
 brew 'ripgrep'
@@ -49,8 +48,7 @@ brew 'python3'
 brew 'ack'
 brew 'unused'
 brew 'grip'
-brew 'codeclimate'
 brew 'rbenv'
 brew 'diff-so-fancy'
 brew 'the_silver_searcher'
-
+brew 'redis'
