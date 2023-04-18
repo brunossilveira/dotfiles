@@ -116,7 +116,8 @@ PATH=$HOME/.bin:$PATH
 # * ~/.rbenv/shims is before /usr/local/bin etc
 # * I don't know why it has to be in this order but putting shims before stubs
 #   breaks stubs ("You have activated the wrong version of rake" error)
-eval "$(rbenv init - --no-rehash)"
+
+eval "$(rbenv init - zsh)"
 PATH=./bin/stubs:$PATH
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"

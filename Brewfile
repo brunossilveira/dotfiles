@@ -52,3 +52,5 @@ brew 'grip'
 brew 'codeclimate'
 brew 'rbenv'
 brew 'diff-so-fancy'
+brew 'the_silver_searcher'
+
