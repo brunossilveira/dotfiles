@@ -43,3 +43,4 @@ alias tagit='/usr/local/bin/ctags -R'
 
 # Typos
 alias vim="nvim"
+

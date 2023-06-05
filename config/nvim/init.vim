@@ -50,6 +50,9 @@ Plug 'habamax/vim-godot'
 " Writing
 Plug 'rhysd/vim-grammarous'
 
+" Python
+Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
+
 call plug#end()
 
 " on opening the file, clear search-highlighting
