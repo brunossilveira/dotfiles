@@ -158,7 +158,9 @@ if executable('ag')
 	let g:ackprg = 'ag --vimgrep'
 endif
 
+" Deoplete
 let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('auto_complete_delay', 100)
 
 "" Change deoplete default colors
 highlight Pmenu ctermbg=8 guibg=white
