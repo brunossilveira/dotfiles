@@ -1,0 +1,1 @@
+--database=postgresql --css=tailwind --skip-test --skip-system-test --skip-jbuilder
