@@ -28,6 +28,8 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'craigemery/vim-autotag'
 Plug 'elzr/vim-json'
+
+" Copilot
 Plug 'github/copilot.vim'
 
 " Asynchronous Lint Engine
@@ -230,8 +232,8 @@ let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 0
 let g:ale_open_list = 2
 let g:ale_list_window_size = 5
-let g:ale_linters = {'ruby': ['rubocop'], 'markdown': ['languagetool'] }
-let g:ale_fixers = {'ruby': ['rubocop']}
+let g:ale_linters = {'ruby': ['rubocop', 'reek'], 'markdown': ['languagetool'], 'javascript': ['prettier'] }
+let g:ale_fixers = {'ruby': ['rubocop', 'reek'], 'javascript': ['eslint']}
 
 " vim-plug loads all the filetype, syntax and colorscheme files, so turn them on
 " _after_ loading plugins.
