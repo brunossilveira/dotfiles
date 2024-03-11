@@ -15,7 +15,7 @@ brew 'coreutils'
 brew 'diffutils'
 
 # so :Rtags works
-brew 'ctags'
+brew 'universal-ctags'
 
 # My favorite editor
 brew 'neovim'

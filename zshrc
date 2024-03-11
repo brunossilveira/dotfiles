@@ -52,6 +52,7 @@ plugins=(git ruby postgres rails rake rake-fast rbenv tmux tmuxinator bundler bg
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 export FZF_BASE=/opt/homebrew/bin/fzf
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -102,9 +103,8 @@ PATH="/usr/local/heroku/bin:$PATH"
 # Node
 PATH=$PATH:/usr/local/share/npm/bin:.git/safe/../../node_modules/.bin/
 # NVM
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # Haskell
 PATH=~/.local/bin:$PATH
@@ -147,6 +147,15 @@ function git-find-deleted-line {
   git log -c -S $1 $2
 }
 
+function git-churn {
+  git log --all -M -C --name-only --format='format:' "$@" \
+    | sort \
+    | grep -v '^$' \
+    | uniq -c \
+    | sort -n \
+    | awk 'BEGIN {print "count\tfile"} {print $1 "\t" $2}'
+}
+
 # Homebrew {{{
 if is_osx; then
   # Opt out of sending Homebrew information to Google Analytics
@@ -176,11 +185,11 @@ source ~/.zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # must set it after sourcing zsh-syntax-highlighting.
 setopt print_exit_value
 
-# added by travis gem
-[ -f /Users/brunosilveira/.travis/travis.sh ] && source /Users/brunosilveira/.travis/travis.sh
+export PATH="code/gq/infrastructure/bin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
+
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/terraform terraform

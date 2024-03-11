@@ -25,7 +25,7 @@ alias most-commited="{ git log --pretty='' --name-only --after="1 year" & git lo
 # Heroku
 alias h=heroku
 alias hcs="heroku run rails console -a gq-staging -e DD_LOG_LEVEL=ERROR"
-alias hcp="heroku run rails console -a gq-production -e DD_LOG_LEVEL=ERROR"
+alias hcp="heroku run rails console -a gq-prod -e DD_LOG_LEVEL=ERROR"
 
 # Ruby
 alias test="be rails test"
