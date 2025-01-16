@@ -58,7 +58,7 @@ export FZF_BASE=/opt/homebrew/bin/fzf
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
-#source ~/.secrets/vars
+source ~/.secrets/vars
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
