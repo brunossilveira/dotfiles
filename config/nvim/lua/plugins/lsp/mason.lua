@@ -28,7 +28,7 @@ return {
       -- list of servers for mason to install
       ensure_installed = {
         "ruby_lsp",
-        "tsserver",
+        --"tsserver",
         "html",
         "cssls",
         "tailwindcss",
@@ -36,7 +36,9 @@ return {
         "prismals",
         "pyright",
         "tflint",
+        "marksman",
       },
+      automatic_installation = false, -- disable automatic installation to avoid enable error
     })
 
     mason_tool_installer.setup({
@@ -51,6 +53,7 @@ return {
         "pylint",
         "eslint_d",
         "tflint",
+        "marksman",
       },
     })
   end,

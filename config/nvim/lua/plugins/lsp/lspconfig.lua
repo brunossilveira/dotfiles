@@ -96,7 +96,7 @@ return {
       end,
       ["ruby_lsp"] = function()
         lspconfig["ruby_lsp"].setup({
-          cmd = { vim.fn.expand("~/.rbenv/shims/ruby-lsp") },
+          cmd = { "bundle", "exec", "ruby-lsp" },
           init_options = {
             linters = { "rubocop", "reek" },
           },

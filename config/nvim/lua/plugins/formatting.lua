@@ -28,8 +28,14 @@ return {
         timeout_ms = 1000,
       },
       formatters = {
+        prettier = {
+          command = vim.fn.getcwd() .. "/app/javascript/node_modules/.bin/prettier",
+        },
+        ruby_lsp = {
+          "~/.rbenv/shims/ruby-lsp",
+        },
         rubocop = {
-          command = "bundle exec rubocop",
+          command = "~/.rbenv/shims/rubocop",
           args = {
             "-a",
             "-f",

@@ -6,20 +6,16 @@ return {
 
     lint.linters_by_ft = {
       ruby = { "rubocop" },
-      javascript = { "eslint_d" },
-      typescript = { "eslint_d" },
-      javascriptreact = { "eslint_d" },
-      typescriptreact = { "eslint_d" },
+      javascript = { "eslint" },
+      typescript = { "eslint" },
+      javascriptreact = { "eslint" },
+      typescriptreact = { "eslint" },
       python = { "pylint" },
     }
 
-    local eslint_d = require("lint.linters.eslint_d")
-    eslint_d.args = vim.tbl_extend("force", {
-      "--config",
-      function()
-        return vim.fn.getcwd() .. "/app/javascript.eslint.js"
-      end,
-    }, eslint_d.args)
+    local eslint = require("lint.linters.eslint")
+    eslint.cmd = vim.fn.getcwd() .. "/app/javascript/node_modules/.bin/eslint"
+    eslint.cwd = vim.fn.getcwd() .. "/app/javascript"
 
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
