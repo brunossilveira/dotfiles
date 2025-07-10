@@ -168,6 +168,9 @@ fi
 source $HOME/.alias
 compdef g=git
 
+# Override oh-my-zsh bundler plugin's rubocop alias to prefer project binstubs
+unalias rubocop 2>/dev/null || true
+
 # Env variables
 source $HOME/.env
 

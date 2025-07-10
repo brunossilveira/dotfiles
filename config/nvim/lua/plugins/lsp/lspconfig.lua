@@ -5,13 +5,11 @@ return {
     "hrsh7th/cmp-nvim-lsp",
     { "antosha417/nvim-lsp-file-operations", config = true },
     { "folke/neodev.nvim", opts = {} },
+    "williamboman/mason.nvim",
   },
   config = function()
     -- import lspconfig plugin
     local lspconfig = require("lspconfig")
-
-    -- import mason_lspconfig plugin
-    local mason_lspconfig = require("mason-lspconfig")
 
     -- import cmp-nvim-lsp plugin
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
@@ -78,63 +76,61 @@ return {
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
     end
 
-    mason_lspconfig.setup_handlers({
-      -- default handler for installed servers
-      function(server_name)
-        lspconfig[server_name].setup({
-          capabilities = capabilities,
-        })
-      end,
-      ["rubocop"] = function()
-        lspconfig["rubocop"].setup({
-          capabilities = capabilities,
-          cmd = { "bundle", "exec", "rubocop", "--lsp", "--force-exclusion" },
-          filetypes = { "ruby" },
-          root_dir = lspconfig.util.root_pattern("Gemfile", ".git"),
-          init_options = { lint = { rubocop = { enabled = false } } },
-        })
-      end,
-      ["ruby_lsp"] = function()
-        lspconfig["ruby_lsp"].setup({
-          cmd = { "bundle", "exec", "ruby-lsp" },
-          init_options = {
-            linters = { "rubocop", "reek" },
+    -- Setup LSP servers manually
+    lspconfig.ruby_lsp.setup({
+      capabilities = capabilities,
+      cmd = { "bundle", "exec", "ruby-lsp" },
+      init_options = {
+        linters = { "rubocop", "reek" },
+      },
+    })
+
+    lspconfig.lua_ls.setup({
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          diagnostics = {
+            globals = { "vim" },
           },
-        })
-      end,
-      ["eslint"] = function()
-        lspconfig["eslint"].setup({
-          capabilities = capabilities,
-          filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-          settings = {
-            -- helps eslint find the eslintrc when it's placed in a subfolder instead of the cwd root
-            workingDirectories = { mode = "auto" },
+          completion = {
+            callSnippet = "Replace",
           },
-        })
-      end,
-      ["lua_ls"] = function()
-        -- configure lua server (with special settings)
-        lspconfig["lua_ls"].setup({
-          capabilities = capabilities,
-          settings = {
-            Lua = {
-              -- make the language server recognize "vim" global
-              diagnostics = {
-                globals = { "vim" },
-              },
-              completion = {
-                callSnippet = "Replace",
-              },
-            },
-          },
-        })
-      end,
-      ["tflint"] = function()
-        lspconfig["tflint"].setup({
-          cmd = { "terraform-ls", "serve" },
-          filetypes = { "terraform", "terraform-vars" },
-        })
-      end,
+        },
+      },
+    })
+
+    lspconfig.html.setup({
+      capabilities = capabilities,
+    })
+
+    lspconfig.cssls.setup({
+      capabilities = capabilities,
+    })
+
+    lspconfig.tailwindcss.setup({
+      capabilities = capabilities,
+    })
+
+    lspconfig.pyright.setup({
+      capabilities = capabilities,
+    })
+
+    lspconfig.terraformls.setup({
+      capabilities = capabilities,
+      cmd = { "terraform-ls", "serve" },
+      filetypes = { "terraform", "terraform-vars" },
+    })
+
+    lspconfig.marksman.setup({
+      capabilities = capabilities,
+    })
+
+    lspconfig.eslint.setup({
+      capabilities = capabilities,
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+      settings = {
+        workingDirectories = { mode = "auto" },
+      },
     })
   end,
 }
