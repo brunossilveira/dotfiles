@@ -1,0 +1,51 @@
+[user]
+  name = Bruno Silveira
+  email = djbrunosilveira@gmail.com
+
+[core]
+  editor = nvim
+  whitespace = trailing-space,cr-at-eol
+  excludesfile = ~/.gitignore
+  autocrlf = false
+
+[merge]
+  ff = only
+
+[diff]
+  mnemonicprefix = true
+  compactionHeuristic = true
+
+[alias]
+  # Essential aliases for occasional CLI use
+  st = status --short --branch
+  cm = commit -av
+  unstage = reset HEAD
+  pf = push --force-with-lease
+
+[push]
+  default = current
+
+[status]
+  showUntrackedFiles = all
+
+[rerere]
+  enabled = 1
+
+[credential]
+  helper = osxkeychain
+
+[commit]
+  verbose = true
+
+[fetch]
+  prune = true
+
+[gh]
+  autoUpdate = never
+
+[color]
+  ui = auto
+
+[rebase]
+  autosquash = true
+  autostash = true
