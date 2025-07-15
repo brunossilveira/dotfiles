@@ -1,4 +1,0 @@
-#!/bin/sh
-
-echo ">>> Running rcup..."
-rcup -v | grep -v identical
