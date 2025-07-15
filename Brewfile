@@ -29,9 +29,6 @@ brew 'git', args: ['--without-completions']
 # Fuzzy finder
 brew 'fzf'
 
-# thoughtbot stuff like rcm
-tap 'thoughtbot/formulae'
-brew 'rcm'
 
 # Fast, hip replacement for grep
 brew 'ripgrep'
