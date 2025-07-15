@@ -23,8 +23,8 @@ brew 'neovim'
 # Fast GitHub client, used in git-create-pull-request
 brew 'gh'
 
-# Don't install completions, in favor of using Zsh's (better) git completions
-brew 'git', args: ['--without-completions']
+# Git version control
+brew 'git'
 
 # Fuzzy finder
 brew 'fzf'
