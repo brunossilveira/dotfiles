@@ -77,8 +77,10 @@ info "Installing wd..."
 curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh
 
 info "Running all setup scripts..."
-for setup in tag-*/setup; do
-  dir=$(basename "$(dirname "$setup")")
-  info "Running setup for ${dir#tag-}..."
-  . "$setup"
+for install_script in ruby/install.sh software/install.sh system/install.sh; do
+  if [ -f "$install_script" ]; then
+    dir=$(basename "$(dirname "$install_script")")
+    info "Running setup for ${dir}..."
+    . "$install_script"
+  fi
 done

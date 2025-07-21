@@ -29,7 +29,6 @@ brew 'git'
 # Fuzzy finder
 brew 'fzf'
 
-
 # Fast, hip replacement for grep
 brew 'ripgrep'
 
@@ -49,3 +48,4 @@ brew 'rbenv'
 brew 'diff-so-fancy'
 brew 'the_silver_searcher'
 brew 'redis'
+brew 'mise'
