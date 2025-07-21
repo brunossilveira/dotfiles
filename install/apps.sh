@@ -60,6 +60,17 @@ installApp() {
 #    Install selected apps    #
 ###############################
 
+# App list:
+# Bartender
+# Iterm
+# Chrome
+# Dash
+# Spotify
+# Hazel
+# Focus
+# Magnet
+# F.lux
+
 installApp "dmg" "Chrome" "Google Chrome.app" "https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg" "" "" ""
 installApp "dmg" "OmniFocus" "OmniFocus.app" "http://www.omnigroup.com/download/latest/omnifocus" "" "" ""
 installApp "zip" "Dash" "Dash.app" "http://london.kapeli.com/Dash.zip" "" "" ""

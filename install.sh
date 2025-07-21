@@ -93,11 +93,3 @@ if is_osx; then
   done
 fi
 
-info "Running all setup scripts..."
-for install_script in ruby/install.sh software/install.sh; do
-  if [ -f "$install_script" ]; then
-    dir=$(basename "$(dirname "$install_script")")
-    info "Running setup for ${dir}..."
-    . "$install_script"
-  fi
-done
