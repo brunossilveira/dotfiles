@@ -76,8 +76,25 @@ fi
 info "Installing wd..."
 curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh
 
+info "Running install scripts..."
+for install_script in install/*.sh; do
+  if [ -f "$install_script" ]; then
+    info "Running $(basename "$install_script")..."
+    . "$install_script"
+  fi
+done
+
+if is_osx; then
+  for install_script in install/macos/*.sh; do
+    if [ -f "$install_script" ]; then
+      info "Running macOS $(basename "$install_script")..."
+      . "$install_script"
+    fi
+  done
+fi
+
 info "Running all setup scripts..."
-for install_script in ruby/install.sh software/install.sh system/install.sh; do
+for install_script in ruby/install.sh software/install.sh; do
   if [ -f "$install_script" ]; then
     dir=$(basename "$(dirname "$install_script")")
     info "Running setup for ${dir}..."
