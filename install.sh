@@ -31,12 +31,9 @@ if is_osx; then
   fi
 
   info "Installing Homebrew packages..."
-  brew tap homebrew/bundle
-  for brewfile in Brewfile Brewfile.casks */Brewfile; do
-    quietly_brew_bundle "$brewfile"
-  done
-
-  pip3 install neovim
+  if [ -f "Brewfile" ]; then
+    quietly_brew_bundle "Brewfile"
+  fi
 
   info "Checking for command-line tools..."
   if ! command -v xcodebuild > /dev/null; then
@@ -182,14 +179,9 @@ if [ ! -d ~/.zsh-plugins/zsh-syntax-highlighting ]; then
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh-plugins/zsh-syntax-highlighting
 fi
 
-info "Installing tmux pugin manager..."
-if [ ! -d ~/.tmux/plugins/tmp ]; then
+info "Installing tmux plugin manager..."
+if [ ! -d ~/.tmux/plugins/tpm ]; then
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-fi
-
-info "Installing powerline..."
-if [ ! -d /usr/local/bin/powerline ]; then
-  pip3 install powerline-status
 fi
 
 info "Installing oh my zsh..."
