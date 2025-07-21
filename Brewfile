@@ -1,45 +1,89 @@
 # vim: syntax=ruby filetype=ruby
 
+###############################
+# Homebrew Taps
+###############################
+
 # Lets us do `brew services restart postgres`, etc
 tap 'homebrew/services'
 
-# Unused
+# Unused code detection
 tap 'joshuaclayton/formulae'
 
-# Code Climate
+# Code Climate CLI tools
 tap 'codeclimate/formulae'
 
+# AeroSpace tiling window manager
+tap 'nikitabobko/tap'
+
+###############################
+# System Utilities
+###############################
+
+# GNU core utilities (better versions of system tools)
 brew 'coreutils'
 
 # Use version 3.4+ for colorful diffs with --color
 brew 'diffutils'
 
-# so :Rtags works
-brew 'universal-ctags'
+# Interactive process viewer (better than top)
+brew 'htop'
 
-# My favorite editor
-brew 'neovim'
+# Terminal multiplexer for managing multiple terminal sessions
+brew 'tmux'
 
-# Fast GitHub client, used in git-create-pull-request
-brew 'gh'
+###############################
+# Development Tools
+###############################
 
-# Git version control
+# Version control system
 brew 'git'
 
-# Fuzzy finder
+# Fast GitHub CLI client, used in git-create-pull-request
+brew 'gh'
+
+# My favorite text editor
+brew 'neovim'
+
+# Code indexing tool - so :Rtags works in vim
+brew 'universal-ctags'
+
+# Runtime version manager (replaces rbenv, nvm, etc.)
+brew 'mise'
+
+###############################
+# Search & Text Processing
+###############################
+
+# Command-line fuzzy finder
 brew 'fzf'
 
-# Fast, hip replacement for grep
+# Fast, modern replacement for grep
 brew 'ripgrep'
 
-# https://tldr.sh/
-# Man pages, but with practical examples.
+# Another grep alternative
+brew 'ack'
+
+# Yet another grep alternative (ag)
+brew 'the_silver_searcher'
+
+# Find unused code in your projects
+brew 'unused'
+
+###############################
+# Documentation & Utilities
+###############################
+
+# Simplified and community-driven man pages
+# https://tldr.sh/ - Man pages, but with practical examples
 brew 'tldr'
 
-brew 'htop'
-brew 'tmux'
-brew 'ack'
-brew 'unused'
+# GitHub-flavored Markdown renderer for local files
 brew 'grip'
-brew 'the_silver_searcher'
-brew 'mise'
+
+###############################
+# GUI Applications (Casks)
+###############################
+
+# Tiling window manager for macOS
+cask 'aerospace'
