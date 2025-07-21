@@ -78,6 +78,7 @@ DOTFILES_TO_LINK=(
 # Directories to link recursively
 DIRECTORIES_TO_LINK=(
     "config/nvim"
+    "config/alacritty"
 )
 
 get_target_path() {
