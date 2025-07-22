@@ -56,21 +56,6 @@ installApp() {
     rm -rf "$2.tar.bz2" && rm -rf "$3"; fi
 }
 
-###############################
-#    Install selected apps    #
-###############################
-
-# App list:
-# Bartender
-# Iterm
-# Chrome
-# Dash
-# Spotify
-# Hazel
-# Focus
-# Magnet
-# F.lux
-
 installApp "dmg" "Chrome" "Google Chrome.app" "https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg" "" "" ""
 installApp "dmg" "Slack" "Slack.app" "https://slack.com/ssb/download-osx" "" "" ""
 
