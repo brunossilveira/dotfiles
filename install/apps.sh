@@ -56,31 +56,7 @@ installApp() {
     rm -rf "$2.tar.bz2" && rm -rf "$3"; fi
 }
 
-###############################
-#    Install selected apps    #
-###############################
-
-# App list:
-# Bartender
-# Iterm
-# Chrome
-# Dash
-# Spotify
-# Hazel
-# Focus
-# Magnet
-# F.lux
-
 installApp "dmg" "Chrome" "Google Chrome.app" "https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg" "" "" ""
-installApp "dmg" "OmniFocus" "OmniFocus.app" "http://www.omnigroup.com/download/latest/omnifocus" "" "" ""
-installApp "zip" "Dash" "Dash.app" "http://london.kapeli.com/Dash.zip" "" "" ""
-installApp "zip" "iTerm2" "iTerm.app" "https://iterm2.com/downloads/stable/latest" "" "" ""
-installApp "zip" "Flux" "Flux.app" "https://justgetflux.com/mac/Flux.zip" "" "" "build"
-installApp "zip" "Bartender" "Bartender 3.app" "https://www.macbartender.com/Demo/Bartender%203.zip" "" "" ""
-installApp "dmg" "Spotify" "Spotify.app" "http://download.spotify.com/Spotify.dmg" "" "" ""
 installApp "dmg" "Slack" "Slack.app" "https://slack.com/ssb/download-osx" "" "" ""
-installApp "dmg" "WhatsApp" "WhatsApp.app" "https://web.whatsapp.com/desktop/mac/files/WhatsApp.dmg" "" "" ""
-installApp "dmg" "Hazel" "Install Hazel.app" "https://www.noodlesoft.com/Products/Hazel/download" "" "" ""
-installApp "zip" "Focus" "Focus.app" "https://heyfocus.com/uploads/Focus-1.9.9.zip" "" "" ""
 
 rm -rf ~/macapps

@@ -42,7 +42,7 @@ brew 'git'
 # Fast GitHub CLI client, used in git-create-pull-request
 brew 'gh'
 
-# My favorite text editor
+# My favorite text editor with Python support
 brew 'neovim'
 
 # Code indexing tool - so :Rtags works in vim
@@ -87,3 +87,4 @@ brew 'grip'
 
 # Tiling window manager for macOS
 cask 'aerospace'
+
