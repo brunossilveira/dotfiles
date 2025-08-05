@@ -3,20 +3,15 @@ TERM = "xterm-256color"
 
 [keyboard]
 bindings = [
-    { key = "F11", action = "ToggleFullscreen" }
+  { key = "F12", action = "ToggleFullscreen" },
+  { key = "T", mods = "Command", action = "CreateNewTab" },
 ]
-
-# ────────────────────────────────────────────────────────────
-# Matte Black Theme for Alacritty
-# By tahayvr
-# https://github.com/tahayvr
-# ────────────────────────────────────────────────────────────
 
 [window]
 # window padding {px}
-padding.x = 12
-padding.y = 12
-decorations = "None"
+padding.x = 14
+padding.y = 14
+decorations = "Full"
 opacity = 0.98
 
 [font]
@@ -27,38 +22,31 @@ size = 12
 
 [colors]
 [colors.primary]
-background = "#121212"
-foreground = "#bebebe"
-dim_foreground = "#8a8a8d"
+background = '#1a1b26'
+foreground = '#a9b1d6'
 
-[colors.cursor]
-text = "#121212"
-cursor = "#eaeaea"
+# Normal colors
+[colors.normal]
+black = '#32344a'
+red = '#f7768e'
+green = '#9ece6a'
+yellow = '#e0af68'
+blue = '#7aa2f7'
+magenta = '#ad8ee6'
+cyan = '#449dab'
+white = '#787c99'
 
-[colors.vi_mode_cursor]
-text = "#121212"
-cursor = "#eaeaea"
+# Bright colors
+[colors.bright]
+black = '#444b6a'
+red = '#ff7a93'
+green = '#b9f27c'
+yellow = '#ff9e64'
+blue = '#7da6ff'
+magenta = '#bb9af7'
+cyan = '#0db9d7'
+white = '#acb0d0'
 
 [colors.selection]
-text = "CellForeground"
-background = "#333333"
+background = '#7aa2f7'
 
-[colors.normal]
-black = "#333333"
-red = "#D35F5F"
-green = "#FFC107"
-yellow = "#b91c1c"
-blue = "#e68e0d"
-magenta = "#D35F5F"
-cyan = "#bebebe"
-white = "#bebebe"
-
-[colors.bright]
-black = "#8a8a8d"
-red = "#B91C1C"
-green = "#FFC107"
-yellow = "#b90a0a"
-blue = "#f59e0b"
-magenta = "#B91C1C"
-cyan = "#eaeaea"
-white = "#ffffff"
