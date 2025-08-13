@@ -17,7 +17,7 @@ return {
     local eslint = require("lint.linters.eslint")
     eslint.cmd = vim.fn.getcwd() .. "/app/javascript/node_modules/.bin/eslint"
     eslint.cwd = vim.fn.getcwd() .. "/app/javascript"
-    
+
     -- Configure rubocop to prefer project version and disable server mode
     local rubocop = require("lint.linters.rubocop")
     rubocop.cmd = function()
@@ -28,8 +28,18 @@ return {
         return "rubocop"
       end
     end
-    rubocop.args = vim.list_extend({ "--no-server" }, rubocop.args or {})
 
+    args = {
+      "--no-server", -- Disable server mode to avoid mason conflicts
+      "-a",
+      "-f",
+      "quiet",
+      "--stderr",
+      "--stdin",
+      "$FILENAME",
+    }
+
+    rubocop.args = vim.list_extend(args, rubocop.args or {})
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
     vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
