@@ -70,6 +70,7 @@ DOTFILES_TO_LINK=(
     "config/curlrc"
     "config/tmux.conf"
     "config/railsrc"
+    "config/aerospace.toml"
 )
 
 # Directories to link recursively
