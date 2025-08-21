@@ -2,6 +2,17 @@
 
 set -e
 
+yellow() {
+  tput setaf 3
+  echo "$*"
+  tput sgr0
+}
+
+info(){
+  echo
+  yellow "$@"
+}
+
 # Repository configuration
 DOTFILES_REPO="${DOTFILES_REPO:-brunossilveira/dotfiles}"
 DOTFILES_REF="${DOTFILES_REF:-master}"
@@ -22,17 +33,6 @@ if [ ! -f "$(pwd)/install.sh" ] || [ "$(pwd)" != "$DOTFILES_DIR" ]; then
   cd "$DOTFILES_DIR"
   exec ./install.sh "$@"
 fi
-
-yellow() {
-  tput setaf 3
-  echo "$*"
-  tput sgr0
-}
-
-info(){
-  echo
-  yellow "$@"
-}
 
 quietly_brew_bundle(){
   brew bundle --file="$1" | \
