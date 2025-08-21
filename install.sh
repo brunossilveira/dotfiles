@@ -20,7 +20,7 @@ DOTFILES_DIR="$HOME/.dotfiles"
 
 # Clone repository if we're not already in it
 if [ ! -f "$(pwd)/install.sh" ] || [ "$(pwd)" != "$DOTFILES_DIR" ]; then
-  info "Cloning dotfiles repository..."
+  echo "Cloning dotfiles repository..."
   rm -rf "$DOTFILES_DIR"
   git clone "https://github.com/${DOTFILES_REPO}.git" "$DOTFILES_DIR" >/dev/null
   
