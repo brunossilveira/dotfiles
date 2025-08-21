@@ -13,6 +13,8 @@ info(){
   yellow "$@"
 }
 
+main() {
+
 # Repository configuration
 DOTFILES_REPO="${DOTFILES_REPO:-brunossilveira/dotfiles}"
 DOTFILES_REF="${DOTFILES_REF:-master}"
@@ -230,4 +232,9 @@ if is_osx; then
     fi
   done
 fi
+
+}
+
+# Call main function
+main "$@"
 
