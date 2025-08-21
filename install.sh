@@ -2,6 +2,27 @@
 
 set -e
 
+# Repository configuration
+DOTFILES_REPO="${DOTFILES_REPO:-brunossilveira/dotfiles}"
+DOTFILES_REF="${DOTFILES_REF:-master}"
+DOTFILES_DIR="$HOME/.dotfiles"
+
+# Clone repository if we're not already in it
+if [ ! -f "$(pwd)/install.sh" ] || [ "$(pwd)" != "$DOTFILES_DIR" ]; then
+  info "Cloning dotfiles repository..."
+  rm -rf "$DOTFILES_DIR"
+  git clone "https://github.com/${DOTFILES_REPO}.git" "$DOTFILES_DIR" >/dev/null
+  
+  if [ -n "$DOTFILES_REF" ] && [ "$DOTFILES_REF" != "master" ]; then
+    cd "$DOTFILES_DIR"
+    git fetch origin "$DOTFILES_REF" >/dev/null 2>&1
+    git checkout "$DOTFILES_REF" >/dev/null
+  fi
+  
+  cd "$DOTFILES_DIR"
+  exec ./install.sh "$@"
+fi
+
 yellow() {
   tput setaf 3
   echo "$*"
@@ -49,7 +70,7 @@ fi
 
 info "Linking dotfiles into ~..."
 
-# Dotfile linking configuration
+# Dotfile linking configuration (use current directory since we've already cloned)
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="$HOME"
 
