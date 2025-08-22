@@ -210,11 +210,15 @@ fi
 
 info "Installing oh my zsh..."
 if [ ! -d ~/.oh_my_zsh ]; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  if ! sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; then
+    echo "Warning: oh-my-zsh installation failed, continuing..."
+  fi
 fi
 
 info "Installing wd..."
-curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh
+if ! curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh; then
+  echo "Warning: wd installation failed, continuing..."
+fi
 
 info "Running install scripts..."
 for install_script in install/*.sh; do
