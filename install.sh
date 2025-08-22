@@ -220,7 +220,9 @@ info "Running install scripts..."
 for install_script in install/*.sh; do
   if [ -f "$install_script" ]; then
     info "Running $(basename "$install_script")..."
-    . "$install_script"
+    if ! . "$install_script"; then
+      echo "Warning: $(basename "$install_script") failed, continuing..."
+    fi
   fi
 done
 
@@ -228,7 +230,9 @@ if is_osx; then
   for install_script in install/macos/*.sh; do
     if [ -f "$install_script" ]; then
       info "Running macOS $(basename "$install_script")..."
-      . "$install_script"
+      if ! . "$install_script"; then
+        echo "Warning: $(basename "$install_script") failed, continuing..."
+      fi
     fi
   done
 fi
