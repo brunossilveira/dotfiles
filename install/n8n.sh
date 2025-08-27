@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
+. "$(cd "$(dirname "$0")" && pwd)/preflight/lib.sh"
 
 info "Setting up n8n..."
 
@@ -6,11 +8,11 @@ info "Setting up n8n..."
 docker pull n8nio/n8n
 
 # Create data directory for persistence
-mkdir -p ~/.n8n
+mkdir -p "$HOME/.n8n"
 
 # Initialize and start the container
 info "Starting n8n container..."
-docker run -d --name n8n -p 5678:5678 -v ~/.n8n:/home/node/.n8n n8nio/n8n
+docker run -d --name n8n -p 5678:5678 -v "$HOME/.n8n":/home/node/.n8n n8nio/n8n
 
 info "n8n setup complete!"
 info "Access n8n at: http://localhost:5678"

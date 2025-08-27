@@ -1,17 +1,6 @@
-#!/bin/bash
-
-set -e
-
-yellow() {
-  tput setaf 3
-  echo "$*"
-  tput sgr0
-}
-
-info(){
-  echo
-  yellow "$@"
-}
+#!/usr/bin/env bash
+set -Eeuo pipefail
+. "$(dirname "$0")/install/preflight/lib.sh"
 
 main() {
 
@@ -41,11 +30,6 @@ quietly_brew_bundle(){
     grep -vE '^(Using |Homebrew Bundle complete)' || \
     true
 }
-
-is_osx(){
-  [ "$(uname -s)" = Darwin ]
-}
-
 
 if is_osx; then
   info "Installing Homebrew if not already installed..."
@@ -209,10 +193,12 @@ if [ ! -d ~/.tmux/plugins/tpm ]; then
 fi
 
 info "Installing oh my zsh..."
-if [ ! -d ~/.oh_my_zsh ]; then
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
   if ! sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; then
     echo "Warning: oh-my-zsh installation failed, continuing..."
   fi
+else
+  info "Oh My Zsh already installed, skipping..."
 fi
 
 info "Installing wd..."
@@ -221,23 +207,16 @@ if ! curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh; then
 fi
 
 info "Running install scripts..."
-for install_script in install/*.sh; do
-  if [ -f "$install_script" ]; then
-    info "Running $(basename "$install_script")..."
-    if ! . "$install_script"; then
-      echo "Warning: $(basename "$install_script") failed, continuing..."
-    fi
-  fi
+
+for s in "$DOTFILES_DIR/install/"*.sh; do
+  [[ -f "$s" ]] || continue
+  bash "$s" || echo "Warning: $(basename "$s") failed"
 done
 
 if is_osx; then
-  for install_script in install/macos/*.sh; do
-    if [ -f "$install_script" ]; then
-      info "Running macOS $(basename "$install_script")..."
-      if ! . "$install_script"; then
-        echo "Warning: $(basename "$install_script") failed, continuing..."
-      fi
-    fi
+  for s in "$DOTFILES_DIR/install/macos/"*.sh; do
+    [[ -f "$s" ]] || continue
+    bash "$s" || echo "Warning: $(basename "$s") failed"
   done
 fi
 

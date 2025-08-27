@@ -4,9 +4,6 @@
 # Homebrew Taps
 ###############################
 
-# Lets us do `brew services restart postgres`, etc
-tap 'homebrew/services'
-
 # Unused code detection
 tap 'joshuaclayton/formulae'
 
@@ -38,6 +35,7 @@ brew 'tmux'
 
 # Version control system
 brew 'git'
+brew 'lazygit'
 
 # Fast GitHub CLI client, used in git-create-pull-request
 brew 'gh'

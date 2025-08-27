@@ -45,7 +45,7 @@ DISABLE_AUTO_TITLE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby postgres rails rake rake-fast rbenv tmux tmuxinator bundler bgnotify macos wd fzf zsh-autosuggestions)
+plugins=(git ruby postgres rails rake rake-fast tmux tmuxinator bundler bgnotify macos wd fzf)
 
 # User configuration
 
@@ -117,7 +117,7 @@ PATH=$HOME/.bin:$PATH
 # * I don't know why it has to be in this order but putting shims before stubs
 #   breaks stubs ("You have activated the wrong version of rake" error)
 
-eval "$(rbenv init - zsh)"
+# Ruby version management is handled by mise
 PATH=./bin/stubs:$PATH
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
@@ -203,3 +203,4 @@ complete -o nospace -C /usr/local/bin/terraform terraform
 # qlty
 export QLTY_INSTALL="$HOME/.qlty"
 export PATH="$QLTY_INSTALL/bin:$PATH"
+eval "$(mise activate zsh)"

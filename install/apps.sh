@@ -1,7 +1,10 @@
-#!/bin/sh
-rm -rf ~/macapps && mkdir ~/macapps > /dev/null && cd ~/macapps
+#!/usr/bin/env bash
+set -Eeuo pipefail
+. "$(cd "$(dirname "$0")" && pwd)/preflight/lib.sh"
 
-echo 'Installing apps...'
+info "Installing apps..."
+
+( tmp="$HOME/macapps"; rm -rf "$tmp"; mkdir -p "$tmp"; cd "$tmp"
 
 ###############################
 #    Define worker functions  #
@@ -26,12 +29,12 @@ checkVersion() {
 
 appStatus() {
   if [ ! -d "/Applications/$1" ]; then echo "uninstalled"; else
-    if [[ $5 == "build" ]]; then BUNDLE="CFBundleVersion"; else BUNDLE="CFBundleShortVersionString"; fi
-    INSTALLED=`/usr/libexec/plistbuddy -c Print:$BUNDLE: "/Applications/$1/Contents/Info.plist"`
-      if [ $4 == "dmg" ]; then COMPARETO=`/usr/libexec/plistbuddy -c Print:$BUNDLE: "/Volumes/$2/$1/Contents/Info.plist"`;
-      elif [[ $4 == "zip" || $4 == "tar" ]]; then COMPARETO=`/usr/libexec/plistbuddy -c Print:$BUNDLE: "$3$1/Contents/Info.plist"`; fi
+    if [[ "$5" == "build" ]]; then BUNDLE="CFBundleVersion"; else BUNDLE="CFBundleShortVersionString"; fi
+    INSTALLED=$(/usr/libexec/plistbuddy -c "Print:$BUNDLE:" "/Applications/$1/Contents/Info.plist")
+      if [ "$4" == "dmg" ]; then COMPARETO=$(/usr/libexec/plistbuddy -c "Print:$BUNDLE:" "/Volumes/$2/$1/Contents/Info.plist");
+      elif [[ "$4" == "zip" || "$4" == "tar" ]]; then COMPARETO=$(/usr/libexec/plistbuddy -c "Print:$BUNDLE:" "$3$1/Contents/Info.plist"); fi
     checkVersion "$INSTALLED" "$COMPARETO"; UPDATED=$?;
-    if [[ $UPDATED == 1 ]]; then echo "updated"; else echo "outdated"; fi; fi
+    if [[ "$UPDATED" == "1" ]]; then echo "updated"; else echo "outdated"; fi; fi
 }
 
 installApp() {
@@ -59,4 +62,4 @@ installApp() {
 installApp "dmg" "Chrome" "Google Chrome.app" "https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg" "" "" ""
 installApp "dmg" "Slack" "Slack.app" "https://slack.com/ssb/download-osx" "" "" ""
 
-rm -rf ~/macapps
+)

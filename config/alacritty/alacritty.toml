@@ -15,9 +15,9 @@ decorations = "Full"
 opacity = 0.98
 
 [font]
-normal = { family = "CaskaydiaMono Nerd Font Mono", style = "Regular" }
-bold = { family = "CaskaydiaMono Nerd Font Mono", style = "Bold" }
-italic = { family = "CaskaydiaMono Nerd Font Mono", style = "Italic" }
+normal = { family = "CaskaydiaMono NF", style = "Regular" }
+bold = { family = "CaskaydiaMono NF", style = "Bold" }
+italic = { family = "CaskaydiaMono NF", style = "Italic" }
 size = 12
 
 [colors]
