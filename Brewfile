@@ -65,9 +65,6 @@ brew 'ack'
 # Yet another grep alternative (ag)
 brew 'the_silver_searcher'
 
-# Find unused code in your projects
-brew 'unused'
-
 ###############################
 # Documentation & Utilities
 ###############################
@@ -85,4 +82,10 @@ brew 'grip'
 
 # Tiling window manager for macOS
 cask 'aerospace'
+
+# Productivity and launcher app
+cask 'raycast'
+
+# Fast, lightweight Docker alternative
+cask 'orbstack'
 
