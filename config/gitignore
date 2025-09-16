@@ -70,3 +70,5 @@ tags
 # From the Haskell Stack tool
 .stack-work
 
+# Claude local configs
+.claude/settings.local.json
