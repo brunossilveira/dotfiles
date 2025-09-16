@@ -5,6 +5,7 @@ TERM = "xterm-256color"
 bindings = [
   { key = "F12", action = "ToggleFullscreen" },
   { key = "T", mods = "Command", action = "CreateNewTab" },
+  { key = "Q", mods = "Command|Shift", action = "Quit" },
 ]
 
 [window]
