@@ -1,0 +1,167 @@
+{
+  "name": "Dotfiles Backup Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "cd /Users/bruno/.dotfiles && git status --porcelain"
+      },
+      "id": "check-git-status",
+      "name": "Check Git Status",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.stdout }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "has-changes",
+      "name": "Has Changes?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "command": "cd /Users/bruno/.dotfiles && git status --porcelain"
+      },
+      "id": "get-changed-files",
+      "name": "Get Changed Files",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "command": "cd /Users/bruno/.dotfiles && git add -A"
+      },
+      "id": "stage-changes",
+      "name": "Stage All Changes",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "command": "cd /Users/bruno/.dotfiles && git commit -m \"Auto-backup: $(date '+%Y-%m-%d %H:%M')\n\nAutomatically committed by n8n workflow\""
+      },
+      "id": "commit-changes",
+      "name": "Commit Changes",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "command": "cd /Users/bruno/.dotfiles && git push origin master"
+      },
+      "id": "push-changes",
+      "name": "Push to Remote",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1450, 200]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Git Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Git Status": {
+      "main": [
+        [
+          {
+            "node": "Has Changes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Changes?": {
+      "main": [
+        [
+          {
+            "node": "Get Changed Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Changed Files": {
+      "main": [
+        [
+          {
+            "node": "Stage All Changes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage All Changes": {
+      "main": [
+        [
+          {
+            "node": "Commit Changes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Commit Changes": {
+      "main": [
+        [
+          {
+            "node": "Push to Remote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "id": "dotfiles-backup-monitor",
+  "meta": {
+    "instanceId": "local"
+  },
+  "tags": []
+}
