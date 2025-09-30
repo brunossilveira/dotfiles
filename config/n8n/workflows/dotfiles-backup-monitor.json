@@ -47,13 +47,49 @@
     },
     {
       "parameters": {
-        "command": "cd /Users/bruno/.dotfiles && git status --porcelain"
+        "command": "cd /Users/bruno/.dotfiles && git diff HEAD"
       },
-      "id": "get-changed-files",
-      "name": "Get Changed Files",
+      "id": "get-git-diff",
+      "name": "Get Git Diff",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "command": "cd /Users/bruno/.dotfiles && git status --short"
+      },
+      "id": "get-file-list",
+      "name": "Get File List",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a helpful assistant that writes clear, concise git commit messages following conventional commit format.\n\nBased on the following git diff and file changes, generate a commit message with:\n1. A short subject line (max 72 chars) that summarizes the changes\n2. A blank line\n3. A detailed body explaining what changed and why (if needed)\n\nFiles changed:\n{{ $('Get File List').item.json.stdout }}\n\nDiff:\n{{ $('Get Git Diff').item.json.stdout }}\n\nRespond with ONLY the commit message, no other text."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-commit-message",
+      "name": "Generate Commit Message",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [1250, 200],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-api",
+          "name": "OpenAI API"
+        }
+      }
     },
     {
       "parameters": {
@@ -63,17 +99,17 @@
       "name": "Stage All Changes",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
-      "position": [1050, 200]
+      "position": [1450, 200]
     },
     {
       "parameters": {
-        "command": "cd /Users/bruno/.dotfiles && git commit -m \"Auto-backup: $(date '+%Y-%m-%d %H:%M')\n\nAutomatically committed by n8n workflow\""
+        "command": "=cd /Users/bruno/.dotfiles && git commit -m \"{{ $('Generate Commit Message').item.json.message.content }}\""
       },
       "id": "commit-changes",
       "name": "Commit Changes",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
-      "position": [1250, 200]
+      "position": [1650, 200]
     },
     {
       "parameters": {
@@ -83,7 +119,7 @@
       "name": "Push to Remote",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
-      "position": [1450, 200]
+      "position": [1850, 200]
     }
   ],
   "connections": {
@@ -113,14 +149,36 @@
       "main": [
         [
           {
-            "node": "Get Changed Files",
+            "node": "Get Git Diff",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Changed Files": {
+    "Get Git Diff": {
+      "main": [
+        [
+          {
+            "node": "Get File List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File List": {
+      "main": [
+        [
+          {
+            "node": "Generate Commit Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Commit Message": {
       "main": [
         [
           {

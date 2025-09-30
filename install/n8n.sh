@@ -21,6 +21,9 @@ npm install -g n8n
 # Create data directory for persistence
 mkdir -p "$HOME/.n8n"
 
+# Load secrets to get API keys
+source "$HOME/.secrets/vars" 2>/dev/null || true
+
 # Create launchd plist for auto-start on macOS
 info "Setting up n8n as a system service..."
 PLIST_PATH="$HOME/Library/LaunchAgents/com.n8n.plist"
@@ -50,6 +53,8 @@ cat > "$PLIST_PATH" <<EOF
         <string>5678</string>
         <key>PATH</key>
         <string>$(mise where node)/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>OPENAI_API_KEY</key>
+        <string>${OPENAI_API_KEY}</string>
     </dict>
 </dict>
 </plist>
@@ -62,6 +67,23 @@ launchctl load "$PLIST_PATH"
 # Wait a moment for n8n to initialize
 info "Waiting for n8n to start..."
 sleep 5
+
+# Import credentials from the dotfiles config directory
+CREDENTIALS_DIR="$(cd "$(dirname "$0")/.." && pwd)/config/n8n/credentials"
+if [ -d "$CREDENTIALS_DIR" ] && [ "$(ls -A "$CREDENTIALS_DIR"/*.json 2>/dev/null)" ]; then
+  info "Importing credentials..."
+  # Create temp directory with credentials, substituting environment variables
+  TEMP_CREDS_DIR=$(mktemp -d)
+  for cred_file in "$CREDENTIALS_DIR"/*.json; do
+    filename=$(basename "$cred_file")
+    # Substitute placeholders with actual values from environment
+    sed "s/__OPENAI_API_KEY_PLACEHOLDER__/${OPENAI_API_KEY}/g" "$cred_file" > "$TEMP_CREDS_DIR/$filename"
+  done
+  n8n import:credentials --separate --input="$TEMP_CREDS_DIR"
+  rm -rf "$TEMP_CREDS_DIR"
+else
+  info "No credentials found to import in $CREDENTIALS_DIR"
+fi
 
 # Import workflows from the dotfiles config directory
 WORKFLOW_DIR="$(cd "$(dirname "$0")/.." && pwd)/config/n8n/workflows"
