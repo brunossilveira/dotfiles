@@ -19,7 +19,7 @@ opacity = 0.98
 normal = { family = "CaskaydiaMono NF", style = "Regular" }
 bold = { family = "CaskaydiaMono NF", style = "Bold" }
 italic = { family = "CaskaydiaMono NF", style = "Italic" }
-size = 12
+size = 18
 
 [colors]
 [colors.primary]
