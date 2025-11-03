@@ -2,7 +2,7 @@ return {
   "coder/claudecode.nvim",
   dependencies = { "folke/snacks.nvim" },
   opts = {
-    terminal_cmd = "~/.local/share/mise/installs/node/24.6.0/bin/claude",
+    terminal_cmd = "claude",
   },
   config = true,
   keys = {
