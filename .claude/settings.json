@@ -1,0 +1,22 @@
+{
+  "enabledPlugins": {
+    "gq-dev@gq-marketplace": true
+  },
+  "alwaysThinkingEnabled": false,
+  "instructions": "At the end of each session, provide a brief 2-3 sentence summary of what was accomplished. This summary will be captured by the session end hook for logging.",
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.config/scripts/claude-session-log.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "OBSIDIAN_VAULT_DIR": "/Volumes/NAS/bruno/vault"
+  }
+}

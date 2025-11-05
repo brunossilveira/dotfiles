@@ -19,19 +19,16 @@ return {
 
     mason_tool_installer.setup({
       ensure_installed = {
-        "erb-formatter",
-        "erb-lint", 
-        "rubocop",
+        -- Formatters (fallback when Docker not available)
         "prettier",
         "stylua",
         "isort",
         "black",
+        -- Linters (fallback when Docker not available)
         "pylint",
         "eslint_d",
         "tflint",
-        "marksman",
-        -- LSP servers
-        "ruby-lsp",
+        -- LSP servers (host-based, not project-specific)
         "html-lsp",
         "css-lsp",
         "tailwindcss-language-server",

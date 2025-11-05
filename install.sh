@@ -66,11 +66,11 @@ DOTFILES_TO_LINK=(
     "config/zshrc"
     "config/alias"
     "config/env"
-    
+
     # Git configuration
     "config/gitconfig"
     "config/gitignore"
-    
+
     # Development tools
     "config/ctags"
     "config/ackrc"
@@ -78,6 +78,9 @@ DOTFILES_TO_LINK=(
     "config/tmux.conf"
     "config/railsrc"
     "config/aerospace.toml"
+
+    # Claude Code configuration
+    ".claude/settings.json"
 )
 
 # Directories to link recursively
@@ -88,9 +91,13 @@ DIRECTORIES_TO_LINK=(
 
 get_target_path() {
     local relative_path="$1"
-    
+
     # Handle special cases
     case "$relative_path" in
+        .claude/*)
+            # Claude config goes to ~/.claude/
+            echo "$TARGET_DIR/${relative_path}"
+            ;;
         config/nvim/*)
             # Neovim config goes to ~/.config/nvim/
             echo "$TARGET_DIR/.${relative_path}"

@@ -69,7 +69,12 @@
       "parameters": {
         "resource": "text",
         "operation": "message",
-        "model": "gpt-4o-mini",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
         "messages": {
           "values": [
             {

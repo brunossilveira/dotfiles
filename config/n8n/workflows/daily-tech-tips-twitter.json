@@ -1,0 +1,128 @@
+{
+  "name": "Daily Tech Tips - Twitter",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily at 10 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "topic",
+              "value": "={{ ['lean_thinking', 'ruby'][Math.floor(Math.random() * 2)] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "random-topic",
+      "name": "Pick Random Topic",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert in {{ $json.topic === 'lean_thinking' ? 'Lean Thinking, Agile methodologies, and continuous improvement' : 'Ruby programming, Rails framework, and Ruby best practices' }}.\n\nCreate a single, engaging tweet (max 280 characters) that:\n- Shares ONE practical tip or insight\n- Is actionable and valuable\n- Uses a conversational tone\n- NO hashtags\n- NO emojis\n- Must be under 280 characters\n\nTopic: {{ $json.topic === 'lean_thinking' ? 'Lean Thinking' : 'Ruby Programming' }}\n\nRespond with ONLY the tweet text, nothing else."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-tip",
+      "name": "Generate Tip with AI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [650, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-api",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.message.content }}",
+        "additionalFields": {}
+      },
+      "id": "post-to-twitter",
+      "name": "Post to Twitter",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [850, 300],
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "twitter-api",
+          "name": "Twitter OAuth2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily at 10 AM": {
+      "main": [
+        [
+          {
+            "node": "Pick Random Topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick Random Topic": {
+      "main": [
+        [
+          {
+            "node": "Generate Tip with AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Tip with AI": {
+      "main": [
+        [
+          {
+            "node": "Post to Twitter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "id": "daily-tech-tips-twitter",
+  "meta": {
+    "instanceId": "local"
+  },
+  "tags": []
+}
