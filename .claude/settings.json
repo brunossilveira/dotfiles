@@ -1,22 +1,21 @@
 {
-  "enabledPlugins": {
-    "gq-dev@gq-marketplace": true
+  "env": {
+    "OBSIDIAN_VAULT_DIR": "/Volumes/NAS/bruno/vault"
   },
-  "alwaysThinkingEnabled": false,
-  "instructions": "At the end of each session, provide a brief 2-3 sentence summary of what was accomplished. This summary will be captured by the session end hook for logging.",
   "hooks": {
-    "SessionEnd": [
+    "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "~/.config/scripts/claude-session-log.sh"
+            "command": "echo '💡 Reminder: Use /log-session at the end of this session to save a summary to your work notes.'"
           }
         ]
       }
     ]
   },
-  "env": {
-    "OBSIDIAN_VAULT_DIR": "/Volumes/NAS/bruno/vault"
-  }
+  "enabledPlugins": {
+    "gq-dev@gq-marketplace": true
+  },
+  "alwaysThinkingEnabled": true
 }

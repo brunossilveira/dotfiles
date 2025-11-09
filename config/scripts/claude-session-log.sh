@@ -90,17 +90,29 @@ else
     echo "No transcript available in CLAUDE_TRANSCRIPT" >> "$DEBUG_LOG"
 fi
 
-# Prompt for a compressed summary
-echo ""
-echo "Session ending for project: $PROJECT_NAME"
-echo "Please provide a brief 1-2 sentence summary of what was accomplished:"
-read -r SESSION_SUMMARY
+# Get summary from stdin (provided by Claude Code hook) or use default
+echo "Reading summary from stdin..." >> "$DEBUG_LOG"
+# Read all available input from stdin (multi-line support)
+if [ -t 0 ]; then
+    # stdin is a terminal, no piped input
+    echo "No stdin available (terminal), checking CLAUDE_SUMMARY env var..." >> "$DEBUG_LOG"
+    SESSION_SUMMARY="${CLAUDE_SUMMARY:-Session completed for $PROJECT_NAME}"
+    echo "Using summary: $SESSION_SUMMARY" >> "$DEBUG_LOG"
+else
+    # stdin is piped, read all lines
+    echo "Reading from piped stdin..." >> "$DEBUG_LOG"
+    SESSION_SUMMARY=$(cat)
+    if [ -n "$SESSION_SUMMARY" ]; then
+        echo "Summary received from stdin (${#SESSION_SUMMARY} chars)" >> "$DEBUG_LOG"
+    else
+        echo "Empty stdin, using default" >> "$DEBUG_LOG"
+        SESSION_SUMMARY="Session completed for $PROJECT_NAME"
+    fi
+fi
 
-echo "Summary received: $SESSION_SUMMARY" >> "$DEBUG_LOG"
-
-# If no summary provided, use a default
+# If still empty, use a default
 if [ -z "$SESSION_SUMMARY" ]; then
-    SESSION_SUMMARY="Session completed without summary."
+    SESSION_SUMMARY="Session completed for $PROJECT_NAME"
     echo "No summary provided, using default" >> "$DEBUG_LOG"
 fi
 
@@ -123,10 +135,10 @@ else
     echo "ERROR: Failed to append to log file" >> "$DEBUG_LOG"
 fi
 
-echo ""
-echo "Session logged to $LOG_FILE"
+# Log completion silently to debug log only
+echo "Session logged to $LOG_FILE" >> "$DEBUG_LOG"
 if [ -f "$TRANSCRIPT_FILE" ]; then
-    echo "Full transcript saved to $TRANSCRIPT_FILE"
+    echo "Full transcript saved to $TRANSCRIPT_FILE" >> "$DEBUG_LOG"
 fi
 
 echo "=== Session Log Complete ===" >> "$DEBUG_LOG"
