@@ -87,6 +87,7 @@ DOTFILES_TO_LINK=(
 DIRECTORIES_TO_LINK=(
     "config/nvim"
     "config/alacritty"
+    ".claude/commands"
 )
 
 get_target_path() {
