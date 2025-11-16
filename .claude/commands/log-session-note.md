@@ -1,0 +1,1 @@
+/Users/bruno/.dotfiles/.claude/commands/log-session-note.md

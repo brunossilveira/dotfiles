@@ -13,6 +13,9 @@ tap 'codeclimate/formulae'
 # AeroSpace tiling window manager
 tap 'nikitabobko/tap'
 
+# Window borders
+tap 'FelixKratz/formulae'
+
 ###############################
 # System Utilities
 ###############################
@@ -75,6 +78,13 @@ brew 'tldr'
 
 # GitHub-flavored Markdown renderer for local files
 brew 'grip'
+
+###############################
+# Window Management
+###############################
+
+# Window borders for focus indication
+brew 'borders'
 
 ###############################
 # GUI Applications (Casks)
