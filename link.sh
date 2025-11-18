@@ -195,8 +195,19 @@ link_directory() {
 
     log_verbose "Linking directory: $relative_path"
 
-    # Find all files in the directory
+    # Find all files in the directory (excluding symlinks)
     while IFS= read -r -d '' file; do
+        # Skip if file is a symlink or doesn't exist
+        if [ -L "$file" ]; then
+            log_verbose "Skipping symlink: $file"
+            continue
+        fi
+
+        if [ ! -e "$file" ]; then
+            log_verbose "Skipping non-existent file: $file"
+            continue
+        fi
+
         local file_relative="${file#$DOTFILES_DIR/}"
         local target="$(get_target_path "$file_relative")"
         create_symlink "$file" "$target" "$file_relative"
