@@ -78,7 +78,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You are a helpful assistant that writes clear, concise git commit messages following conventional commit format.\n\nBased on the following git diff and file changes, generate a commit message with:\n1. A short subject line (max 72 chars) that summarizes the changes\n2. A blank line\n3. A detailed body explaining what changed and why (if needed)\n\nFiles changed:\n{{ $('Get File List').item.json.stdout }}\n\nDiff:\n{{ $('Get Git Diff').item.json.stdout }}\n\nRespond with ONLY the commit message, no other text."
+              "content": "=You are a helpful assistant that writes clear, concise git commit messages following conventional commit format.\n\nBased on the following git diff and file changes, generate a commit message with:\n1. A short subject line (max 72 chars) that summarizes the changes\n2. A blank line\n3. A detailed body explaining what changed and why (if needed)\n\nFiles changed:\n{{ $('Get File List').item.json.stdout }}\n\nDiff:\n{{ $('Get Git Diff').item.json.stdout }}\n\nRespond with ONLY the commit message as plain text. Do not wrap it in code blocks, backticks, or any markdown formatting."
             }
           ]
         },
