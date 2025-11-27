@@ -17,5 +17,5 @@
   "enabledPlugins": {
     "gq-dev@gq-marketplace": true
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": false
 }
