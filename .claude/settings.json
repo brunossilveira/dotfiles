@@ -16,6 +16,5 @@
   },
   "enabledPlugins": {
     "gq-dev@gq-marketplace": true
-  },
-  "alwaysThinkingEnabled": false
+  }
 }
