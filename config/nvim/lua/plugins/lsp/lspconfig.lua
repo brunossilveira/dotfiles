@@ -74,7 +74,7 @@ return {
     }
 
     vim.lsp.config.ruby_lsp = {
-      cmd = { "bundle", "exec", "ruby-lsp" },
+      cmd = { "ruby-lsp" },
       init_options = {
         linters = { "rubocop", "reek" },
       },

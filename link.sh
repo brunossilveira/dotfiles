@@ -57,6 +57,7 @@ DOTFILES_TO_LINK=(
     "config/tmux.conf"
     "config/railsrc"
     "config/aerospace.toml"
+    "config/default-gems"
 
     # Claude Code configuration
     ".claude/settings.json"
@@ -108,6 +109,9 @@ get_target_path() {
             ;;
         config/gitignore)
             echo "$TARGET_DIR/.gitignore"
+            ;;
+        config/default-gems)
+            echo "$TARGET_DIR/.default-gems"
             ;;
         config/*)
             # Other config files get dot prefix of just the filename
