@@ -63,11 +63,15 @@ DOTFILES_TO_LINK=(
     ".claude/settings.json"
 )
 
-# Directories to link recursively
+# Directories to link recursively (individual files get symlinked)
 DIRECTORIES_TO_LINK=(
     "config/nvim"
     "config/alacritty"
     "config/scripts"
+)
+
+# Directories to link as a single symlink (entire directory)
+DIRECTORY_SYMLINKS=(
     ".claude/commands"
 )
 
@@ -218,6 +222,59 @@ link_directory() {
     done < <(find "$source_dir" -type f -print0)
 }
 
+link_directory_as_symlink() {
+    local relative_path="$1"
+    local source="$DOTFILES_DIR/$relative_path"
+    local target="$(get_target_path "$relative_path")"
+
+    if [ ! -d "$source" ]; then
+        echo "Warning: Source directory does not exist: $source"
+        return 1
+    fi
+
+    # Create parent directory if needed
+    local target_parent="$(dirname "$target")"
+    if [ ! -d "$target_parent" ]; then
+        if [ "$DRY_RUN" = true ]; then
+            log_dry_run "Would create directory: $target_parent"
+        else
+            mkdir -p "$target_parent"
+            log_verbose "Created directory: $target_parent"
+        fi
+    fi
+
+    # Check if target already exists
+    if [ -L "$target" ]; then
+        local current_link="$(readlink "$target")"
+        if [ "$current_link" = "$source" ]; then
+            log_verbose "Already linked: $target -> $source"
+            return 0
+        else
+            if [ "$DRY_RUN" = true ]; then
+                log_dry_run "Would remove old symlink: $target -> $current_link"
+            else
+                rm "$target"
+                log_verbose "Removed old symlink: $target"
+            fi
+        fi
+    elif [ -d "$target" ]; then
+        if [ "$DRY_RUN" = true ]; then
+            log_dry_run "Would backup existing directory: $target -> $target.backup"
+        else
+            mv "$target" "$target.backup"
+            log_verbose "Backed up existing directory: $target -> $target.backup"
+        fi
+    fi
+
+    # Create the symlink
+    if [ "$DRY_RUN" = true ]; then
+        log_dry_run "Would create directory symlink: $target -> $source"
+    else
+        ln -s "$source" "$target"
+        log_info "Linked directory: $relative_path -> $target"
+    fi
+}
+
 # Main execution
 if [ "$DRY_RUN" = true ]; then
     echo "=== DRY RUN MODE - No changes will be made ==="
@@ -238,9 +295,14 @@ for file in "${DOTFILES_TO_LINK[@]}"; do
     link_file "$file"
 done
 
-# Link directories
+# Link directories (individual files)
 for dir in "${DIRECTORIES_TO_LINK[@]}"; do
     link_directory "$dir"
+done
+
+# Link directories as symlinks (entire directory)
+for dir in "${DIRECTORY_SYMLINKS[@]}"; do
+    link_directory_as_symlink "$dir"
 done
 
 echo ""
