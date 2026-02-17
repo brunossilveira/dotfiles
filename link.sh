@@ -61,6 +61,7 @@ DOTFILES_TO_LINK=(
 
     # Claude Code configuration
     ".claude/settings.json"
+    ".claude/CLAUDE.md"
 )
 
 # Directories to link recursively (individual files get symlinked)
@@ -73,6 +74,8 @@ DIRECTORIES_TO_LINK=(
 # Directories to link as a single symlink (entire directory)
 DIRECTORY_SYMLINKS=(
     ".claude/commands"
+    ".claude/hooks"
+    ".claude/skills"
 )
 
 log_info() {
