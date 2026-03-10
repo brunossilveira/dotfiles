@@ -21,7 +21,7 @@ FILENAME="$(date '+%Y-%m-%d-%H%M%S').md"
 FILEPATH="$DIR/$FILENAME"
 
 if [ "$1" = "--gui" ]; then
-  exec alacritty -e nvim "$FILEPATH"
+  open -na Alacritty --args -e /opt/homebrew/bin/nvim "$FILEPATH"
 else
   exec nvim "$FILEPATH"
 fi
