@@ -43,3 +43,6 @@ alias tagit='/usr/local/bin/ctags -R'
 
 # Typos
 alias vim="nvim"
+
+# Scratch pad
+alias scratch="~/.config/scripts/scratch.sh"
