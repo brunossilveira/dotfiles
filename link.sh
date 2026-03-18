@@ -62,6 +62,9 @@ DOTFILES_TO_LINK=(
     # Claude Code configuration
     ".claude/settings.json"
     ".claude/CLAUDE.md"
+
+    # PI agent configuration
+    ".pi/agent/APPEND_SYSTEM.md"
 )
 
 # Directories to link recursively (individual files get symlinked)
@@ -76,6 +79,8 @@ DIRECTORY_SYMLINKS=(
     ".claude/commands"
     ".claude/hooks"
     ".claude/skills"
+    ".pi/agent/extensions"
+    ".pi/agent/agents"
 )
 
 log_info() {
@@ -101,6 +106,10 @@ get_target_path() {
     case "$relative_path" in
         .claude/*)
             # Claude config goes to ~/.claude/
+            echo "$TARGET_DIR/${relative_path}"
+            ;;
+        .pi/*)
+            # PI agent config goes to ~/.pi/
             echo "$TARGET_DIR/${relative_path}"
             ;;
         config/nvim/*)
@@ -137,9 +146,19 @@ create_symlink() {
     local target="$2"
     local relative_path="$3"
 
-    # Create target directory if it doesn't exist
+    # Ensure target directory is a real directory (not a symlink)
     local target_dir="$(dirname "$target")"
-    if [ ! -d "$target_dir" ]; then
+    if [ -L "$target_dir" ]; then
+        # Parent is a symlink (e.g. from a previous directory symlink config).
+        # Replace it with a real directory so we can create symlinks inside it.
+        if [ "$DRY_RUN" = true ]; then
+            log_dry_run "Would replace directory symlink with real directory: $target_dir"
+        else
+            rm "$target_dir"
+            mkdir -p "$target_dir"
+            log_verbose "Replaced directory symlink with real directory: $target_dir"
+        fi
+    elif [ ! -d "$target_dir" ]; then
         if [ "$DRY_RUN" = true ]; then
             log_dry_run "Would create directory: $target_dir"
         else
