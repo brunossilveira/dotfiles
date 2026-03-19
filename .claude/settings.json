@@ -145,7 +145,8 @@
   },
   "enabledPlugins": {
     "gq-dev@gq-marketplace": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true
   },
   "effortLevel": "high"
 }
