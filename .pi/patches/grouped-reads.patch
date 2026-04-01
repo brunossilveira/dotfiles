@@ -1,0 +1,377 @@
+diff --color --no-dereference -ruN a/dist/modes/interactive/components/read-tool-group.js b/dist/modes/interactive/components/read-tool-group.js
+--- a/dist/modes/interactive/components/read-tool-group.js	1969-12-31 21:00:00.000000000 -0300
++++ b/dist/modes/interactive/components/read-tool-group.js	2026-03-31 11:21:19.928279656 -0300
+@@ -0,0 +1,146 @@
++import { Container, Spacer, Text } from "@mariozechner/pi-tui";
++import { theme } from "../theme/theme.js";
++/**
++ * ReadToolGroupComponent — groups consecutive Read tool calls into a compact tree view.
++ *
++ * Implements the same interface as ToolExecutionComponent so the pendingTools map
++ * can hold either type transparently.
++ */
++export class ReadToolGroupComponent extends Container {
++    entries = new Map();
++    contentText;
++    expanded = false;
++    showImages;
++    constructor(options = {}) {
++        super();
++        this.showImages = options.showImages ?? true;
++        this.addChild(new Spacer(1));
++        this.contentText = new Text("", 1, 1, (text) => theme.bg("toolPendingBg", text));
++        this.addChild(this.contentText);
++        this.updateDisplay();
++    }
++    hasToolCallId(toolCallId) {
++        return this.entries.has(toolCallId);
++    }
++    updateArgs(args, toolCallId) {
++        const path = args?.path || args?.file_path || "...";
++        const offset = args?.offset;
++        const limit = args?.limit;
++        const existing = this.entries.get(toolCallId);
++        if (existing) {
++            existing.path = path;
++            existing.offset = offset;
++            existing.limit = limit;
++        }
++        else {
++            this.entries.set(toolCallId, {
++                toolCallId,
++                path,
++                offset,
++                limit,
++                status: "pending",
++            });
++        }
++        this.updateDisplay();
++    }
++    markExecutionStarted(toolCallId) {
++        const entry = this.entries.get(toolCallId);
++        if (entry && entry.status === "pending") {
++            entry.status = "pending";
++        }
++        this.updateDisplay();
++    }
++    updateResult(result, isPartial = false, toolCallId) {
++        if (toolCallId) {
++            const entry = this.entries.get(toolCallId);
++            if (entry) {
++                entry.status = result?.isError ? "error" : "success";
++            }
++        }
++        this.updateDisplay();
++    }
++    setExpanded(expanded) {
++        this.expanded = expanded;
++        this.updateDisplay();
++    }
++    setShowImages(show) {
++        this.showImages = show;
++    }
++    setArgsComplete() {
++        this.updateDisplay();
++    }
++    updateDisplay() {
++        const entries = Array.from(this.entries.values());
++        const allDone = entries.length > 0 && entries.every((e) => e.status !== "pending");
++        const hasError = entries.some((e) => e.status === "error");
++        const bgFn = allDone
++            ? hasError
++                ? (text) => theme.bg("toolErrorBg", text)
++                : (text) => theme.bg("toolSuccessBg", text)
++            : (text) => theme.bg("toolPendingBg", text);
++        this.contentText.setCustomBgFn(bgFn);
++        if (entries.length === 0) {
++            this.contentText.setText(theme.fg("toolTitle", theme.bold("read")));
++            return;
++        }
++        if (entries.length === 1) {
++            const e = entries[0];
++            const status = this.formatStatus(e.status);
++            const pathStr = this.formatPath(e);
++            this.contentText.setText(`${status} ${theme.fg("toolTitle", theme.bold("read"))} ${pathStr}`);
++            return;
++        }
++        // Tree view for 2+ entries
++        const header = `${theme.fg("toolTitle", theme.bold("read"))}${theme.fg("dim", ` (${entries.length})`)}`;
++        const lines = [`${this.formatGroupStatus(entries)} ${header}`];
++        for (let i = 0; i < entries.length; i++) {
++            const e = entries[i];
++            const isLast = i === entries.length - 1;
++            const connector = isLast ? "└─" : "├─";
++            const status = this.formatStatus(e.status);
++            const pathStr = this.formatPath(e);
++            lines.push(`   ${theme.fg("dim", connector)} ${status} ${pathStr}`);
++        }
++        this.contentText.setText(lines.join("\n"));
++    }
++    formatStatus(status) {
++        switch (status) {
++            case "success":
++                return theme.fg("success", "✔");
++            case "error":
++                return theme.fg("error", "✘");
++            case "pending":
++                return theme.fg("dim", "⏳");
++        }
++    }
++    formatGroupStatus(entries) {
++        const pending = entries.some((e) => e.status === "pending");
++        const hasError = entries.some((e) => e.status === "error");
++        if (pending) return theme.fg("dim", "⏳");
++        if (hasError) return theme.fg("error", "✘");
++        return theme.fg("success", "✔");
++    }
++    formatPath(entry) {
++        let p = entry.path;
++        const home = process.env.HOME || process.env.USERPROFILE || "";
++        if (home && p.startsWith(home)) {
++            p = "~" + p.slice(home.length);
++        }
++        let text = theme.fg("accent", p);
++        if (entry.offset !== undefined || entry.limit !== undefined) {
++            const start = entry.offset ?? 1;
++            const end = entry.limit !== undefined ? start + entry.limit - 1 : "";
++            text += theme.fg("warning", `:${start}${end ? `-${end}` : ""}`);
++        }
++        return text;
++    }
++    // ToolExecutionComponent interface compatibility
++    render(width) {
++        return super.render(width);
++    }
++    invalidate() {
++        super.invalidate();
++        this.updateDisplay();
++    }
++}
++//# sourceMappingURL=read-tool-group.js.map
+diff --color --no-dereference -ruN a/dist/modes/interactive/interactive-mode.js b/dist/modes/interactive/interactive-mode.js
+--- a/dist/modes/interactive/interactive-mode.js	2026-03-31 11:21:19.917775749 -0300
++++ b/dist/modes/interactive/interactive-mode.js	2026-03-31 13:31:43.137992879 -0300
+@@ -45,6 +45,7 @@
+ import { SettingsSelectorComponent } from "./components/settings-selector.js";
+ import { SkillInvocationMessageComponent } from "./components/skill-invocation-message.js";
+ import { ToolExecutionComponent } from "./components/tool-execution.js";
++import { ReadToolGroupComponent } from "./components/read-tool-group.js";
+ import { TreeSelectorComponent } from "./components/tree-selector.js";
+ import { UserMessageComponent } from "./components/user-message.js";
+ import { UserMessageSelectorComponent } from "./components/user-message-selector.js";
+@@ -87,6 +88,8 @@
+     streamingMessage = undefined;
+     // Tool execution tracking: toolCallId -> component
+     pendingTools = new Map();
++    // Read tool grouping: tracks the current consecutive read group
++    lastReadGroup = undefined;
+     // Tool output expansion state
+     toolOutputExpanded = false;
+     // Thinking block visibility state
+@@ -1858,6 +1861,7 @@
+                 this.ui.requestRender();
+                 break;
+             case "message_start":
++                this.lastReadGroup = undefined;
+                 if (event.message.role === "custom") {
+                     this.addMessageToChat(event.message);
+                     this.ui.requestRender();
+@@ -1882,17 +1886,36 @@
+                     for (const content of this.streamingMessage.content) {
+                         if (content.type === "toolCall") {
+                             if (!this.pendingTools.has(content.id)) {
+-                                const component = new ToolExecutionComponent(content.name, content.id, content.arguments, {
+-                                    showImages: this.settingsManager.getShowImages(),
+-                                }, this.getRegisteredToolDefinition(content.name), this.ui);
+-                                component.setExpanded(this.toolOutputExpanded);
+-                                this.chatContainer.addChild(component);
+-                                this.pendingTools.set(content.id, component);
++                                if (content.name === "read") {
++                                    // Group consecutive reads
++                                    if (!this.lastReadGroup) {
++                                        this.lastReadGroup = new ReadToolGroupComponent({ showImages: this.settingsManager.getShowImages() });
++                                        this.lastReadGroup.setExpanded(this.toolOutputExpanded);
++                                        this.chatContainer.addChild(this.lastReadGroup);
++                                    }
++                                    this.lastReadGroup.updateArgs(content.arguments, content.id);
++                                    this.pendingTools.set(content.id, this.lastReadGroup);
++                                }
++                                else {
++                                    // Non-read tool: reset read group
++                                    this.lastReadGroup = undefined;
++                                    const component = new ToolExecutionComponent(content.name, content.id, content.arguments, {
++                                        showImages: this.settingsManager.getShowImages(),
++                                    }, this.getRegisteredToolDefinition(content.name), this.ui);
++                                    component.setExpanded(this.toolOutputExpanded);
++                                    this.chatContainer.addChild(component);
++                                    this.pendingTools.set(content.id, component);
++                                }
+                             }
+                             else {
+                                 const component = this.pendingTools.get(content.id);
+                                 if (component) {
+-                                    component.updateArgs(content.arguments);
++                                    if (component instanceof ReadToolGroupComponent) {
++                                        component.updateArgs(content.arguments, content.id);
++                                    }
++                                    else {
++                                        component.updateArgs(content.arguments);
++                                    }
+                                 }
+                             }
+                         }
+@@ -1942,21 +1965,43 @@
+             case "tool_execution_start": {
+                 let component = this.pendingTools.get(event.toolCallId);
+                 if (!component) {
+-                    component = new ToolExecutionComponent(event.toolName, event.toolCallId, event.args, {
+-                        showImages: this.settingsManager.getShowImages(),
+-                    }, this.getRegisteredToolDefinition(event.toolName), this.ui);
+-                    component.setExpanded(this.toolOutputExpanded);
+-                    this.chatContainer.addChild(component);
++                    if (event.toolName === "read") {
++                        if (!this.lastReadGroup) {
++                            this.lastReadGroup = new ReadToolGroupComponent({ showImages: this.settingsManager.getShowImages() });
++                            this.lastReadGroup.setExpanded(this.toolOutputExpanded);
++                            this.chatContainer.addChild(this.lastReadGroup);
++                        }
++                        this.lastReadGroup.updateArgs(event.args, event.toolCallId);
++                        component = this.lastReadGroup;
++                    }
++                    else {
++                        this.lastReadGroup = undefined;
++                        component = new ToolExecutionComponent(event.toolName, event.toolCallId, event.args, {
++                            showImages: this.settingsManager.getShowImages(),
++                        }, this.getRegisteredToolDefinition(event.toolName), this.ui);
++                        component.setExpanded(this.toolOutputExpanded);
++                        this.chatContainer.addChild(component);
++                    }
+                     this.pendingTools.set(event.toolCallId, component);
+                 }
+-                component.markExecutionStarted();
++                if (component instanceof ReadToolGroupComponent) {
++                    component.markExecutionStarted(event.toolCallId);
++                }
++                else {
++                    component.markExecutionStarted();
++                }
+                 this.ui.requestRender();
+                 break;
+             }
+             case "tool_execution_update": {
+                 const component = this.pendingTools.get(event.toolCallId);
+                 if (component) {
+-                    component.updateResult({ ...event.partialResult, isError: false }, true);
++                    if (component instanceof ReadToolGroupComponent) {
++                        component.updateResult({ ...event.partialResult, isError: false }, true, event.toolCallId);
++                    }
++                    else {
++                        component.updateResult({ ...event.partialResult, isError: false }, true);
++                    }
+                     this.ui.requestRender();
+                 }
+                 break;
+@@ -1964,7 +2009,12 @@
+             case "tool_execution_end": {
+                 const component = this.pendingTools.get(event.toolCallId);
+                 if (component) {
+-                    component.updateResult({ ...event.result, isError: event.isError });
++                    if (component instanceof ReadToolGroupComponent) {
++                        component.updateResult({ ...event.result, isError: event.isError }, false, event.toolCallId);
++                    }
++                    else {
++                        component.updateResult({ ...event.result, isError: event.isError });
++                    }
+                     this.pendingTools.delete(event.toolCallId);
+                     this.ui.requestRender();
+                 }
+@@ -2187,6 +2237,7 @@
+      */
+     renderSessionContext(sessionContext, options = {}) {
+         this.pendingTools.clear();
++        let replayReadGroup = undefined;
+         if (options.updateFooter) {
+             this.footer.invalidate();
+             this.updateEditorBorderColor();
+@@ -2198,25 +2249,53 @@
+                 // Render tool call components
+                 for (const content of message.content) {
+                     if (content.type === "toolCall") {
+-                        const component = new ToolExecutionComponent(content.name, content.id, content.arguments, { showImages: this.settingsManager.getShowImages() }, this.getRegisteredToolDefinition(content.name), this.ui);
+-                        component.setExpanded(this.toolOutputExpanded);
+-                        this.chatContainer.addChild(component);
+-                        if (message.stopReason === "aborted" || message.stopReason === "error") {
+-                            let errorMessage;
+-                            if (message.stopReason === "aborted") {
+-                                const retryAttempt = this.session.retryAttempt;
+-                                errorMessage =
+-                                    retryAttempt > 0
+-                                        ? `Aborted after ${retryAttempt} retry attempt${retryAttempt > 1 ? "s" : ""}`
+-                                        : "Operation aborted";
++                        if (content.name === "read") {
++                            if (!replayReadGroup) {
++                                replayReadGroup = new ReadToolGroupComponent({ showImages: this.settingsManager.getShowImages() });
++                                replayReadGroup.setExpanded(this.toolOutputExpanded);
++                                this.chatContainer.addChild(replayReadGroup);
++                            }
++                            replayReadGroup.updateArgs(content.arguments, content.id);
++                            if (message.stopReason === "aborted" || message.stopReason === "error") {
++                                let errorMessage;
++                                if (message.stopReason === "aborted") {
++                                    const retryAttempt = this.session.retryAttempt;
++                                    errorMessage =
++                                        retryAttempt > 0
++                                            ? `Aborted after ${retryAttempt} retry attempt${retryAttempt > 1 ? "s" : ""}`
++                                            : "Operation aborted";
++                                }
++                                else {
++                                    errorMessage = message.errorMessage || "Error";
++                                }
++                                replayReadGroup.updateResult({ content: [{ type: "text", text: errorMessage }], isError: true }, false, content.id);
+                             }
+                             else {
+-                                errorMessage = message.errorMessage || "Error";
++                                this.pendingTools.set(content.id, replayReadGroup);
+                             }
+-                            component.updateResult({ content: [{ type: "text", text: errorMessage }], isError: true });
+                         }
+                         else {
+-                            this.pendingTools.set(content.id, component);
++                            replayReadGroup = undefined;
++                            const component = new ToolExecutionComponent(content.name, content.id, content.arguments, { showImages: this.settingsManager.getShowImages() }, this.getRegisteredToolDefinition(content.name), this.ui);
++                            component.setExpanded(this.toolOutputExpanded);
++                            this.chatContainer.addChild(component);
++                            if (message.stopReason === "aborted" || message.stopReason === "error") {
++                                let errorMessage;
++                                if (message.stopReason === "aborted") {
++                                    const retryAttempt = this.session.retryAttempt;
++                                    errorMessage =
++                                        retryAttempt > 0
++                                            ? `Aborted after ${retryAttempt} retry attempt${retryAttempt > 1 ? "s" : ""}`
++                                            : "Operation aborted";
++                                }
++                                else {
++                                    errorMessage = message.errorMessage || "Error";
++                                }
++                                component.updateResult({ content: [{ type: "text", text: errorMessage }], isError: true });
++                            }
++                            else {
++                                this.pendingTools.set(content.id, component);
++                            }
+                         }
+                     }
+                 }
+@@ -2225,7 +2304,12 @@
+                 // Match tool results to pending tool components
+                 const component = this.pendingTools.get(message.toolCallId);
+                 if (component) {
+-                    component.updateResult(message);
++                    if (component instanceof ReadToolGroupComponent) {
++                        component.updateResult(message, false, message.toolCallId);
++                    }
++                    else {
++                        component.updateResult(message);
++                    }
+                     this.pendingTools.delete(message.toolCallId);
+                 }
+             }
