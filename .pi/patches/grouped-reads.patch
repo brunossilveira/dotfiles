@@ -1,6 +1,6 @@
-diff --color --no-dereference -ruN a/dist/modes/interactive/components/read-tool-group.js b/dist/modes/interactive/components/read-tool-group.js
+diff --color -ruN a/dist/modes/interactive/components/read-tool-group.js b/dist/modes/interactive/components/read-tool-group.js
 --- a/dist/modes/interactive/components/read-tool-group.js	1969-12-31 21:00:00.000000000 -0300
-+++ b/dist/modes/interactive/components/read-tool-group.js	2026-03-31 11:21:19.928279656 -0300
++++ b/dist/modes/interactive/components/read-tool-group.js	2026-04-01 10:40:50.454812099 -0300
 @@ -0,0 +1,146 @@
 +import { Container, Spacer, Text } from "@mariozechner/pi-tui";
 +import { theme } from "../theme/theme.js";
@@ -148,9 +148,9 @@ diff --color --no-dereference -ruN a/dist/modes/interactive/components/read-tool
 +    }
 +}
 +//# sourceMappingURL=read-tool-group.js.map
-diff --color --no-dereference -ruN a/dist/modes/interactive/interactive-mode.js b/dist/modes/interactive/interactive-mode.js
---- a/dist/modes/interactive/interactive-mode.js	2026-03-31 11:21:19.917775749 -0300
-+++ b/dist/modes/interactive/interactive-mode.js	2026-03-31 13:31:43.137992879 -0300
+diff --color -ruN a/dist/modes/interactive/interactive-mode.js b/dist/modes/interactive/interactive-mode.js
+--- a/dist/modes/interactive/interactive-mode.js	2026-04-01 10:40:50.444568069 -0300
++++ b/dist/modes/interactive/interactive-mode.js	2026-04-01 10:40:50.450226294 -0300
 @@ -45,6 +45,7 @@
  import { SettingsSelectorComponent } from "./components/settings-selector.js";
  import { SkillInvocationMessageComponent } from "./components/skill-invocation-message.js";
