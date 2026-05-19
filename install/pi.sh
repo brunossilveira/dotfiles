@@ -21,8 +21,16 @@ else
   exit 1
 fi
 
-# Apply patches
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+
+# Copy global Claude instructions to PI agent config
+if [ -f "$HOME/.claude/CLAUDE.md" ]; then
+  mkdir -p "$DOTFILES_DIR/.pi/agent"
+  cp "$HOME/.claude/CLAUDE.md" "$DOTFILES_DIR/.pi/agent/AGENTS.md"
+  info "Copied CLAUDE.md to .pi/agent/AGENTS.md"
+fi
+
+# Apply patches
 PI_ROOT="$(npm root -g)/@mariozechner/pi-coding-agent"
 PATCHES_DIR="$DOTFILES_DIR/.pi/patches"
 
