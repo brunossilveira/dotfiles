@@ -148,6 +148,5 @@
     "swift-lsp@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true
   },
-  "effortLevel": "high",
-  "fastMode": true
+  "effortLevel": "high"
 }
