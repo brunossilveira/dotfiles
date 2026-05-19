@@ -23,11 +23,17 @@ fi
 
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
-# Copy global Claude instructions to PI agent config
+# Symlink global Claude instructions so Pi picks them up as AGENTS.md
+PI_AGENT_DIR="$HOME/.pi/agent"
+AGENTS_LINK="$PI_AGENT_DIR/AGENTS.md"
 if [ -f "$HOME/.claude/CLAUDE.md" ]; then
-  mkdir -p "$DOTFILES_DIR/.pi/agent"
-  cp "$HOME/.claude/CLAUDE.md" "$DOTFILES_DIR/.pi/agent/AGENTS.md"
-  info "Copied CLAUDE.md to .pi/agent/AGENTS.md"
+  mkdir -p "$PI_AGENT_DIR"
+  if [ -L "$AGENTS_LINK" ] || [ ! -e "$AGENTS_LINK" ]; then
+    ln -sf "$HOME/.claude/CLAUDE.md" "$AGENTS_LINK"
+    info "Linked ~/.claude/CLAUDE.md → ~/.pi/agent/AGENTS.md"
+  else
+    info "Skipped: ~/.pi/agent/AGENTS.md exists and is not a symlink"
+  fi
 fi
 
 # Apply patches
