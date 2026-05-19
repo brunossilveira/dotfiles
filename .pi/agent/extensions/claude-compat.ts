@@ -71,10 +71,15 @@ export default function (pi: ExtensionAPI) {
 
 			pi.registerCommand(`claude:${name}`, {
 				description: parseFrontmatter(fs.readFileSync(filePath, "utf-8")).meta.description as string || `Claude command: ${name}`,
-				handler: async (args) => {
+				handler: async (args, cmdCtx) => {
 					const { body } = parseFrontmatter(fs.readFileSync(filePath, "utf-8"));
 					const prompt = args ? `${body.trim()}\n\nArguments: ${args}` : body.trim();
-					pi.sendUserMessage(prompt);
+					cmdCtx.ui.notify(`Running claude:${name}`, "info");
+					pi.sendMessage({
+						role: "user",
+						content: [{ type: "text", text: prompt }],
+						display: false,
+					});
 				},
 			});
 		}
