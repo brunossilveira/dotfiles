@@ -81,6 +81,7 @@ DIRECTORY_SYMLINKS=(
     ".claude/skills"
     ".pi/agent/extensions"
     ".pi/agent/agents"
+    ".pi/agent/skills"
 )
 
 log_info() {
