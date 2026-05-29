@@ -3,8 +3,28 @@ import { SessionManager, type ExtensionCommandContext } from "@earendil-works/pi
 
 export const WORKTREE_CONTEXT_TYPE = "worktree-context";
 
+type SessionMessage = Parameters<SessionManager["appendMessage"]>[0];
+
 export function buildContextMessage(branch: string, worktreeDir: string): string {
 	return `You are now in git worktree \`${worktreeDir}\` on branch \`${branch}\`. Keep all changes within this worktree.`;
+}
+
+/**
+ * A synthetic, empty assistant message. pi defers writing a new session file
+ * until it contains an assistant message, so appending this forces a brand-new
+ * (never-persisted) session to flush to disk before we switch into it.
+ */
+function buildPersistenceSentinel(): SessionMessage {
+	return {
+		role: "assistant",
+		content: [],
+		api: "synthetic",
+		provider: "pi-worktree",
+		model: "session-persistence-sentinel",
+		usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, totalTokens: 0, cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } },
+		stopReason: "aborted",
+		timestamp: Date.now(),
+	} as SessionMessage;
 }
 
 /**
@@ -14,10 +34,14 @@ export function buildContextMessage(branch: string, worktreeDir: string): string
  */
 export async function switchToWorktreeSession(ctx: ExtensionCommandContext, branch: string, worktreeDir: string): Promise<void> {
 	const seed = ctx.sessionManager.getSessionFile();
-	const manager =
-		seed !== undefined && existsSync(seed)
-			? SessionManager.forkFrom(seed, worktreeDir)
-			: SessionManager.create(worktreeDir);
+	const hasPersistedSeed = seed !== undefined && existsSync(seed);
+	const manager = hasPersistedSeed ? SessionManager.forkFrom(seed, worktreeDir) : SessionManager.create(worktreeDir);
+
+	// forkFrom writes the file eagerly; a freshly created session does not until
+	// it holds an assistant message, so seed one to guarantee it lands on disk.
+	if (!hasPersistedSeed) {
+		manager.appendMessage(buildPersistenceSentinel());
+	}
 
 	manager.resetLeaf();
 	manager.appendCustomMessageEntry(WORKTREE_CONTEXT_TYPE, buildContextMessage(branch, worktreeDir), false, { branch, worktreeDir });
