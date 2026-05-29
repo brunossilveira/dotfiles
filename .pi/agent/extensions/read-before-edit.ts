@@ -8,7 +8,7 @@
  * This is tool-level enforcement, not just a prompt instruction.
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { resolve } from "node:path";
 import { access } from "node:fs/promises";
 

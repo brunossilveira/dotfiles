@@ -8,7 +8,7 @@
  * Uses Jina's free APIs under the hood. No dependencies beyond built-in fetch().
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 
 const MAX_CONTENT_LENGTH = 30000;
