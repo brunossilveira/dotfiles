@@ -62,6 +62,7 @@ DOTFILES_TO_LINK=(
     # Claude Code configuration
     ".claude/settings.json"
     ".claude/CLAUDE.md"
+    ".claude/statusline-command.sh"
 
     # PI agent configuration
     ".pi/agent/APPEND_SYSTEM.md"

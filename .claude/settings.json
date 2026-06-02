@@ -147,5 +147,9 @@
     "swift-lsp@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true
   },
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/bruno/.claude/statusline-command.sh"
+  }
 }
