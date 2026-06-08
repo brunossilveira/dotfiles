@@ -72,6 +72,7 @@ DOTFILES_TO_LINK=(
 DIRECTORIES_TO_LINK=(
     "config/nvim"
     "config/alacritty"
+    "config/ghostty"
     "config/scripts"
 )
 
@@ -120,6 +121,10 @@ get_target_path() {
             ;;
         config/scripts/*)
             # Scripts go to ~/.config/scripts/
+            echo "$TARGET_DIR/.${relative_path}"
+            ;;
+        config/ghostty/*)
+            # Ghostty config goes to ~/.config/ghostty/
             echo "$TARGET_DIR/.${relative_path}"
             ;;
         config/gitconfig)

@@ -99,3 +99,6 @@ cask 'raycast'
 # Fast, lightweight Docker alternative
 cask 'orbstack'
 
+# GPU-accelerated terminal emulator
+cask 'ghostty'
+
