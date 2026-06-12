@@ -152,6 +152,5 @@
     "ruby-lsp@claude-plugins-official": true
   },
   "effortLevel": "high",
-  "skipWorkflowUsageWarning": true,
-  "model": "claude-fable-5[1m]"
+  "skipWorkflowUsageWarning": true
 }
