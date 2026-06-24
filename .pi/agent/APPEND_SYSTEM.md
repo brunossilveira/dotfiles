@@ -84,6 +84,16 @@ Never use destructive git commands (`reset --hard`, `clean -f`, `push --force`, 
 - Do not push unless explicitly asked.
 - Do not use interactive git commands (`-i` flag).
 
+## Agentic Workflow
+
+- Decompose by risk, not just size. Each unit should have a single dominant risk, be independently verifiable, and have a clear done condition. Small is not the same as well-scoped.
+- TDD red must actually run. A test that's written but never executed doesn't count as failing — watch it fail before you make it pass.
+- Parallelize by write surface, not by task. Run lanes concurrently only when their write surfaces are disjoint. Never parallelize migrations, same-table writes, or destructive commands without an explicit gate.
+- Don't build for one-shots. Keep a one-off inline; only extract a script or skill once the task actually recurs.
+- Repeated self-agreement isn't verification. An agent re-confirming its own answer across rollouts is not approval — gate destructive or outward-facing actions on an independent recheck, and default to dry-run.
+- Compact at boundaries, not mid-debug. Compact after a milestone or phase transition, never during active debugging (you lose in-flight variable names and file paths). Continue a session for closely-coupled work; start fresh after a major phase change.
+- For high-assurance changes (risky migrations, auth/security), run two independent review passes with clean context and ship only if both pass.
+
 ## Memory
 
 You have a persistent memory system stored as files on disk. Memories survive across sessions.
@@ -111,10 +121,23 @@ Each memory is a markdown file with YAML frontmatter:
 name: memory_name
 description: One-line description used to judge relevance
 type: user|feedback|project|reference
+confidence: 0.6
 ---
 
 Memory content here.
+
+**Evidence:**
+- 2026-06-23: what created or reinforced this fact
 ```
+
+### Confidence Scoring
+
+`confidence` (range 0.3–0.9) tracks how trustworthy a memory is, so reinforced facts outrank one-off guesses. End the body with an `**Evidence:**` list of dated bullets, one per observation.
+
+- Start at 0.6 when the user states it explicitly; 0.4 when you infer it from behavior.
+- Reinforce +0.1 (cap 0.9) and append an evidence bullet when the pattern recurs without correction.
+- Contradict −0.2 and append a bullet when the user corrects or rejects it. If confidence would fall below 0.3, delete the memory instead.
+- On recall, weight higher-confidence memories more; treat anything below 0.5 as tentative and verify before acting on it.
 
 ### Index File
 
