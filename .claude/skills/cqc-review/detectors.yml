@@ -1,0 +1,77 @@
+# Code Quality Challenge detectors — machine-readable manifest.
+# An orchestrator runs each `find` command (substituting {path}) to collect
+# candidates, then loads `reference` for the per-candidate improvement guidance.
+#
+# requires_run: false => static/git analysis, cheap, safe to run every sweep.
+# requires_run: true  => must boot the app or execute the test suite; gate behind opt-in.
+
+detectors:
+  - id: large-class
+    title: Slim down a large class
+    reference: references/slim-down-large-class.md
+    requires_run: false
+    output: ranked file list (longest first)
+    # Longest source files as a proxy for classes doing too much.
+    find: |
+      find {path} -name '*.rb' -type f -not -path '*/vendor/*' -not -path '*/node_modules/*' \
+        | xargs wc -l 2>/dev/null | sort -rn | sed '/ total$/d' | head -20
+    notes: Swap '*.rb' for the target language. Length is a smell, not a verdict.
+
+  - id: high-churn-files
+    title: Investigate high-churn files
+    reference: references/investigate-high-churn-files.md
+    requires_run: false
+    output: count<TAB>file, ascending (most-churned last)
+    find: |
+      git -C {path} log --all -M -C --name-only --format='format:' \
+        | sort | grep -v '^$' | uniq -c | sort -n \
+        | awk 'BEGIN {print "count\tfile"} {print $1 "\t" $2}' | tail -20
+    notes: >-
+      Add `--since='3 months ago'` to the git log for recent churn. Cross-reference
+      with large-class output; files that are both long AND high-churn are the
+      strongest refactoring candidates.
+
+  - id: slowest-tests
+    title: Investigate slowest test
+    reference: references/investigate-slowest-test.md
+    requires_run: true
+    output: 10 slowest examples with timings
+    # RSpec. For other runners find the equivalent profile flag.
+    find: |
+      bundle exec rspec --profile 10 {path}
+    notes: Expensive — runs the suite. Look for duplicate tests, over-broad specs, dead tests.
+
+  - id: todo-comments
+    title: Nuke TODO comments
+    reference: references/nuke-todo-comments.md
+    requires_run: false
+    output: file:line:text for each marker
+    find: |
+      rg -n --no-heading '\b(TODO|FIXME|HACK|XXX)\b' {path}
+    notes: Each hit is a candidate to delete or convert into a tracked issue.
+
+  - id: warnings
+    title: Get rid of a warning
+    reference: references/get-rid-of-warnings.md
+    requires_run: true
+    output: warning lines captured from stderr
+    # No single command — capture warnings from whichever of these the project does.
+    find: |
+      # Pick the relevant one(s) and grep their output:
+      #   boot:    <app boot command>        2>&1 | grep -i 'warning\|deprecat'
+      #   tests:   bundle exec rspec          2>&1 | grep -i 'warning\|deprecat'
+      #   install: bundle install             2>&1 | grep -i 'warning\|deprecat'
+      bundle exec rspec 2>&1 | grep -i 'warning\|deprecat' | sort -u
+    notes: Deprecation warnings become breakages later; treat as broken windows.
+
+  - id: long-parameter-lists
+    title: Investigate long parameter lists
+    reference: references/investigate-long-parameter-lists.md
+    requires_run: false
+    output: file:line for method defs with 4+ params
+    # Ruby def with >=3 commas inside the parens == 4+ params. Misses line-wrapped defs.
+    find: |
+      rg -n --no-heading 'def \w+[!?]?\(([^,)]+,){3,}' {path}
+    notes: >-
+      Naive (single-line defs only). 4+ params is the threshold. Look for data clumps
+      (extract a value object), boolean params (control coupling), and dead params.
