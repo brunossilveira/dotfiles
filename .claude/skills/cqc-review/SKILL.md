@@ -42,8 +42,12 @@ are Ruby/RSpec-flavored where the original is; the heuristics are language-gener
    target directory.
 2. Run it to get a ranked list of candidates.
 3. For each candidate worth pursuing, **load that detector's reference file** for
-   the full rationale, what to look for, and how to make the improvement.
-4. Propose the smallest worthwhile change. Don't force it — "no good candidate
+   the rationale and what to look for.
+4. To actually fix it, use the companion **`safe-refactoring`** skill — start with
+   its safety harness (keep tests green, small steps, separate refactor from
+   behavior change), then the specific technique. Each detector in
+   [`detectors.yml`](detectors.yml) names its `fix:` technique there.
+5. Propose the smallest worthwhile change. Don't force it — "no good candidate
    found" is a valid outcome for any single file.
 
 The two `requires_run: true` detectors (slowest tests, warnings) need the suite /
@@ -55,5 +59,6 @@ opt-in rather than running them on every sweep.
 [`detectors.yml`](detectors.yml) is the machine-readable bridge. An orchestrator
 should: read the manifest → run each `find` command to collect candidates →
 fan out one agent per candidate → that agent loads the matching `reference` file
-and proposes/applies the improvement. Keep this skill as the single source of
+(to judge) and the `fix:` technique from `safe-refactoring` (to remediate) and
+proposes/applies the improvement. Keep these skills as the single source of
 truth; the workflow only orchestrates.

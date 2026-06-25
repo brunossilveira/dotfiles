@@ -4,11 +4,16 @@
 #
 # requires_run: false => static/git analysis, cheap, safe to run every sweep.
 # requires_run: true  => must boot the app or execute the test suite; gate behind opt-in.
+#
+# `reference` = how to DETECT/judge (this skill). `fix` = how to FIX it well,
+# pointing into the companion `safe-refactoring` skill. Read safe-refactoring's
+# SKILL.md (the safety harness) before applying any fix.
 
 detectors:
   - id: large-class
     title: Slim down a large class
     reference: references/slim-down-large-class.md
+    fix: safe-refactoring/references/extract-class.md
     requires_run: false
     output: ranked file list (longest first)
     # Longest source files as a proxy for classes doing too much.
@@ -20,6 +25,7 @@ detectors:
   - id: high-churn-files
     title: Investigate high-churn files
     reference: references/investigate-high-churn-files.md
+    fix: safe-refactoring/SKILL.md  # no single technique — add tests, find the seam, then apply whichever fits
     requires_run: false
     output: count<TAB>file, ascending (most-churned last)
     find: |
@@ -34,6 +40,7 @@ detectors:
   - id: slowest-tests
     title: Investigate slowest test
     reference: references/investigate-slowest-test.md
+    fix: safe-refactoring/references/speed-up-slow-tests.md
     requires_run: true
     output: 10 slowest examples with timings
     # RSpec. For other runners find the equivalent profile flag.
@@ -44,6 +51,7 @@ detectors:
   - id: todo-comments
     title: Nuke TODO comments
     reference: references/nuke-todo-comments.md
+    fix: null  # process, not a refactoring — delete or convert to a tracked issue (see reference)
     requires_run: false
     output: file:line:text for each marker
     find: |
@@ -53,6 +61,7 @@ detectors:
   - id: warnings
     title: Get rid of a warning
     reference: references/get-rid-of-warnings.md
+    fix: safe-refactoring/references/fix-deprecation-warnings.md
     requires_run: true
     output: warning lines captured from stderr
     # No single command — capture warnings from whichever of these the project does.
@@ -67,6 +76,10 @@ detectors:
   - id: long-parameter-lists
     title: Investigate long parameter lists
     reference: references/investigate-long-parameter-lists.md
+    fix:  # pick by what the long list reveals
+      - safe-refactoring/references/introduce-parameter-object.md  # data clump
+      - safe-refactoring/references/replace-boolean-parameter.md   # boolean / control coupling
+      - safe-refactoring/references/remove-dead-parameter.md       # unused arg
     requires_run: false
     output: file:line for method defs with 4+ params
     # Ruby def with >=3 commas inside the parens == 4+ params. Misses line-wrapped defs.
