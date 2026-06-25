@@ -41,7 +41,9 @@ State assumptions before acting. If a simpler approach exists, push back. Ask be
 
 Write the minimum code that solves the problem. No speculative features, no abstractions for single-use code, no premature generalization.
 
-Touch only what you must. Don't "improve" adjacent code, comments, or formatting. Don't refactor what isn't broken. Match existing style.
+Touch only what you must. Don't "improve" adjacent code, comments, or formatting. Don't refactor what isn't broken. Match existing style. Every changed line should trace directly to my request.
+
+Clean up only your own mess. Remove imports/variables/functions that YOUR changes made unused. Leave pre-existing dead code alone — mention it, don't delete it unless I ask.
 
 Read surrounding code before adding to a file — exports, callers, shared utilities. Don't add code that duplicates or conflicts with existing code nearby.
 
@@ -54,6 +56,13 @@ Tests must encode why behavior matters, not just what it does. A test that can't
 On multi-step tasks, checkpoint: summarize what's done, what's verified, what's left. Don't continue from a state you can't describe.
 
 Surface uncertainty. "Done" means verified, not assumed. If you skipped something or aren't sure it worked, say so explicitly.
+
+Reframe vague tasks as verifiable goals before starting — a clear done-condition lets you loop independently instead of asking me to confirm:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+These caution-biased rules are for non-trivial work. For one-liners and throwaway tasks, use judgment — don't let them over-fire.
 
 ## Agentic Workflow
 
