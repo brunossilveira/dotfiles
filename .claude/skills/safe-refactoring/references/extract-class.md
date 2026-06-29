@@ -16,7 +16,8 @@ class Order
   # ...order stuff...
 end
 
-# After — address concerns live in their own object
+# After — address concerns live in their own object, in their own file
+# app/models/address.rb
 class Address
   def initialize(street, city, zip) = (@street, @city, @zip = street, city, zip)
   def label = "#{@street}\n#{@city}, #{@zip}"
@@ -32,7 +33,11 @@ end
 ## Safe step sequence
 1. **Name the clump.** Identify the methods + fields that move together. If you
    can't name the new concept, you haven't found a real clump — stop.
-2. **Create the empty new class.**
+2. **Create the empty new class in its own file.** Favor a dedicated file
+   (following the codebase's path/naming conventions) over a nested or inline
+   class in the original file — a separate file forces a clear boundary, keeps
+   the original file shrinking, and makes the new object independently testable.
+   Only keep it inline when the surrounding code already establishes that.
 3. **Move one field/method at a time.** After each move, have the old class
    *delegate* to the new one and run tests. Stay green at every step.
 4. **Decide the relationship.** Either the old class holds the new one and
