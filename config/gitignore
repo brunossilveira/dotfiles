@@ -72,3 +72,6 @@ tags
 
 # Claude local configs
 .claude/settings.local.json
+
+# Gesso review artifacts (see ~/code/gesso)
+.gesso/
