@@ -33,19 +33,27 @@ infer what to visualize from the conversation.
    lost.
 4. Apply the feedback (edit the artifact or the underlying work it describes),
    then `gesso poll <file> --reply "<what you did>"` to answer in the chat and
-   keep listening. The user must reload to see artifact changes (no live
-   reload yet).
+   keep listening. Artifact edits appear in the browser automatically (live
+   reload watches the artifact's directory).
 5. When poll returns `"session_ended": true`, the user is done — stop polling.
    You can also end it yourself with `gesso end <file>` once the review
    concludes.
+6. If the user wants to keep or share the artifact, `gesso export <file>
+   [--out <path>]` writes a portable copy with local css/js/images inlined
+   that opens anywhere with no server (remote refs still need network).
 
 ## Feedback format
 
 Poll output: `{"messages": [{role, text, annotations: [{kind, selector,
-text}]}], "session_ended": bool}`. `kind` is `element` (user clicked) or
-`text` (user selected); `selector` locates the spot in the artifact; `text` is
-the annotated content. Treat annotations as pointers into the artifact — find
-the corresponding content and apply the note to it.
+text}]}], "session_ended": bool}`. For `role: human`, `kind` is `element`
+(user clicked) or `text` (user selected); `selector` locates the spot in the
+artifact; `text` is the annotated content. Treat annotations as pointers into
+the artifact — find the corresponding content and apply the note to it.
+
+`role: system` messages carry browser-reported `layout_warnings` (kinds
+`page-h-overflow`, `h-overflow`, `clipped-text`). Fix these immediately —
+wrap/truncate the offending content — BEFORE asking the human to review; live
+reload re-audits automatically and a clean pass sends nothing.
 
 ## Artifact guidance
 
