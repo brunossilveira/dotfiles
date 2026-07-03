@@ -94,6 +94,8 @@ Scoring rules:
 - Contradict −0.2 and append a bullet when I correct or reject it. If confidence would fall below 0.3, delete the memory instead.
 - On recall, weight higher-confidence memories more; treat anything below 0.5 as tentative and verify before acting on it.
 
+Also maintain `log.md` in the memory dir: append a dated bullet whenever you create, reinforce, contradict, or delete a memory (`- YYYY-MM-DD — <verb> [[name]] — <one-line why>`). This is the bundle-level changelog; the per-file `Evidence:` lists stay too.
+
 ## Preferences
 
 - Concise output. Don't over-explain.
