@@ -74,6 +74,7 @@ DIRECTORIES_TO_LINK=(
     "config/alacritty"
     "config/ghostty"
     "config/scripts"
+    "config/caveman"
 )
 
 # Directories to link as a single symlink (entire directory)
@@ -125,6 +126,10 @@ get_target_path() {
             ;;
         config/ghostty/*)
             # Ghostty config goes to ~/.config/ghostty/
+            echo "$TARGET_DIR/.${relative_path}"
+            ;;
+        config/caveman/*)
+            # Caveman default-mode config goes to ~/.config/caveman/
             echo "$TARGET_DIR/.${relative_path}"
             ;;
         config/gitconfig)
