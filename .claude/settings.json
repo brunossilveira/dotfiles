@@ -5,6 +5,7 @@
   "attribution": {
     "commit": ""
   },
+  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -162,6 +163,5 @@
   },
   "effortLevel": "high",
   "tui": "default",
-  "skipWorkflowUsageWarning": true,
-  "model": "claude-fable-5[1m]"
+  "skipWorkflowUsageWarning": true
 }
