@@ -163,5 +163,7 @@
   },
   "effortLevel": "high",
   "tui": "default",
-  "skipWorkflowUsageWarning": true
+  "skipWorkflowUsageWarning": true,
+  "agentPushNotifEnabled": true,
+  "inputNeededNotifEnabled": true
 }
