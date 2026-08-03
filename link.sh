@@ -66,6 +66,12 @@ DOTFILES_TO_LINK=(
 
     # PI agent configuration
     ".pi/agent/APPEND_SYSTEM.md"
+    ".pi/agent/AGENTS.md"
+
+    # Codex CLI configuration
+    ".codex/config.toml"
+    ".codex/AGENTS.md"
+    ".codex/hooks.json"
 )
 
 # Directories to link recursively (individual files get symlinked)
@@ -85,6 +91,16 @@ DIRECTORY_SYMLINKS=(
     ".pi/agent/extensions"
     ".pi/agent/agents"
     ".pi/agent/skills"
+    ".codex/hooks"
+    # Symlink into .claude/skills — Claude Code and Codex share one skill set
+    ".codex/skills"
+    # .claude/commands re-exposed as skills. Codex dropped custom prompts, and
+    # ~/.agents/skills is read by Codex but not by Claude, so these reach Codex
+    # without showing up twice in Claude. Linked per skill to leave any
+    # externally managed skills in ~/.agents/skills alone.
+    ".agents/skills/log-session"
+    ".agents/skills/log-session-note"
+    ".agents/skills/open-pr"
 )
 
 log_info() {
@@ -114,6 +130,14 @@ get_target_path() {
             ;;
         .pi/*)
             # PI agent config goes to ~/.pi/
+            echo "$TARGET_DIR/${relative_path}"
+            ;;
+        .codex/*)
+            # Codex CLI config goes to ~/.codex/
+            echo "$TARGET_DIR/${relative_path}"
+            ;;
+        .agents/*)
+            # Cross-agent skills go to ~/.agents/
             echo "$TARGET_DIR/${relative_path}"
             ;;
         config/nvim/*)

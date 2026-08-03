@@ -1,0 +1,19 @@
+# Codex CLI configuration — symlinked to ~/.codex/config.toml by link.sh.
+# Reference: https://learn.chatgpt.com/docs/config-file/config-reference
+#
+# Global instructions come from .codex/AGENTS.md (symlink -> .claude/CLAUDE.md).
+# Hooks live in .codex/hooks.json; skills come from .codex/skills -> .claude/skills
+# plus the command-derived ones in .agents/skills.
+#
+# Codex writes machine-local state back into this file at runtime ([projects.*]
+# trust records, [tui.*] first-run flags). Those lines will show up in git diff —
+# discard them unless you actually want them on every machine.
+
+# `model` is deliberately unpinned — Codex tracks its own current default.
+model_reasoning_effort = "high"
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[projects."/Users/bruno"]
+trust_level = "trusted"

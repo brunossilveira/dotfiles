@@ -23,18 +23,8 @@ fi
 
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
-# Symlink global Claude instructions so Pi picks them up as AGENTS.md
-PI_AGENT_DIR="$HOME/.pi/agent"
-AGENTS_LINK="$PI_AGENT_DIR/AGENTS.md"
-if [ -f "$HOME/.claude/CLAUDE.md" ]; then
-  mkdir -p "$PI_AGENT_DIR"
-  if [ -L "$AGENTS_LINK" ] || [ ! -e "$AGENTS_LINK" ]; then
-    ln -sf "$HOME/.claude/CLAUDE.md" "$AGENTS_LINK"
-    info "Linked ~/.claude/CLAUDE.md → ~/.pi/agent/AGENTS.md"
-  else
-    info "Skipped: ~/.pi/agent/AGENTS.md exists and is not a symlink"
-  fi
-fi
+# ~/.pi/agent/AGENTS.md is handled by link.sh — .pi/agent/AGENTS.md is a repo
+# symlink to .claude/CLAUDE.md, same as .codex/AGENTS.md.
 
 # Apply patches
 PI_ROOT="$(npm root -g)/@mariozechner/pi-coding-agent"

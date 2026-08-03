@@ -1,0 +1,3 @@
+# Codex materializes its bundled skills into $CODEX_HOME/skills/.system, which
+# resolves here through .codex/skills -> .claude/skills. Codex owns them.
+.claude/skills/.system/

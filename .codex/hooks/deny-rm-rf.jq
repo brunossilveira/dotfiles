@@ -1,0 +1,1 @@
+../../.claude/hooks/deny-rm-rf.jq

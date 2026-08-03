@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/bruno/.codex/hooks/deny-rm-rf.jq",
+            "statusMessage": "Checking command",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '💡 Reminder: Use /log-session at the end of this session to save a summary to your work notes.'",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
