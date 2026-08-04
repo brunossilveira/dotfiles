@@ -32,6 +32,9 @@ brew 'htop'
 # Terminal multiplexer for managing multiple terminal sessions
 brew 'tmux'
 
+# Agent multiplexer — https://herdr.dev
+brew 'herdr'
+
 ###############################
 # Development Tools
 ###############################

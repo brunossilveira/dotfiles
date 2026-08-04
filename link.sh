@@ -79,6 +79,7 @@ DIRECTORIES_TO_LINK=(
     "config/nvim"
     "config/alacritty"
     "config/ghostty"
+    "config/herdr"
     "config/scripts"
     "config/caveman"
 )
@@ -150,6 +151,10 @@ get_target_path() {
             ;;
         config/ghostty/*)
             # Ghostty config goes to ~/.config/ghostty/
+            echo "$TARGET_DIR/.${relative_path}"
+            ;;
+        config/herdr/*)
+            # Herdr config goes to ~/.config/herdr/
             echo "$TARGET_DIR/.${relative_path}"
             ;;
         config/caveman/*)

@@ -1,0 +1,34 @@
+# herdr configuration — https://herdr.dev/docs/configuration/
+# Linked to ~/.config/herdr/config.toml by link.sh.
+# Mirrors config/tmux.conf: same prefix, same split/pane keys, same palette.
+# Run `herdr config check` after editing; `herdr --default-config` dumps every option.
+
+[theme]
+# tmux.conf uses the Solarized 256 palette
+name = "solarized"
+
+[keys]
+# C-a instead of C-b, like tmux
+prefix = "ctrl+a"
+
+# Splits match tmux: | side by side, - stacked
+split_vertical = "prefix+|"
+split_horizontal = "prefix+minus"
+
+# Pane focus (prefix+hjkl) and navigate mode (hjkl) already match tmux by default.
+# tmux resizes with prefix+HJKL; herdr uses a resize mode instead (prefix+r, then hjkl).
+
+[ui]
+# tmux keeps its status bar at the bottom
+tab_bar_position = "bottom"
+
+# tmux highlights the active window in Solarized orange (colour166)
+accent = "#cb4b16"
+
+[ui.toast]
+# tmux runs monitor-activity + visual-activity: alerts show in-app, not on the desktop
+delivery = "herdr"
+
+[session]
+# tmux-resurrect/tmux-continuum restore sessions; herdr does it natively
+resume_agents_on_restore = true
