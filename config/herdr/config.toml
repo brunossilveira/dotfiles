@@ -22,6 +22,10 @@ split_horizontal = "prefix+minus"
 # tmux keeps its status bar at the bottom
 tab_bar_position = "bottom"
 
+# One tab per workspace is the norm with hacktopus (each session is a
+# workspace), so the row is noise until a workspace actually has several.
+hide_tab_bar_when_single_tab = true
+
 # tmux highlights the active window in Solarized orange (colour166)
 accent = "#cb4b16"
 
