@@ -37,6 +37,16 @@ delivery = "herdr"
 # tmux-resurrect/tmux-continuum restore sessions; herdr does it natively
 resume_agents_on_restore = true
 
+[ui.sidebar.agents]
+# Same shape as the spaces panel below, one level deeper: repo, session, agent.
+# hacktopus mirrors $hk_group and $hk_name onto the agent's pane; $hk_indent is
+# blank braille rather than spaces, because herdr drops a whitespace-only token.
+rows = [
+  [{ token = "$hk_group", fg = "#268bd2", bold = true }],
+  ["$hk_name"],
+  ["$hk_indent", "state_icon", "agent"],
+]
+
 [ui.sidebar.spaces]
 # hacktopus (--mux herdr) publishes $hk_group once per repo and indents session
 # labels, so sessions read as a list under their repo. herdr drops a row whose
