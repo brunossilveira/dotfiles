@@ -29,6 +29,10 @@ hide_tab_bar_when_single_tab = true
 # tmux highlights the active window in Solarized orange (colour166)
 accent = "#cb4b16"
 
+# Group the agent panel by space, so it reads in the same order as the spaces
+# panel instead of an attention queue.
+agent_panel_sort = "spaces"
+
 [ui.toast]
 # tmux runs monitor-activity + visual-activity: alerts show in-app, not on the desktop
 delivery = "herdr"
