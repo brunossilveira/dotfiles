@@ -7,6 +7,7 @@
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import * as fs from "node:fs";
+import * as os from "node:os";
 import * as path from "node:path";
 
 function parseFrontmatter(content: string): { meta: Record<string, string | boolean>; body: string } {
@@ -45,14 +46,27 @@ export default function (pi: ExtensionAPI) {
 	pi.on("before_agent_start", async (event, ctx) => {
 		const rulesDir = path.join(ctx.cwd, ".claude", "rules");
 		const files = mdFiles(rulesDir);
-		if (files.length === 0) return undefined;
+		const configDir = process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config");
+		const globalCavemanRule = path.join(configDir, "caveman", "rules.md");
+		const paths = files.map((file) => path.join(rulesDir, file));
+		if (fs.existsSync(globalCavemanRule)) paths.push(globalCavemanRule);
+		if (paths.length === 0) return undefined;
 
 		const blocks: string[] = [];
-		for (const file of files) {
-			const content = fs.readFileSync(path.join(rulesDir, file), "utf-8");
+		const seen = new Set<string>();
+		for (const filePath of paths) {
+			let identity: string;
+			try {
+				identity = fs.realpathSync(filePath);
+			} catch {
+				continue;
+			}
+			if (seen.has(identity)) continue;
+			seen.add(identity);
+			const content = fs.readFileSync(filePath, "utf-8");
 			const { meta, body } = parseFrontmatter(content);
 			if (meta.alwaysApply === true) {
-				blocks.push(`### ${file}\n${body.trim()}`);
+				blocks.push(`### ${path.basename(filePath)}\n${body.trim()}`);
 			}
 		}
 

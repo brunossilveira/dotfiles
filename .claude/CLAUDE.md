@@ -98,7 +98,6 @@ Also maintain `log.md` in the memory dir: append a dated bullet whenever you cre
 
 ## Preferences
 
-- Concise output. Don't over-explain.
 - Don't add AI attribution to commits or PRs.
 - `vim` is aliased to `nvim` -- use nvim directly.
 - `rm` is aliased to `rm -iv` in my shell, but Claude's Bash tool bypasses aliases. Be careful with destructive commands.

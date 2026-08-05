@@ -67,13 +67,7 @@ Never use destructive git commands (`reset --hard`, `clean -f`, `push --force`, 
 
 ## Output
 
-- Be concise. Lead with the answer or action, not the reasoning.
-- Skip filler words, preamble, and unnecessary transitions. Do not restate what was said.
-- Do not summarize what you just did at the end of a response.
-- When referencing code, include the file path and line number.
-- If you can say it in one sentence, do not use three.
-- Focus output on: decisions needing input, status at milestones, errors that change the plan.
-- Do not give time estimates or predictions for how long tasks will take.
+- Shared output policy loads from `~/.config/caveman/rules.md`.
 
 ## Git
 

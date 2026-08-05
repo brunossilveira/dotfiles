@@ -21,6 +21,17 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"$HOME/.config/caveman/rules.md\"",
+            "statusMessage": "Loading shared Caveman rules",
+            "timeout": 5
+          }
+        ]
       }
     ]
   }

@@ -4,8 +4,8 @@ set -Eeuo pipefail
 
 info "Setting up caveman (Claude Code output-compression plugin)..."
 
-# caveman is a Claude Code plugin. Install is idempotent — re-running just
-# refreshes the marketplace and re-installs at the pinned scope.
+# caveman is a Claude Code plugin. Re-running refreshes the marketplace and
+# updates the user-scoped plugin in place.
 if ! command -v claude &> /dev/null; then
   info "  claude CLI not found on PATH — skipping caveman plugin install."
   exit 0
@@ -20,10 +20,13 @@ export TMPDIR="$HOME/.claude/tmp"
 mkdir -p "$TMPDIR"
 
 if claude plugin list 2>/dev/null | grep -qi 'caveman@caveman'; then
-  info "  caveman plugin already installed — skipping."
+  info "  caveman plugin already installed — updating."
+  claude plugin marketplace update caveman
+  claude plugin update caveman@caveman --scope user
 else
   claude plugin marketplace add JuliusBrussee/caveman
-  claude plugin install caveman@caveman
+  claude plugin install caveman@caveman --scope user
 fi
 
-info "caveman setup complete. Default mode: lite (see ~/.config/caveman/config.json)."
+default_mode="$(sed -n 's/.*\"defaultMode\": *\"\([^\"]*\)\".*/\1/p' "$(cd "$(dirname "$0")/.." && pwd)/config/caveman/config.json")"
+info "caveman setup complete. Default mode: ${default_mode:-ultra} (see ~/.config/caveman/config.json)."

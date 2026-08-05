@@ -93,6 +93,8 @@ DIRECTORY_SYMLINKS=(
     ".pi/agent/agents"
     ".pi/agent/skills"
     ".codex/hooks"
+    # Shared always-on rules; Codex reads the linked config/caveman source.
+    ".claude/rules"
     # Symlink into .claude/skills — Claude Code and Codex share one skill set
     ".codex/skills"
     # .claude/commands re-exposed as skills. Codex dropped custom prompts, and
