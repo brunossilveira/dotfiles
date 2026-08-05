@@ -38,10 +38,11 @@ delivery = "herdr"
 resume_agents_on_restore = true
 
 [ui.sidebar.spaces]
-# hacktopus (--mux herdr) publishes $hk_* tokens per session: name, repo, kind,
-# state. Workspaces it does not own have none, so `workspace` stays as the first
-# row and they keep reading normally.
-rows = [["state_icon", "workspace"], ["$hk_name", "$hk_state"]]
+# hacktopus (--mux herdr) publishes $hk_group once per repo and indents session
+# labels, so sessions read as a list under their repo. herdr drops a row whose
+# tokens are empty, which is what turns the first row into a heading; the second
+# row is the workspace label (indented for sessions, plain for your own spaces).
+rows = [["$hk_group"], ["workspace", "$hk_state"]]
 
 # >>> hacktopus (managed) >>>
 # Written by hacktopus; edits inside are overwritten.
