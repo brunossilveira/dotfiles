@@ -42,7 +42,12 @@ resume_agents_on_restore = true
 # labels, so sessions read as a list under their repo. herdr drops a row whose
 # tokens are empty, which is what turns the first row into a heading; the second
 # row is the workspace label (indented for sessions, plain for your own spaces).
-rows = [["$hk_group"], ["workspace", "$hk_state"]]
+# The repo heading is Solarized blue so it reads apart from the session names,
+# which keep the contextual default.
+rows = [
+  [{ token = "$hk_group", fg = "#268bd2", bold = true }],
+  ["workspace"],
+]
 
 # >>> hacktopus (managed) >>>
 # Written by hacktopus; edits inside are overwritten.
