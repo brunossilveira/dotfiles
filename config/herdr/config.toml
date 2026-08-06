@@ -81,4 +81,10 @@ type = "popup"
 command = "hacktopus session switch --mux herdr"
 width = "70%"
 height = "70%"
+
+# open this session's pull request
+[[keys.command]]
+key = "prefix+u"
+type = "shell"
+command = "hacktopus session open-pr --mux herdr"
 # <<< hacktopus (managed) <<<
