@@ -53,6 +53,18 @@ When two patterns in a codebase contradict, pick one (the more recent or more te
 
 Tests must encode why behavior matters, not just what it does. A test that can't fail when business logic changes is worthless.
 
+Two banned test shapes:
+- **Change-detector tests** — assert on data that is *expected* to change: model catalogs, config version literals, enumeration counts, hardcoded name lists. If the test reads like a snapshot of current data, delete it. If it reads like a contract about how two pieces of data must relate, keep it. `assert len(providers) == 8` ✗ / `assert every catalog entry has a context length` ✓.
+- **Tests that read source text** — regexing a file's contents tests the shape of the source, not its behavior. It passes when the wiring is subtly broken and fails on correct refactors, so it blocks cleanups and gives false confidence. If the logic only exists inline in a god-file, extracting it into a callable unit is the fix, not a tighter regex.
+
+Before calling something a bug, verify the premise. Most confident-but-wrong fixes rest on one of these:
+- The limitation is intentional design, not a gap — the isolation IS the feature.
+- The premise doesn't hold against how the code actually works — trace the runtime, don't trust the mental model.
+- The absence was load-bearing — adding the obvious missing piece breaks what the omission was protecting.
+- Scope creep that revives an approach already abandoned.
+
+Bar to clear: point at the exact line where the bug manifests AND show the fix changes that line's behavior. A reproduction beats a plausible rationale.
+
 On multi-step tasks, checkpoint: summarize what's done, what's verified, what's left. Don't continue from a state you can't describe.
 
 Surface uncertainty. "Done" means verified, not assumed. If you skipped something or aren't sure it worked, say so explicitly.
@@ -95,6 +107,12 @@ Scoring rules:
 - On recall, weight higher-confidence memories more; treat anything below 0.5 as tentative and verify before acting on it.
 
 Also maintain `log.md` in the memory dir: append a dated bullet whenever you create, reinforce, contradict, or delete a memory (`- YYYY-MM-DD — <verb> [[name]] — <one-line why>`). This is the bundle-level changelog; the per-file `Evidence:` lists stay too.
+
+What belongs in memory:
+
+- **Staleness test** — if a fact will be stale in a week, it doesn't belong in memory. Never store PR numbers, issue numbers, commit SHAs, "fixed bug X", "shipped Y", "Phase N done", file counts, or task progress. Recall those from past transcripts instead.
+- **Declarative, not imperative** — `User prefers concise responses` ✓ / `Always respond concisely` ✗. `Project uses pytest with xdist` ✓ / `Run tests with pytest -n 4` ✗. Imperative phrasing gets re-read as a standing directive in a later session and can override what I'm actually asking for then. Procedures and workflows go in skills, not memory.
+- **Prioritize what reduces future steering** — a memory that stops me repeating a correction is worth more than one that logs task detail.
 
 ## Preferences
 
