@@ -82,6 +82,14 @@ command = "hacktopus session switch --mux herdr"
 width = "70%"
 height = "70%"
 
+# broadcast a message to several sessions
+[[keys.command]]
+key = "prefix+m"
+type = "popup"
+command = "hacktopus session broadcast --mux herdr"
+width = "70%"
+height = "70%"
+
 # open this session's pull request
 [[keys.command]]
 key = "prefix+u"
