@@ -16,6 +16,7 @@ approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
 notify = ["/Users/bruno/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+approvals_reviewer = "auto_review"
 
 [projects."/Users/bruno"]
 trust_level = "trusted"
@@ -45,6 +46,9 @@ trusted_hash = "sha256:f6d4fa68657270d6713966c22c9495975bf7015459deb6a1f2da48d2b
 
 [hooks.state."/Users/bruno/.dotfiles/.codex/hooks.json:session_start:0:0"]
 trusted_hash = "sha256:5a1199eafdbac4784cb56f72bcdeacbdb7871c9869a1095599a8d1557555d86b"
+
+[hooks.state."/Users/bruno/.codex/hooks.json:session_start:1:0"]
+trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c6194f77632"
 
 [marketplaces.openai-bundled]
 last_updated = "2026-08-05T20:07:13Z"
