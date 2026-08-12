@@ -104,6 +104,7 @@ DIRECTORY_SYMLINKS=(
     ".agents/skills/log-session"
     ".agents/skills/log-session-note"
     ".agents/skills/open-pr"
+    ".agents/skills/work"
 )
 
 log_info() {
