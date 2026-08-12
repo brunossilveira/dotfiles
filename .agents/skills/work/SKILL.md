@@ -1,10 +1,10 @@
 ---
 name: work
-description: Work a task end to end — gather context, implement, simplify, then spawn an adversarial Codex review of the branch
+description: Work a task end to end — gather context, implement, simplify, audit responsibilities, then spawn an adversarial Codex review of the branch
 argument-hint: [ticket id, prompt, or description of the work]
 ---
 
-Work this task through all four phases, in order, without stopping to ask
+Work this task through all five phases, in order, without stopping to ask
 whether to continue:
 
 $ARGUMENTS
@@ -42,7 +42,23 @@ Commit the work before the next phase, so the review has a branch to read.
 Invoke the `simplify` skill on the change. Let it apply its cleanups, then
 re-run the tests — a quality pass that breaks the build is not done.
 
-## 4. Spawn the adversarial review
+## 4. Responsibility audit
+
+`simplify` reviews the diff's placement, not class growth, so check this
+separately: for each existing class this branch grew, ask **"did it accrete a
+new responsibility?"**
+
+A cluster of new members serving one concern — new private state plus the
+methods that own it — is a new object wearing the class's clothes. Extract it
+to its own file with its own tests. (The `SessionLease` / `TurnRecorder` split
+out of `session-conductor.ts` is the precedent for what a clean extraction
+looks like.)
+
+List the grown classes and the verdict for each, even when the verdict is "no
+new responsibility" — a silent audit is indistinguishable from a skipped one.
+Extractions are behavior-preserving: tests stay green across the move.
+
+## 5. Spawn the adversarial review
 
 Split this hacktopus session and hand the branch to Codex:
 
