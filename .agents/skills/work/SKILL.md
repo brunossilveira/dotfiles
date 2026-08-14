@@ -45,18 +45,37 @@ re-run the tests — a quality pass that breaks the build is not done.
 ## 4. Responsibility audit
 
 `simplify` reviews the diff's placement, not class growth, so check this
-separately: for each existing class this branch grew, ask **"did it accrete a
-new responsibility?"**
+separately. Cover **every file this branch added or grew** — a new file is not
+exempt, and is in fact the easier place to hide two objects, because nothing
+looks like accretion when the whole file is new.
 
+For a class the branch **grew**, ask: *did it accrete a new responsibility?*
 A cluster of new members serving one concern — new private state plus the
-methods that own it — is a new object wearing the class's clothes. Extract it
-to its own file with its own tests. (The `SessionLease` / `TurnRecorder` split
-out of `session-conductor.ts` is the precedent for what a clean extraction
+methods that own it — is a new object wearing the class's clothes.
+
+For a file the branch **added**, the growth signal is unavailable, so apply the
+same test to the finished shape: *if this file's members arrived as a diff to an
+existing class, would I have called it one responsibility or several?* Three
+signals, any one of which means extract:
+
+- **Separate state clusters.** Members that own different state — one group
+  keyed on a connection and a cursor, another on nothing at all — are already
+  two objects sharing a constructor.
+- **Both halves of one contract, far apart.** An encoder inline in one method
+  and its decoder at the bottom of the file must agree on a format nothing
+  checks. That agreement wants its own module and its own test.
+- **A protocol and its transport.** "How the bytes are laid out", "how a write
+  is made safe", and "how a reader consumes it" are three concerns; a module
+  that does all three is a package, not a class.
+
+Extract to its own file with its own tests. (The `SessionLease` / `TurnRecorder`
+split out of `session-conductor.ts` is the precedent for what a clean extraction
 looks like.)
 
-List the grown classes and the verdict for each, even when the verdict is "no
-new responsibility" — a silent audit is indistinguishable from a skipped one.
-Extractions are behavior-preserving: tests stay green across the move.
+List every added and grown file with its verdict, even when the verdict is "one
+responsibility" — a silent audit is indistinguishable from a skipped one, and
+state the signal you checked rather than asserting the conclusion. Extractions
+are behavior-preserving: tests stay green across the move.
 
 ## 5. Spawn the adversarial review
 

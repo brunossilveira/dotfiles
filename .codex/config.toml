@@ -33,6 +33,12 @@ trust_level = "trusted"
 [projects."/Users/bruno/Documents/Codex/2026-08-05/create-a-scheduled-task-called-weekday"]
 trust_level = "trusted"
 
+[projects."/Users/bruno/Documents/Codex/2026-08-13/can"]
+trust_level = "trusted"
+
+[projects."/Users/bruno/Documents/Codex/2026-08-13/let-s-set-up-a-scheduled"]
+trust_level = "trusted"
+
 [hooks.state]
 
 [hooks.state."/Users/bruno/.codex/hooks.json:pre_tool_use:0:0"]
@@ -51,12 +57,12 @@ trusted_hash = "sha256:5a1199eafdbac4784cb56f72bcdeacbdb7871c9869a1095599a8d1557
 trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c6194f77632"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-08-05T20:07:13Z"
+last_updated = "2026-08-13T14:24:38Z"
 source_type = "local"
 source = "/Users/bruno/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-08-06T02:30:40Z"
+last_updated = "2026-08-14T08:30:38Z"
 source_type = "local"
 source = "/Users/bruno/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -98,13 +104,13 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_n
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 CODEX_HOME = "/Users/bruno/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "091a81603ff202a16ed56557709bf42d97caf8f0dd2e07ae9e26d7c014d71035"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "8e86beb821b9afc846211798e0113bd4b9e79312dfcd135eb447bdb154f64071"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.730.61639"
+BROWSER_USE_CODEX_APP_VERSION = "26.803.61601"
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.computer-use]
@@ -115,9 +121,10 @@ enabled = false
 
 [shell_environment_policy.set]
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "091a81603ff202a16ed56557709bf42d97caf8f0dd2e07ae9e26d7c014d71035"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "8e86beb821b9afc846211798e0113bd4b9e79312dfcd135eb447bdb154f64071"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
 ambient-suggestions-enabled = true
+followUpQueueMode = "queue"
