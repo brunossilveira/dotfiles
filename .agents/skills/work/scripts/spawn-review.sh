@@ -1,35 +1,42 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Split the current hacktopus session and open Codex in the new pane with an
-# adversarial review of this branch against its base branch.
+# Run an adversarial Codex review of this branch against its base branch, and
+# write the findings to a file the calling agent can read — no copy-pasting.
+#
+# By default it splits the current hacktopus session so the review is visible in
+# a pane beside you; outside a hacktopus session (or with --headless) it runs in
+# the background instead. Either way the findings land in the same report file.
 #
 # Usage: spawn-review.sh [--base BRANCH] [--title TITLE] [--focus TEXT]
+#                        [--out FILE] [--headless]
+#
+# Prints REPORT_FILE=<path> and DONE_FILE=<path>. The review is finished when
+# DONE_FILE exists; its contents are the codex exit code.
 
 BASE=""
 TITLE="review"
 FOCUS=""
+REPORT=""
+HEADLESS=0
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         --base)  BASE="$2"; shift 2 ;;
         --title) TITLE="$2"; shift 2 ;;
         --focus) FOCUS="$2"; shift 2 ;;
+        --out)   REPORT="$2"; shift 2 ;;
+        --headless) HEADLESS=1; shift ;;
         --help|-h)
-            echo "Usage: $0 [--base BRANCH] [--title TITLE] [--focus TEXT]"
+            echo "Usage: $0 [--base BRANCH] [--title TITLE] [--focus TEXT] [--out FILE] [--headless]"
             exit 0
             ;;
         *) echo "Unknown option: $1" >&2; exit 1 ;;
     esac
 done
 
-if [[ -z "${HACKTOPUS_SESSION_ID:-}" ]]; then
-    echo "Not inside a hacktopus session (\$HACKTOPUS_SESSION_ID is empty)." >&2
-    echo "Run the review yourself: codex \"adversarial review of this branch vs its base\"" >&2
-    exit 1
-fi
-
 git rev-parse --git-dir >/dev/null 2>&1 || { echo "Not a git repository." >&2; exit 1; }
+command -v codex >/dev/null 2>&1 || { echo "codex is not installed." >&2; exit 1; }
 
 if [[ -z "$BASE" ]]; then
     if BASE=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null); then
@@ -50,7 +57,20 @@ if [[ "$BRANCH" == "$BASE" ]]; then
     exit 1
 fi
 
-PROMPT_FILE=$(mktemp -t adversarial-review)
+if [[ -z "${HACKTOPUS_SESSION_ID:-}" ]]; then
+    HEADLESS=1
+fi
+
+REVIEW_DIR="${TMPDIR:-/tmp}/adversarial-review"
+mkdir -p "$REVIEW_DIR"
+if [[ -z "$REPORT" ]]; then
+    REPORT="$REVIEW_DIR/$(echo "$BRANCH" | tr '/' '-')-$$.md"
+fi
+DONE_FILE="$REPORT.done"
+LOG_FILE="$REPORT.log"
+rm -f "$REPORT" "$DONE_FILE" "$LOG_FILE"
+
+PROMPT_FILE="$REVIEW_DIR/prompt-$$.txt"
 
 {
     echo "Adversarial code review. Branch \`$BRANCH\` against \`$BASE\`."
@@ -77,11 +97,25 @@ PROMPT_FILE=$(mktemp -t adversarial-review)
         echo "What the change is meant to do: $FOCUS"
         echo
     fi
-    echo "Report findings ordered by severity. Do not edit any files."
+    echo "Do not edit any files."
+    echo "Your final message IS the report: markdown, findings ordered by severity,"
+    echo "one section per finding with file:line, how it breaks, and the fix."
 } > "$PROMPT_FILE"
 
-hacktopus session split \
-    --title "$TITLE" \
-    --command "codex \"\$(cat $PROMPT_FILE)\""
+RUN="codex exec --sandbox read-only -o '$REPORT' \"\$(cat '$PROMPT_FILE')\"; echo \$? > '$DONE_FILE'"
 
-echo "Opened Codex in a split pane: $BRANCH vs $BASE"
+if [[ "$HEADLESS" -eq 1 ]]; then
+    nohup bash -c "$RUN" >"$LOG_FILE" 2>&1 &
+    echo "Codex review running in the background: $BRANCH vs $BASE"
+else
+    hacktopus session split \
+        --title "$TITLE" \
+        --command "$RUN; echo; echo 'Report: $REPORT'; echo 'Follow up with: codex resume --last'; exec \$SHELL" \
+        >"$LOG_FILE" 2>&1 \
+        || { echo "hacktopus split failed (see $LOG_FILE); falling back to headless." >&2
+             nohup bash -c "$RUN" >>"$LOG_FILE" 2>&1 & }
+    echo "Opened Codex in a split pane: $BRANCH vs $BASE"
+fi
+
+echo "REPORT_FILE=$REPORT"
+echo "DONE_FILE=$DONE_FILE"
