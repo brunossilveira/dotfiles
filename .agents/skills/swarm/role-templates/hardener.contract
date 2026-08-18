@@ -8,3 +8,5 @@ may_talk_to_user: false
 writes: hardening-tests hardening-fixes
 worktree_only: true
 records_with: swarm_story.sh record <story> hardening done <sha>
+checked_by: swarm_check.sh run <story> hardening
+self_certifies: false

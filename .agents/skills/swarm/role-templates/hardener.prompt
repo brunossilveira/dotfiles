@@ -23,6 +23,12 @@ Read and obey `role-templates/hardener.contract`.
 
 Run the full suite, not just your new tests.
 
+## Check
+
+Your handoff is gated by a check outside this role — mutation testing where the
+repository has it, an agent working through surviving mutants where it does not.
+Recording hardening with no new tests and no fixed defect fails.
+
 ## Handoff
 
 Commit in the worktree and report the sha, what you hardened, and any defect you

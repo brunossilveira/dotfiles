@@ -19,6 +19,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/swarm_lib.sh"
 STAGES="implementation code-review adversarial-review cleanup hardening architecture senior-implementation merged"
 VERDICTS="accepted changes-requested done"
 
+# Stages whose work is checked by a tool (or, where no tool exists, by an agent
+# against a rubric) before it can be recorded. The threshold lives outside the
+# role that did the work, so "done" is not a claim anyone can simply make.
+CHECKED_STAGES="implementation cleanup hardening senior-implementation"
+
 valid_stage() { [[ " $STAGES " == *" $1 "* ]]; }
 valid_verdict() { [[ " $VERDICTS " == *" $1 "* ]]; }
 
@@ -64,6 +69,17 @@ record)
     valid_stage "$stage" || die "Unknown stage: $stage (want one of: $STAGES)"
     valid_verdict "$verdict" || die "Unknown verdict: $verdict (want one of: $VERDICTS)"
     [[ -d "$(story_dir "$dir" "$id")" ]] || die "No such story: $id"
+    if [[ " $CHECKED_STAGES " == *" $stage "* ]]; then
+        check="$(story_dir "$dir" "$id")/checks/$stage"
+        result="$(kv_get "$check" result)"
+        if [[ "$result" != "pass" ]]; then
+            die "Refusing to record $stage for $id: its check is ${result:-missing}.
+Run it first:  swarm_check.sh run $id $stage
+If that reports a fallback, have an agent judge against the printed rubric and
+record the verdict with swarm_check.sh record."
+        fi
+    fi
+
     f="$(stage_file "$dir" "$id" "$stage")"
     kv_set "$f" stage "$stage"
     kv_set "$f" verdict "$verdict"
@@ -101,6 +117,8 @@ rework)
     for stage in implementation code-review adversarial-review cleanup hardening architecture senior-implementation; do
         f="$sdir/stages/$stage"
         [[ -f "$f" ]] && mv "$f" "$sdir/superseded/$n/$stage"
+        c="$sdir/checks/$stage"
+        [[ -f "$c" ]] && mv "$c" "$sdir/superseded/$n/$stage.check"
     done
     kv_set "$sdir/story" rework_cycles "$n"
     journal "$dir" "story $id: rework cycle $n — $*"

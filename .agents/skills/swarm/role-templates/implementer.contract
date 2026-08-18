@@ -8,3 +8,5 @@ writes: production-code unit-tests
 worktree_only: true
 commits_before_handoff: true
 records_with: swarm_story.sh record <story> implementation done <sha>
+checked_by: swarm_check.sh run <story> implementation
+self_certifies: false

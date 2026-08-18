@@ -30,6 +30,13 @@ Run the tests and the linter the repository actually uses, on the paths you
 touched. "Done" means verified, not assumed — if something is unverified, say so
 plainly.
 
+## Check
+
+Your handoff is gated by a check outside this role — tests and lint for this
+repository, or an agent judging against a rubric where no tool exists. Work that
+fails the check comes straight back to you, so run the repository's own tests
+before handing off.
+
 ## Handoff
 
 Commit the work in the worktree, then report the sha, the changed paths, and the

@@ -23,6 +23,11 @@ Read `reference/clean-architecture.md`.
 
 Run the full suite before and after.
 
+## Check
+
+Your handoff is gated by a check outside this role. It fails any behavior change
+and any finding you skipped silently rather than handing back.
+
 ## Handoff
 
 Commit in the worktree and report the sha and which findings you applied:

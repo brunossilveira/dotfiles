@@ -8,3 +8,5 @@ writes: cleanup
 behavior_preserving: true
 worktree_only: true
 records_with: swarm_story.sh record <story> cleanup done <sha>
+checked_by: swarm_check.sh run <story> cleanup
+self_certifies: false

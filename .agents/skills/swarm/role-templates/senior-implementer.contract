@@ -9,3 +9,5 @@ writes: architectural-improvement verification-updates
 behavior_preserving: true
 worktree_only: true
 records_with: swarm_story.sh record <story> senior-implementation done <sha>
+checked_by: swarm_check.sh run <story> senior-implementation
+self_certifies: false

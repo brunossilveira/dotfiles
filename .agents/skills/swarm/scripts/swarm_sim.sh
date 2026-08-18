@@ -80,7 +80,7 @@ while (( tick < 40 )); do
     run_implementer)
         w="$(run swarm_worktree.sh path "$story")"
         git -C "$w" -c user.email=sim@example.com -c user.name=sim commit -q --allow-empty -m "implement $story"
-        run swarm_story.sh assign "$story" implementation implementer "$story-impl-$tick" >/dev/null
+        run swarm_check.sh record "$story" implementation pass "sim: agent-judged" >/dev/null
         run swarm_story.sh record "$story" implementation done "$(git -C "$w" rev-parse --short=10 HEAD)" >/dev/null
         ;;
     open_draft_pr)
@@ -99,14 +99,26 @@ while (( tick < 40 )); do
     run_adversarial_review)
         run swarm_story.sh record "$story" adversarial-review accepted simsha >/dev/null
         ;;
-    run_cleaner)     run swarm_story.sh record "$story" cleanup done simsha >/dev/null ;;
-    run_hardener)    run swarm_story.sh record "$story" hardening done simsha >/dev/null ;;
+    run_cleaner)
+        # Exercise the real check path; a fallback means no tool exists here, so
+        # the simulator stands in for the agent that would judge the rubric.
+        # Capture before matching: piping into `grep -q` under `set -o pipefail`
+        # reports failure when grep exits early and the writer takes SIGPIPE.
+        out="$(run swarm_check.sh run "$story" cleanup 2>&1 || true)"
+        if grep -q '^RESULT: fallback' <<< "$out"; then
+            run swarm_check.sh record "$story" cleanup pass "sim: agent-judged" >/dev/null
+        fi
+        run swarm_story.sh record "$story" cleanup done simsha >/dev/null ;;
+    run_hardener)
+        run swarm_check.sh record "$story" hardening pass "sim: agent-judged" >/dev/null
+        run swarm_story.sh record "$story" hardening done simsha >/dev/null ;;
     run_architect)
         verdict=accepted
         [[ "$architect_policy" == "reject-once" ]] && { verdict=changes-requested; architect_policy=accept; }
         run swarm_story.sh record "$story" architecture "$verdict" simsha >/dev/null
         ;;
     run_senior_implementer)
+        run swarm_check.sh record "$story" senior-implementation pass "sim: agent-judged" >/dev/null
         run swarm_story.sh record "$story" senior-implementation done simsha >/dev/null ;;
     mark_pr_ready)
         run swarm_story.sh set "$story" pr_state open >/dev/null

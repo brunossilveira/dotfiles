@@ -121,6 +121,28 @@ Rework is bounded at **two cycles**. A third changes-requested on the same story
 stage becomes a blocker instead of another attempt. The plan gate counts the
 same way: two rejected plans, then stop and talk.
 
+## Checks
+
+Four stages produce work rather than opinions — implementation, cleanup,
+hardening, senior implementation — and each is gated by a check that runs
+outside the role that did the work. A stage cannot be recorded until its check
+passes.
+
+The threshold lives in a command, not in an agent's judgment, because a tool
+that exits non-zero cannot be talked around. Which command depends on the
+repository: the languages present decide, a `.swarm.conf` at the repo root
+overrides, and `skip <stage>` opts out explicitly rather than silently.
+
+Where no tool exists for a language or a stage, an agent judges against a
+written rubric instead. That is weaker, and it is meant to be: it keeps the
+shape — separate actor, recorded verdict, evidence required — while being honest
+that nothing was measured. The fallback agent is never the one that produced the
+work.
+
+A rework cycle supersedes the checks that passed for the work it replaces, so a
+story cannot inherit a green check from a version of the code that no longer
+exists.
+
 ## State
 
 Run state lives **outside the repository**, keyed by repo and run id — not in a

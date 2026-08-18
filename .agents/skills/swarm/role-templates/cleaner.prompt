@@ -23,6 +23,12 @@ Read and obey `role-templates/cleaner.contract`.
 
 Run the tests before and after. Green to green, or it does not ship.
 
+## Check
+
+Your handoff is gated by a check outside this role. It fails cleanup that
+changed behavior and cleanup that changed nothing worth changing, so an empty
+pass is not a way out.
+
 ## Handoff
 
 Commit in the worktree and report the sha and what changed:

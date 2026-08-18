@@ -73,11 +73,11 @@ After anything is recorded, run `~/.agents/skills/swarm/scripts/swarm_summary.sh
 | `await_approval` | Stop. Show the operator the gate's question and the artifact it covers. Record their answer with `swarm_gate.sh approve/reject`. Never approve on their behalf. |
 | `request_plan_approval` | Run the command it prints. |
 | `create_worktree` | Run the command. It branches from the parent story's branch when there is one, from the run's base otherwise. |
-| `run_implementer`, `rework_implementer` | Subagent with `~/.agents/skills/swarm/role-templates/implementer.prompt`, working **only** in the printed `WORKTREE`. Pass it the story's `story.md`, and for rework the review findings. It commits; you record the sha. |
+| `run_implementer`, `rework_implementer` | Subagent with `~/.agents/skills/swarm/role-templates/implementer.prompt`, working **only** in the printed `WORKTREE`. Pass it the story's `story.md`, and for rework the review findings. It commits, then you **check before recording** (below). |
 | `open_draft_pr` | Run the command. The PR opens as a draft so the run is visible in GitHub while the pipeline finishes. |
 | `run_code_reviewer` | Subagent with `~/.agents/skills/swarm/role-templates/code-reviewer.prompt`, read-only in the worktree. Post its findings with `swarm_pr.sh comment`, record its verdict. |
 | `run_adversarial_review` | `~/.agents/skills/swarm/scripts/swarm_review.sh run <story>`. Headless Codex, clean context, different model. It records its own verdict. Post the report to the PR. |
-| `run_cleaner`, `run_hardener`, `run_senior_implementer` | Subagent with the matching prompt, in the worktree. Each commits; you record the sha. |
+| `run_cleaner`, `run_hardener`, `run_senior_implementer` | Subagent with the matching prompt, in the worktree. Each commits, then you **check before recording** (below). |
 | `run_architect` | Subagent with `~/.agents/skills/swarm/role-templates/architect.prompt`, read-only. Post findings, record the verdict. |
 | `mark_pr_ready` | Run the command. Every stage cleared. |
 | `await_ci` | Run `swarm_pr.sh sync <story>` and check again. Do not poll in a tight loop. |
@@ -86,6 +86,32 @@ After anything is recorded, run `~/.agents/skills/swarm/scripts/swarm_summary.sh
 | `handle_blocker`, `open_blocker` | Stop. Report the blocker plainly and what it would take to clear it. Resolve only with `swarm_blocker.sh resolve` after the operator decides. |
 | `complete_run` | Run the command and report what shipped. |
 | `wait`, `none` | Say what the run is waiting on and stop. |
+
+## Checking before recording
+
+`implementation`, `cleanup`, `hardening`, and `senior-implementation` cannot be
+recorded until their check passes. `swarm_story.sh record` refuses otherwise, so
+the threshold lives outside the role that did the work:
+
+```sh
+~/.agents/skills/swarm/scripts/swarm_check.sh run <story> <stage>
+```
+
+It resolves the check from the languages the repository actually uses, or from a
+`.swarm.conf` at the repo root when one exists (`check <stage> <command...>`,
+`skip <stage>`), and runs it in the story's worktree. Three outcomes:
+
+- `RESULT: pass` — record the stage.
+- `RESULT: fail` — hand the log back to the role that produced the work and let
+  it fix what failed. Do not record, and do not argue with the tool.
+- `RESULT: fallback` — no tool exists for this stage here. Spawn a **read-only**
+  subagent with the printed `RUBRIC`, the story's diff, and `story.md`; it
+  returns `pass` or `fail` with evidence. Record its verdict with
+  `swarm_check.sh record <story> <stage> <pass|fail> <detail>`, then proceed.
+  The fallback agent must not be the one that did the work.
+
+Capture the output before matching on it — piping into `grep -q` under
+`pipefail` misreports, because the writer takes SIGPIPE when grep exits early.
 
 ## Spawning a role
 
@@ -102,6 +128,8 @@ touch a worktree that is not theirs.
   `gates/`, it did not happen.
 - Author product artifacts yourself. You route work and record results — see
   `~/.agents/skills/swarm/roles/orchestrator.contract`.
+- Record a checked stage yourself when its check failed or was never run. The
+  refusal is the point.
 - Retry past the rework bound. Two changes-requested cycles on a story, or two
   rejected plans, and the advisor raises a blocker instead. Let it.
 
