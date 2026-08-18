@@ -1,11 +1,10 @@
 role: cleaner
-handoff_targets: squad-leader
-may_web_search: true
-web_search_scope: property-testing-framework-discovery
-may_fetch_tools: false
+stage: cleanup
+runs_in: assigned worktree
+may_web_search: false
 may_spawn: false
 may_talk_to_user: false
-required_tool_ids: crap4clj dry4clj dependency-checker
-writes: cleanup coverage-improvements
-artifact_roots: src/ test/
+writes: cleanup
 behavior_preserving: true
+worktree_only: true
+records_with: swarm_story.sh record <story> cleanup done <sha>

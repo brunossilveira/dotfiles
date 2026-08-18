@@ -1,10 +1,10 @@
 role: implementer
-handoff_targets: squad-leader
+stage: implementation
+runs_in: assigned worktree
 may_web_search: false
-may_fetch_tools: false
 may_spawn: false
 may_talk_to_user: false
-required_tool_ids: dependency-checker
-writes: production-code unit-tests acceptance-tests acceptance-pipeline
-artifact_roots: src/ test/ features/ qa/ acceptance/ bb/
-workflow_readiness_source: squad_next.sh
+writes: production-code unit-tests
+worktree_only: true
+commits_before_handoff: true
+records_with: swarm_story.sh record <story> implementation done <sha>

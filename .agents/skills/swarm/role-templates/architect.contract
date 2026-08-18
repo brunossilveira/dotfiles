@@ -1,12 +1,10 @@
 role: architect
-handoff_targets: squad-leader
+stage: architecture
+runs_in: assigned worktree, read-only
 may_web_search: false
-may_fetch_tools: false
 may_spawn: false
 may_talk_to_user: false
-required_tool_ids: dependency-checker
 writes: architecture-critique
-artifact_roots: reviews/
-forbidden_artifact_roots: stories/ features/ qa/ src/ test/
-singleton: true
-batch_kind: architecture
+edits_implementation: false
+verdicts: accepted changes-requested
+records_with: swarm_story.sh record <story> architecture <verdict> <sha>

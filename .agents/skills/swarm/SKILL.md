@@ -1,77 +1,108 @@
 ---
 name: swarm
-description: Multi-story orchestration — a deterministic advisor sequences the work and roles do it; single tasks are a swarm of one story
-argument-hint: [theme, ticket id, or task description]
+description: Work an intent end to end as a run — shape it into stories, then drive each story through implement, review, clean, and architecture to its own pull request, sequenced by a deterministic advisor
+argument-hint: [intent, ticket id, or task description] | resume | status
 ---
 
-**Status: scaffolding.** The design is settled (`reference/DESIGN.md`) and the
-roles and contracts are in place, but the advisor, the state directory, and the
-spawn path are not written yet. Running this today gets you role prompts to
-read, nothing that orchestrates. Use `work` until the advisor lands.
+Run the work described by:
 
-## The idea
+$ARGUMENTS
 
-Three parts, kept separate on purpose:
+With no argument, or with `resume`, continue the run already in progress. With
+`status`, print the summary and stop.
 
-- **State on disk.** Every fact about the run — which story exists, which sha
-  implemented it, which review accepted it, which gate the user approved — is a
-  file, not a memory of the conversation. Sessions can die; the run continues.
-- **A deterministic advisor sequences the work.** A script reads the state and
-  prints the single next action. Roles do not choose, skip, or reorder the
-  pipeline from prose, memory, or judgment. The model supplies judgment; the
-  script supplies order.
-- **Roles are prompt + contract.** A contract says what a role may write, what
-  it may never write, and who it hands to. The orchestrator's contract forbids
-  it from authoring product artifacts at all — it routes, it does not
-  contribute.
+`reference/DESIGN.md` explains why this is shaped the way it is. Read it before
+changing any of it.
 
-A single task is not a special case: it is a run with one story.
+## The rule that matters
 
-A **run** carries one intent from a request to a set of merged pull requests —
-one branch and one draft PR per story, stacked only where a dependency demands
-it, and merged by the operator, never automatically. `reference/DESIGN.md` is
-the full picture: the run structure, the loop, the gates, and what upstream
-machinery is deliberately left out.
+**You do not decide what happens next. `scripts/swarm_next.sh` does.**
 
-## Roles
+Run it, do exactly the one action it names, record the outcome, run it again.
+Do not skip a stage because it looks unnecessary, do not reorder stages, do not
+batch two actions because they seem related, and do not infer the next step from
+this file, from memory, or from what the conversation was just talking about.
+Your judgment goes *inside* an action — shaping stories, writing code, reviewing
+a diff. Sequencing is the advisor's.
 
-The spine is `analyst -> implementer -> code-reviewer -> cleaner -> architect`;
-the rest are enabled per story. `roles/` holds the persistent pair,
-`role-templates/` the spawnable workers. Each has a `.prompt` (what it owns) and
-a `.contract` (what it may touch: `key: value`, lists space-separated).
+If the advisor's output contradicts what you believe about the run, the advisor
+is right about sequence and you are possibly right about facts: check whether
+something went unrecorded, record it, and ask again.
 
-| Role | Owns |
+## Starting and resuming
+
+```sh
+scripts/swarm_run.sh start "<intent>"     # new run; makes it current
+scripts/swarm_run.sh list                 # runs for this repository
+scripts/swarm_run.sh use <run-id>         # switch the current run
+scripts/swarm_summary.sh --print          # where the run stands
+```
+
+State lives outside the repository, under
+`${XDG_STATE_HOME:-~/.local/state}/swarm/<repo>/runs/<run-id>/`, so per-story
+worktrees all see the same run and nothing lands in a diff. A dead session loses
+nothing: resume and the advisor picks up at the next action.
+
+## The loop
+
+```sh
+scripts/swarm_next.sh --all
+```
+
+It prints one `NEXT_ACTION`, the story it applies to, the reason, and the command
+that records the result. `CONCURRENT:` lines list other stories with work
+available — those are safe to run in parallel, because independent stories have
+disjoint write surfaces by construction. Stacked stories never appear
+concurrently with their parent.
+
+After anything is recorded, run `scripts/swarm_summary.sh`.
+
+| `NEXT_ACTION` | What you do |
 | --- | --- |
-| `squad-leader` | Talks to the user, routes work, records results, requests approvals. Authors no product artifact. |
-| `analyst` | Intent to self-contained stories (INVEST), plus the dependency order the branch stack is built from. |
-| `implementer` | Implements exactly one story, TDD, and opens its draft pull request. |
-| `cleaner` | Behavior-preserving cleanup — names, cohesion, duplication, dead code. |
-| `code-reviewer` | Reads the diff, writes a review artifact, returns `accepted` or `changes-requested`. Never edits the implementation. |
-| `architect` | Reviews structure and dependency direction. Recommends only. |
-| `hardener` | Optional. Robustness and edge handling on risky stories, after code review passes. |
-| `senior-implementer` | Optional. Applies the architect's findings, behavior-preserving. |
-| `merger` | Restacks a story branch after its parent merges. |
+| `run_analyst` | Subagent with `role-templates/analyst.prompt`, repository root, read-only. It writes `story.md` per story and registers each with `swarm_story.sh add`. Then request the plan gate. |
+| `await_approval` | Stop. Show the operator the gate's question and the artifact it covers. Record their answer with `swarm_gate.sh approve/reject`. Never approve on their behalf. |
+| `request_plan_approval` | Run the command it prints. |
+| `create_worktree` | Run the command. It branches from the parent story's branch when there is one, from the run's base otherwise. |
+| `run_implementer`, `rework_implementer` | Subagent with `role-templates/implementer.prompt`, working **only** in the printed `WORKTREE`. Pass it the story's `story.md`, and for rework the review findings. It commits; you record the sha. |
+| `open_draft_pr` | Run the command. The PR opens as a draft so the run is visible in GitHub while the pipeline finishes. |
+| `run_code_reviewer` | Subagent with `role-templates/code-reviewer.prompt`, read-only in the worktree. Post its findings with `swarm_pr.sh comment`, record its verdict. |
+| `run_adversarial_review` | `scripts/swarm_review.sh run <story>`. Headless Codex, clean context, different model. It records its own verdict. Post the report to the PR. |
+| `run_cleaner`, `run_hardener`, `run_senior_implementer` | Subagent with the matching prompt, in the worktree. Each commits; you record the sha. |
+| `run_architect` | Subagent with `role-templates/architect.prompt`, read-only. Post findings, record the verdict. |
+| `mark_pr_ready` | Run the command. Every stage cleared. |
+| `await_ci` | Run `swarm_pr.sh sync <story>` and check again. Do not poll in a tight loop. |
+| `await_merge` | Stop and tell the operator the PR is ready. **You never merge.** Take a concurrent lane if one is offered. |
+| `record_merge`, `restack` | Run the command. If a restack conflicts, spawn a subagent with `role-templates/merger.prompt` in that worktree. |
+| `handle_blocker`, `open_blocker` | Stop. Report the blocker plainly and what it would take to clear it. Resolve only with `swarm_blocker.sh resolve` after the operator decides. |
+| `complete_run` | Run the command and report what shipped. |
+| `wait`, `none` | Say what the run is waiting on and stop. |
 
-Carried over but not in the pipeline: `troubleshooter` (the pull requests are
-the window, and the operator is in the session) and `qa` (independent
-verification is CI on the PR, a fact to read rather than a role to spawn).
+## Spawning a role
 
-The shape worth keeping: **the author never approves itself** — reviewers read
-and comment, never edit — and an **orchestrator that writes nothing**, only
-routes.
+Every worker gets: its role prompt, its contract, the story's `story.md`, the
+worktree path, and the exact command that will record its result. Nothing else.
+Workers do not spawn other workers, do not talk to the operator, and do not
+touch a worktree that is not theirs.
 
-## Still to build
+## What you never do
 
-`reference/DESIGN.md` decides the behavior; `reference/PORTING.md` lists what the
-copied prompts still assume that this setup does not have.
+- Merge a pull request. That is the operator's, always, even with green CI and an
+  accepted review.
+- Approve a gate, or treat a remembered "yes" as an approval. If it is not in
+  `gates/`, it did not happen.
+- Author product artifacts yourself. You route work and record results — see
+  `roles/orchestrator.contract`.
+- Retry past the rework bound. Two changes-requested cycles on a story, or two
+  rejected plans, and the advisor raises a blocker instead. Let it.
 
-1. State layout — stories, assignments, verdicts, gates, blockers, plus the run
-   summary and journal. Lives outside the repository, keyed by repo and run id.
-2. `scripts/swarm_next.sh` — the advisor. Bash. Pure function of the state.
-3. Spawn path — subagent, worktree session, or headless Codex, chosen by write
-   surface.
-4. Gates — plan and review disposition stop for the operator; everything else
-   runs through. Rework bounded at two cycles.
-5. Prompt rewrite — strip the upstream runtime the roles still talk to.
-6. A simulator, so the pipeline can be exercised without spending a single
-   agent turn.
+## Changing the pipeline
+
+`scripts/swarm_sim.sh` drives the advisor through a whole run with no agents and
+no network, printing the tick trace. Run it after any change to
+`swarm_next.sh`, including the paths that are meant to stop:
+
+```sh
+scripts/swarm_sim.sh
+scripts/swarm_sim.sh --reviewer reject-once --architect reject-once
+scripts/swarm_sim.sh --reviewer reject-always     # expect a blocker, not a third attempt
+```

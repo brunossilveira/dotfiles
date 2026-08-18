@@ -1,0 +1,8 @@
+role: orchestrator
+persistent: true
+may_talk_to_user: true
+may_spawn: true
+writes: run-state story-records assignments gate-requests blocker-records summaries
+forbidden_writes: production-code unit-tests review-reports cleanup-changes architecture-critiques stories
+sequencing_source: scripts/swarm_next.sh
+merges_pull_requests: false

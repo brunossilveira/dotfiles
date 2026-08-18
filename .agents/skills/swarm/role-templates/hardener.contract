@@ -1,12 +1,10 @@
 role: hardener
-handoff_targets: squad-leader
+stage: hardening
+optional: true
+runs_in: assigned worktree
 may_web_search: false
-may_fetch_tools: false
 may_spawn: false
 may_talk_to_user: false
-required_tool_ids: clj-mutate crap4clj dry4clj gherkin-parser gherkin-mutator dependency-checker
-writes: hardening-tests hardening-fixes tool-manifests
-artifact_roots: src/ test/ .squad/ features/ acceptance/ bb/
-forbidden_root_files: bb.edn deps.edn package.json package-lock.json Cargo.toml go.mod pom.xml build.gradle Makefile project.clj shadow-cljs.edn
-singleton: true
-batch_kind: hardener
+writes: hardening-tests hardening-fixes
+worktree_only: true
+records_with: swarm_story.sh record <story> hardening done <sha>
