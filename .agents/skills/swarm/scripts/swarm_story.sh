@@ -6,6 +6,7 @@
 #   swarm_story.sh set <story-id> <key> <value...>
 #   swarm_story.sh record <story-id> <stage> <verdict> [sha] [detail...]
 #   swarm_story.sh assign <story-id> <stage> <role> <assignment-id>
+#   swarm_story.sh rework <story-id> <reason...>
 #   swarm_story.sh status <story-id>
 #   swarm_story.sh list
 #
@@ -87,6 +88,24 @@ assign)
     journal "$dir" "story $id: assigned $role for $stage ($aid)"
     echo "ASSIGNMENT: $aid"
     ;;
+rework)
+    # Send a story back to the implementer: archive the verdicts that rejected
+    # it and count the cycle. Without this the old changes-requested verdicts
+    # would still be the latest fact and the story could never move again.
+    [[ $# -ge 2 ]] || die "Usage: swarm_story.sh rework <story-id> <reason...>"
+    id="$1"; shift
+    sdir="$(story_dir "$dir" "$id")"
+    [[ -d "$sdir" ]] || die "No such story: $id"
+    n=$(( $(kv_get "$sdir/story" rework_cycles || echo 0) + 1 ))
+    mkdir -p "$sdir/superseded/$n"
+    for stage in implementation code-review adversarial-review cleanup hardening architecture senior-implementation; do
+        f="$sdir/stages/$stage"
+        [[ -f "$f" ]] && mv "$f" "$sdir/superseded/$n/$stage"
+    done
+    kv_set "$sdir/story" rework_cycles "$n"
+    journal "$dir" "story $id: rework cycle $n — $*"
+    echo "REWORK: $id cycle $n of $REWORK_LIMIT"
+    ;;
 status)
     [[ $# -eq 1 ]] || die "Usage: swarm_story.sh status <story-id>"
     sdir="$(story_dir "$dir" "$1")"
@@ -104,6 +123,6 @@ list)
     done
     ;;
 *)
-    die "Usage: swarm_story.sh {add|set|record|assign|status|list}"
+    die "Usage: swarm_story.sh {add|set|record|assign|rework|status|list}"
     ;;
 esac

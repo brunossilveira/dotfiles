@@ -33,7 +33,6 @@ cd "$repo"
 
 run() { "$S/$@"; }
 field() { run swarm_next.sh | sed -n "s/^$1: //p" | head -1; }
-stage_path() { echo "$(run swarm_run.sh path)/stories/$1/stages"; }
 
 echo "SIM_START reviewer=$reviewer_policy architect=$architect_policy"
 echo
@@ -75,13 +74,14 @@ while (( tick < 40 )); do
     create_worktree)
         run swarm_worktree.sh create "$story" >/dev/null
         ;;
-    run_implementer|rework_implementer)
+    rework_implementer)
+        run swarm_story.sh rework "$story" "review requested changes" >/dev/null
+        ;;
+    run_implementer)
         w="$(run swarm_worktree.sh path "$story")"
         git -C "$w" -c user.email=sim@example.com -c user.name=sim commit -q --allow-empty -m "implement $story"
         run swarm_story.sh assign "$story" implementation implementer "$story-impl-$tick" >/dev/null
         run swarm_story.sh record "$story" implementation done "$(git -C "$w" rev-parse --short=10 HEAD)" >/dev/null
-        # A rework attempt clears the verdicts that sent it back.
-        rm -f "$(stage_path "$story")/code-review" "$(stage_path "$story")/adversarial-review"
         ;;
     open_draft_pr)
         run swarm_story.sh set "$story" pr "https://example.invalid/pr/$story" >/dev/null

@@ -184,11 +184,11 @@ story_action() {
     }
 
     if [[ "$code_v" == "changes-requested" || "$adv_v" == "changes-requested" ]]; then
-        local attempts; attempts="$(attempt_count "$dir" "$s" implementation)"
-        if (( attempts >= REWORK_LIMIT )); then
-            echo "open_blocker|$s||review requested changes $attempts times; stop instead of another attempt|swarm_blocker.sh open rework-$s rework $s \"$attempts rework cycles\""
+        local cycles; cycles="$(story_field "$dir" "$s" rework_cycles)"; cycles="${cycles:-0}"
+        if (( cycles >= REWORK_LIMIT )); then
+            echo "open_blocker|$s||review requested changes after $cycles rework cycles; stop instead of another attempt|swarm_blocker.sh open rework-$s rework $s \"$cycles rework cycles\""
         else
-            echo "rework_implementer|$s|implementer|review requested changes (attempt $((attempts + 1)) of $REWORK_LIMIT)|swarm_story.sh assign $s implementation implementer $s-impl-$((attempts + 1))"
+            echo "rework_implementer|$s|implementer|review requested changes (cycle $((cycles + 1)) of $REWORK_LIMIT)|swarm_story.sh rework $s \"review requested changes\" then re-run the implementer"
         fi
         return 0
     fi

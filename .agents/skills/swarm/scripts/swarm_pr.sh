@@ -39,30 +39,23 @@ sync)
     story="$1"
     path="$(story_path "$story")"
     [[ -d "$path" ]] || die "No worktree for story: $story"
-    json="$(cd "$path" && gh pr view --json state,isDraft,mergedAt,statusCheckRollup 2>/dev/null)" \
+
+    state="$(cd "$path" && gh pr view --json state,isDraft,mergedAt -q \
+        'if .mergedAt then "merged" elif .isDraft then "draft" else (.state | ascii_downcase) end' 2>/dev/null)" \
         || { echo "PR_STATE: none"; exit 0; }
-    merged="$(echo "$json" | grep -o '"mergedAt":"[^"]*"' | head -1 || true)"
-    draft="$(echo "$json" | grep -o '"isDraft":[a-z]*' | head -1 || true)"
-    if [[ -n "$merged" ]]; then
-        state=merged
-    elif [[ "$draft" == '"isDraft":true' ]]; then
-        state=draft
-    else
-        state=open
-    fi
-    if echo "$json" | grep -q '"conclusion":"FAILURE"'; then
-        ci=failing
-    elif echo "$json" | grep -q '"status":"IN_PROGRESS"\|"status":"QUEUED"'; then
-        ci=pending
-    elif echo "$json" | grep -q '"conclusion":"SUCCESS"'; then
-        ci=passing
-    else
-        ci=none
-    fi
+
+    # Any failure wins, then anything still running, then success.
+    ci="$(cd "$path" && gh pr view --json statusCheckRollup -q '
+        [.statusCheckRollup[]? | (.conclusion // .state // .status // "") | ascii_downcase] as $c
+        | if ($c | length) == 0 then "none"
+          elif ($c | map(select(. == "failure" or . == "timed_out" or . == "cancelled" or . == "action_required")) | length) > 0 then "failing"
+          elif ($c | map(select(. == "" or . == "pending" or . == "in_progress" or . == "queued" or . == "expected")) | length) > 0 then "pending"
+          else "passing" end' 2>/dev/null)" || ci=none
+
     story_set "$dir" "$story" pr_state "$state"
-    story_set "$dir" "$story" ci "$ci"
+    story_set "$dir" "$story" ci "${ci:-none}"
     echo "PR_STATE: $state"
-    echo "CI: $ci"
+    echo "CI: ${ci:-none}"
     ;;
 ready)
     [[ $# -eq 1 ]] || die "Usage: swarm_pr.sh ready <story-id>"
