@@ -13,10 +13,12 @@ S="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 reviewer_policy=accept
 architect_policy=accept
+missing_tools=false
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --reviewer) reviewer_policy="$2"; shift 2 ;;   # accept | reject-once | reject-always
         --architect) architect_policy="$2"; shift 2 ;;
+        --missing-tools) missing_tools=true; shift ;;   # a language whose tools are absent
         *) echo "Unknown option: $1" >&2; exit 1 ;;
     esac
 done
@@ -28,6 +30,9 @@ export SWARM_STATE_HOME="$sandbox/state"
 repo="$sandbox/repo"
 mkdir -p "$repo"
 git -C "$repo" init -q -b master
+# A Gemfile with no gems installed is the "language has a bar, tool absent" case.
+$missing_tools && touch "$repo/Gemfile"
+git -C "$repo" add -A 2>/dev/null || true
 git -C "$repo" -c user.email=sim@example.com -c user.name=sim commit -q --allow-empty -m init
 cd "$repo"
 
@@ -107,6 +112,8 @@ while (( tick < 40 )); do
         out="$(run swarm_check.sh run "$story" cleanup 2>&1 || true)"
         if grep -q '^RESULT: fallback' <<< "$out"; then
             run swarm_check.sh record "$story" cleanup pass "sim: agent-judged" >/dev/null
+        elif grep -q '^RESULT: missing-tools' <<< "$out"; then
+            continue        # the advisor turns this into a blocker on the next tick
         fi
         run swarm_story.sh record "$story" cleanup done simsha >/dev/null ;;
     run_hardener)

@@ -137,6 +137,10 @@ attempt_count() {
 
 REWORK_LIMIT="${SWARM_REWORK_LIMIT:-2}"
 
+check_field() {
+    kv_get "$(story_dir "$1" "$2")/checks/$3" "$4"
+}
+
 # --- gates and blockers -----------------------------------------------------
 
 open_gates() {

@@ -158,6 +158,17 @@ story_action() {
         fi
     fi
 
+    # A check that cannot run because its tool is absent is a stop, not a retry:
+    # the language has a deterministic bar, so nothing stands in for it.
+    local stage
+    for stage in implementation cleanup hardening senior-implementation; do
+        if [[ "$(check_field "$dir" "$s" "$stage" source)" == "missing-tools" \
+           && "$(check_field "$dir" "$s" "$stage" result)" == "fail" ]]; then
+            echo "open_blocker|$s||$stage needs $(check_field "$dir" "$s" "$stage" detail), which is not installed here|$S/swarm_blocker.sh open tools-$s-$stage tooling $s \"missing: $(check_field "$dir" "$s" "$stage" detail)\""
+            return 0
+        fi
+    done
+
     [[ -z "$(story_field "$dir" "$s" worktree)" ]] && {
         echo "create_worktree|$s||the story has no branch yet|$S/swarm_worktree.sh create $s"
         return 0

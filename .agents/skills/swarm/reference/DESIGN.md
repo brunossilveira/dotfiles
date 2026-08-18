@@ -133,11 +133,22 @@ that exits non-zero cannot be talked around. Which command depends on the
 repository: the languages present decide, a `.swarm.conf` at the repo root
 overrides, and `skip <stage>` opts out explicitly rather than silently.
 
-Where no tool exists for a language or a stage, an agent judges against a
-written rubric instead. That is weaker, and it is meant to be: it keeps the
-shape — separate actor, recorded verdict, evidence required — while being honest
-that nothing was measured. The fallback agent is never the one that produced the
-work.
+**Deterministic first, always.** A language that has a defined check for a stage
+gets that check and nothing else. If its tool is not installed, the run stops
+and names what is missing — it does not quietly downgrade to an opinion, because
+a real bar exists and skipping it would be invisible in the record afterwards.
+This is the property swarm-forge buys by owning its language; keeping it means
+accepting that a repo sometimes has to install something before a stage can
+pass.
+
+An agent judges against a written rubric in exactly one case: no check is
+defined for that language at that stage. That path exists so an unsupported
+language does not stop the run outright, not as a general substitute. It is
+weaker by construction, so it keeps the shape — separate actor, recorded
+verdict, evidence required — and records `source: agent`, which the summary
+shows, so a run gated by opinions never reads like one gated by measurements.
+
+The fallback agent is never the one that produced the work.
 
 A rework cycle supersedes the checks that passed for the work it replaces, so a
 story cannot inherit a green check from a version of the code that no longer

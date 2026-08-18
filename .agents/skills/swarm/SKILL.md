@@ -97,18 +97,23 @@ the threshold lives outside the role that did the work:
 ~/.agents/skills/swarm/scripts/swarm_check.sh run <story> <stage>
 ```
 
-It resolves the check from the languages the repository actually uses, or from a
-`.swarm.conf` at the repo root when one exists (`check <stage> <command...>`,
-`skip <stage>`), and runs it in the story's worktree. Three outcomes:
+Precedence, in order: a `.swarm.conf` at the repo root (`check <stage>
+<command...>`, `skip <stage>`) wins outright; otherwise the languages the
+repository actually uses decide, via `reference/tool-table.conf`. Four outcomes:
 
 - `RESULT: pass` — record the stage.
 - `RESULT: fail` — hand the log back to the role that produced the work and let
   it fix what failed. Do not record, and do not argue with the tool.
-- `RESULT: fallback` — no tool exists for this stage here. Spawn a **read-only**
+- `RESULT: missing-tools` — this language *has* a deterministic bar for this
+  stage and the tool is not installed. **No agent stands in for it.** The
+  advisor turns this into a blocker on the next tick; the fix is to install the
+  tool, or to write an explicit `check`/`skip` line in `.swarm.conf`.
+- `RESULT: fallback` — no check is defined for this language at this stage at
+  all. Only here does judgment substitute for measurement: spawn a **read-only**
   subagent with the printed `RUBRIC`, the story's diff, and `story.md`; it
-  returns `pass` or `fail` with evidence. Record its verdict with
-  `swarm_check.sh record <story> <stage> <pass|fail> <detail>`, then proceed.
-  The fallback agent must not be the one that did the work.
+  returns `pass` or `fail` with evidence. Record with `swarm_check.sh record
+  <story> <stage> <pass|fail> <detail>`. The fallback agent must not be the one
+  that did the work.
 
 Capture the output before matching on it — piping into `grep -q` under
 `pipefail` misreports, because the writer takes SIGPIPE when grep exits early.

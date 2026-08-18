@@ -47,27 +47,69 @@ repo_skips() {
     grep -qE "^skip[[:space:]]+${stage}([[:space:]]|$)" "$p/.swarm.conf"
 }
 
-# Commands whose probe succeeds in this repository, one per line.
-resolve_commands() {
-    local p="$1" stage="$2" lang line probe cmd
+# Entries defined for a language and stage, whether or not the tool is present.
+defined_entries() {
+    local p="$1" stage="$2" lang
+    for lang in $(detect_languages "$p"); do
+        awk -F'|' -v l="$lang" -v s="$stage" \
+            'NF == 5 && $0 !~ /^[[:space:]]*#/ && $1 == l && $2 == s { print }' "$TOOL_TABLE"
+    done
+}
+
+# Of those, the ones whose probe succeeds here.
+runnable_commands() {
+    local p="$1" stage="$2" line probe cmd
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        probe="$(cut -d'|' -f4 <<< "$line")"
+        cmd="$(cut -d'|' -f5 <<< "$line")"
+        if ( cd "$p" && eval "$probe" ) >/dev/null 2>&1; then echo "$cmd"; fi
+    done < <(defined_entries "$p" "$stage")
+}
+
+# Defined for this language and stage, but not installed. These never degrade to
+# an agent: a deterministic bar exists here, so the run says what is missing.
+missing_tools() {
+    local p="$1" stage="$2" line probe tool
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        tool="$(cut -d'|' -f3 <<< "$line")"
+        probe="$(cut -d'|' -f4 <<< "$line")"
+        if ! ( cd "$p" && eval "$probe" ) >/dev/null 2>&1; then
+            echo "$tool ($(cut -d'|' -f1 <<< "$line"))"
+        fi
+    done < <(defined_entries "$p" "$stage")
+}
+
+# One of: override, tools, missing-tools, fallback — plus the detail lines that
+# go with it. This is the whole precedence rule in one place.
+resolve() {
+    local p="$1" stage="$2"
 
     local overrides; overrides="$(repo_overrides "$p" "$stage" || true)"
     if [[ -n "$overrides" ]]; then
-        echo "$overrides"
+        echo "KIND: override"
+        echo "$overrides" | sed 's/^/CMD: /'
         return 0
     fi
 
-    for lang in $(detect_languages "$p"); do
-        while IFS= read -r line; do
-            [[ "$line" =~ ^[[:space:]]*# || -z "${line// }" ]] && continue
-            [[ "$line" != "$lang "* ]] && continue
-            [[ "$line" != *"||"* ]] && continue
-            probe="$(echo "${line%%||*}" | sed -E "s/^${lang}[[:space:]]+${stage}[[:space:]]+//")"
-            [[ "$probe" == "${line%%||*}" ]] && continue   # stage did not match
-            cmd="$(echo "${line#*||}" | sed 's/^[[:space:]]*//')"
-            if ( cd "$p" && eval "$probe" ) >/dev/null 2>&1; then echo "$cmd"; fi
-        done < "$TOOL_TABLE"
-    done
+    local defined; defined="$(defined_entries "$p" "$stage" || true)"
+    if [[ -z "$defined" ]]; then
+        echo "KIND: fallback"
+        local langs; langs="$(detect_languages "$p" | paste -sd, - || true)"
+        echo "DETAIL: no check is defined for ${langs:-an unrecognised project} at stage $stage"
+        return 0
+    fi
+
+    local missing; missing="$(missing_tools "$p" "$stage" || true)"
+    if [[ -n "$missing" ]]; then
+        echo "KIND: missing-tools"
+        echo "$missing" | sed 's/^/TOOL: /'
+        return 0
+    fi
+
+    echo "KIND: tools"
+    runnable_commands "$p" "$stage" | sed 's/^/CMD: /'
 }
 
 cmd="${1:-}"; shift || true
@@ -83,15 +125,12 @@ plan)
         echo "PLAN: skipped by .swarm.conf"
         exit 0
     fi
-    commands="$(resolve_commands "$path" "$stage" || true)"
-    if [[ -z "$commands" ]]; then
-        echo "PLAN: fallback"
-        echo "REASON: no usable tool for stage $stage in $(detect_languages "$path" | paste -sd, - || echo 'an unrecognised project')"
-        echo "RUBRIC: $SKILL/reference/check-rubrics/$stage.md"
-    else
-        echo "PLAN: commands"
-        echo "$commands" | sed 's/^/COMMAND: /'
-    fi
+    resolved="$(resolve "$path" "$stage")"
+    kind="$(sed -n 's/^KIND: //p' <<< "$resolved")"
+    echo "PLAN: $kind"
+    sed -n 's/^CMD: /COMMAND: /p;s/^TOOL: /MISSING_TOOL: /p;s/^DETAIL: /REASON: /p' <<< "$resolved"
+    [[ "$kind" == "fallback" ]] && echo "RUBRIC: $SKILL/reference/check-rubrics/$stage.md"
+    exit 0
     ;;
 run)
     [[ $# -eq 2 ]] || die "Usage: swarm_check.sh run <story-id> <stage>"
@@ -112,15 +151,32 @@ run)
         exit 0
     fi
 
-    commands="$(resolve_commands "$path" "$stage" || true)"
-    if [[ -z "$commands" ]]; then
+    resolved="$(resolve "$path" "$stage")"
+    kind="$(sed -n 's/^KIND: //p' <<< "$resolved")"
+
+    case "$kind" in
+    fallback)
         echo "RESULT: fallback"
-        echo "REASON: no usable tool for $stage in this repository"
+        echo "REASON: $(sed -n 's/^DETAIL: //p' <<< "$resolved")"
         echo "RUBRIC: $SKILL/reference/check-rubrics/$stage.md"
         echo "RECORD_WITH: $(dirname "${BASH_SOURCE[0]}")/swarm_check.sh record $story $stage <pass|fail> <detail>"
         exit 0
-    fi
+        ;;
+    missing-tools)
+        kv_set "$f" result fail
+        kv_set "$f" source missing-tools
+        kv_set "$f" detail "$(sed -n 's/^TOOL: //p' <<< "$resolved" | paste -sd',' - | sed 's/,/, /g')"
+        kv_set "$f" at "$(now)"
+        journal "$dir" "story $story: $stage check blocked — missing $(kv_get "$f" detail)"
+        echo "RESULT: missing-tools"
+        sed -n 's/^TOOL: /MISSING_TOOL: /p' <<< "$resolved"
+        echo "REASON: this language has a deterministic check for $stage, so an agent does not stand in for it"
+        echo "FIX: install the tool, or set 'check $stage <command...>' or 'skip $stage' in .swarm.conf"
+        exit 1
+        ;;
+    esac
 
+    commands="$(sed -n 's/^CMD: //p' <<< "$resolved")"
     : > "$log"
     result=pass
     while IFS= read -r c; do
@@ -131,15 +187,16 @@ run)
         else
             echo "FAIL: $c"
             result=fail
+            break          # later commands may depend on this one, as CRAP does on coverage
         fi
     done <<< "$commands"
 
     kv_set "$f" result "$result"
-    kv_set "$f" source tools
+    kv_set "$f" source "$kind"
     kv_set "$f" commands "$(echo "$commands" | paste -sd';' -)"
     kv_set "$f" log "$log"
     kv_set "$f" at "$(now)"
-    journal "$dir" "story $story: $stage check $result"
+    journal "$dir" "story $story: $stage check $result ($kind)"
     echo "RESULT: $result"
     echo "LOG: $log"
     [[ "$result" == "pass" ]]

@@ -15,6 +15,23 @@ STAGES="implementation code-review adversarial-review cleanup hardening architec
 
 dash() { local v="$1"; echo "${v:-—}"; }
 
+# Which stages were measured and which were judged. A run gated by opinions
+# should never read like one gated by tools.
+checks_line() {
+    local s="$1" stage out="" src
+    for stage in implementation cleanup hardening senior-implementation; do
+        src="$(check_field "$dir" "$s" "$stage" source)"
+        [[ -z "$src" ]] && continue
+        case "$src" in
+            tools|override) out+="$stage:tool " ;;
+            agent) out+="**$stage:agent** " ;;
+            skipped) out+="$stage:skipped " ;;
+            missing-tools) out+="**$stage:missing-tools** " ;;
+        esac
+    done
+    echo "${out:-—}"
+}
+
 stage_line() {
     local s="$1" stage out=""
     for stage in $STAGES; do
@@ -38,13 +55,14 @@ stage_line() {
     if [[ -z "$(story_ids "$dir")" ]]; then
         echo "None yet — the analyst has not run."
     else
-        echo "| Story | Depends on | Stages cleared | PR | CI |"
-        echo "| --- | --- | --- | --- | --- |"
+        echo "| Story | Depends on | Stages cleared | Checks | PR | CI |"
+        echo "| --- | --- | --- | --- | --- | --- |"
         for s in $(story_ids "$dir" | sort); do
-            printf '| `%s` %s | %s | %s | %s | %s |\n' \
+            printf '| `%s` %s | %s | %s | %s | %s | %s |\n' \
                 "$s" "$(story_field "$dir" "$s" title)" \
                 "$(dash "$(story_field "$dir" "$s" depends_on)")" \
                 "$(stage_line "$s")" \
+                "$(checks_line "$s")" \
                 "$(dash "$(story_field "$dir" "$s" pr)")" \
                 "$(dash "$(story_field "$dir" "$s" ci)")"
         done
