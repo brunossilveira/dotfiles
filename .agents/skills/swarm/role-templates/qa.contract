@@ -1,0 +1,11 @@
+role: qa
+handoff_targets: squad-leader
+may_web_search: false
+may_fetch_tools: false
+may_spawn: false
+may_talk_to_user: false
+required_tool_ids: crap4clj dry4clj
+writes: qa-scripts qa-fixes qa-report
+artifact_roots: qa/ src/ test/
+singleton: true
+batch_kind: qa

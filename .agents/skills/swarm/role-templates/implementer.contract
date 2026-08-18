@@ -1,0 +1,10 @@
+role: implementer
+handoff_targets: squad-leader
+may_web_search: false
+may_fetch_tools: false
+may_spawn: false
+may_talk_to_user: false
+required_tool_ids: dependency-checker
+writes: production-code unit-tests acceptance-tests acceptance-pipeline
+artifact_roots: src/ test/ features/ qa/ acceptance/ bb/
+workflow_readiness_source: squad_next.sh

@@ -1,0 +1,13 @@
+role: analyst
+handoff_targets: squad-leader
+may_web_search: true
+may_fetch_tools: false
+may_spawn: false
+may_talk_to_user: false
+writes: stories dependency-checker implementation-order
+artifact_roots: stories/
+allowed_root_files: dependency-checker.edn implementation-order.md
+forbidden_artifact_roots: features/ qa/ src/ test/ reviews/
+self_contained_output: true
+requires_dependency_checker: true
+requires_implementation_order: true

@@ -1,0 +1,11 @@
+role: senior-implementer
+handoff_targets: squad-leader
+may_web_search: false
+may_fetch_tools: false
+may_spawn: false
+may_talk_to_user: false
+may_run_broad_tests: true
+required_tool_ids: dependency-checker
+writes: architectural-improvement verification-updates
+artifact_roots: src/ test/
+behavior_preserving: true

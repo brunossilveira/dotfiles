@@ -1,0 +1,12 @@
+role: merger
+handoff_targets: squad-leader
+may_web_search: false
+may_fetch_tools: false
+may_spawn: false
+may_talk_to_user: false
+may_run_broad_tests: true
+singleton: true
+writes: merge-conflict-resolution integration-notes
+artifact_roots: src/ test/ features/ qa/ .squad/
+workflow_readiness_source: squad_next.sh
+conflict_resolution: true

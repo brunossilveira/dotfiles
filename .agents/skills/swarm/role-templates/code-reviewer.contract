@@ -1,0 +1,10 @@
+role: code-reviewer
+handoff_targets: squad-leader
+may_web_search: false
+may_fetch_tools: false
+may_spawn: false
+may_talk_to_user: false
+required_tool_ids: dependency-checker
+writes: review-report
+artifact_roots: reviews/
+forbidden_artifact_roots: stories/ features/ qa/ src/ test/

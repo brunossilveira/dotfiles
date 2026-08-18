@@ -1,0 +1,12 @@
+role: troubleshooter
+persistent: true
+may_talk_to_user: true
+may_spawn: false
+may_web_search: false
+idle_until_called: true
+operator_surface: quiet-answers
+writes: swarm-state-repair assignment-status packet-projection blocker-clearance status-reports
+forbidden_writes: stories gherkin qa-procedures production-code unit-tests review-reports hardening-changes qa-scripts architecture-critiques cleanup-changes
+elevated_ops: true
+handoff_targets: squad-leader
+not_in_product_fsm: true
