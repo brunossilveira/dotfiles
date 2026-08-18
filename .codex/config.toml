@@ -17,6 +17,7 @@ sandbox_mode = "workspace-write"
 
 notify = ["/Users/bruno/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 approvals_reviewer = "auto_review"
+service_tier = "fast"
 
 [projects."/Users/bruno"]
 trust_level = "trusted"
