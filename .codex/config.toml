@@ -44,6 +44,9 @@ trust_level = "trusted"
 [projects."/Users/bruno/Documents/Codex/2026-08-17/is"]
 trust_level = "trusted"
 
+[projects."/Users/bruno/Documents/Codex/2026-08-20/google-drive-plugin-google-drive-openai"]
+trust_level = "trusted"
+
 [hooks.state]
 
 [hooks.state."/Users/bruno/.codex/hooks.json:pre_tool_use:0:0"]
@@ -62,12 +65,12 @@ trusted_hash = "sha256:5a1199eafdbac4784cb56f72bcdeacbdb7871c9869a1095599a8d1557
 trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c6194f77632"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-08-14T14:23:18Z"
+last_updated = "2026-08-20T13:00:30Z"
 source_type = "local"
 source = "/Users/bruno/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-08-19T00:30:39Z"
+last_updated = "2026-08-20T13:01:10Z"
 source_type = "local"
 source = "/Users/bruno/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -109,13 +112,13 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_n
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 CODEX_HOME = "/Users/bruno/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "7fe0e1c59da4bc68f9d6ab81ae8d349b53fee44b074f49be0effbc1105a5f1d3"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.810.41047"
+BROWSER_USE_CODEX_APP_VERSION = "26.810.52044"
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.computer-use]
@@ -126,7 +129,7 @@ enabled = false
 
 [shell_environment_policy.set]
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "7fe0e1c59da4bc68f9d6ab81ae8d349b53fee44b074f49be0effbc1105a5f1d3"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 
 [desktop]
