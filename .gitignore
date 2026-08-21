@@ -1,3 +1,13 @@
 # Codex materializes its bundled skills into $CODEX_HOME/skills/.system, which
 # resolves here through .codex/skills -> .claude/skills. Codex owns them.
 .claude/skills/.system/
+
+# Codex's external-agent-import-sync copies .claude/skills/<name> into
+# .agents/skills/<name> as real files — the duplication CLAUDE.md forbids.
+# Ignore everything here and un-ignore the skills this repo actually authors.
+.agents/skills/*
+!.agents/skills/log-session/
+!.agents/skills/log-session-note/
+!.agents/skills/open-pr/
+!.agents/skills/swarm/
+!.agents/skills/work/

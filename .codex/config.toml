@@ -5,20 +5,18 @@
 # Hooks live in .codex/hooks.json; skills come from .codex/skills -> .claude/skills
 # plus the command-derived ones in .agents/skills.
 #
-# Codex writes machine-local state back into this file at runtime ([projects.*]
-# trust records, [tui.*] first-run flags). Those lines will show up in git diff —
-# discard them unless you actually want them on every machine.
+# Codex rewrites this file at runtime and drops every comment below the header,
+# along with machine-local state ([projects.*] trust records, [hooks.state.*]
+# hashes, [tui.*] flags). Those lines show up in git diff — discard them unless
+# you actually want them on every machine.
 
-# `model` is deliberately unpinned — Codex tracks its own current default.
-model_reasoning_effort = "high"
-
+model_reasoning_effort = "max"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
-
-notify = ["/Users/bruno/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+notify = [ "/Users/bruno/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended" ]
 approvals_reviewer = "auto_review"
 service_tier = "default"
-model = "gpt-5.6-sol"
+model = "gpt-5.6-luna"
 
 [projects."/Users/bruno"]
 trust_level = "trusted"
@@ -47,6 +45,9 @@ trust_level = "trusted"
 [projects."/Users/bruno/Documents/Codex/2026-08-20/google-drive-plugin-google-drive-openai"]
 trust_level = "trusted"
 
+[projects."/Users/bruno/Documents/Codex/2026-08-21/tu"]
+trust_level = "trusted"
+
 [hooks.state]
 
 [hooks.state."/Users/bruno/.codex/hooks.json:pre_tool_use:0:0"]
@@ -64,6 +65,27 @@ trusted_hash = "sha256:5a1199eafdbac4784cb56f72bcdeacbdb7871c9869a1095599a8d1557
 [hooks.state."/Users/bruno/.codex/hooks.json:session_start:1:0"]
 trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c6194f77632"
 
+[hooks.state."/Users/bruno/code/work/next/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:c6a257dace80848e23be1daf728e1db2adb32339c8cb728947efb63c0421be28"
+
+[hooks.state."/Users/bruno/code/work/next/.codex/hooks.json:pre_tool_use:0:1"]
+trusted_hash = "sha256:5d61b729987b2800137657f192d48cdb46fba2fd3e02ffb929f3ce7c853f2e5f"
+
+[hooks.state."/Users/bruno/code/work/next/.codex/hooks.json:pre_tool_use:0:2"]
+trusted_hash = "sha256:7702a77a08eb066c11872f3cb0af55891df10e5c3bb8e1ce9933db24e8248aa3"
+
+[hooks.state."/Users/bruno/code/work/next/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:3da4c37a98aabc6fc4582f1a1e86d59455c82f73c746186deb6a54e2d0da283a"
+
+[hooks.state."gq-dev@gq-marketplace:hooks/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:8d42c70ecc8c1fdc7f4eeb2a80e30949b0e4bfd09c89290e2ef49e23e9cba19a"
+
+[hooks.state."gq-dev@gq-marketplace:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:5b83b378b4a95593442ea997455f5fff224dc9ee49274b0f66f69aed9ecc8613"
+
+[hooks.state."gq-dev@gq-marketplace:hooks/hooks.json:session_start:0:1"]
+trusted_hash = "sha256:261bdfc55b73841fd55912f3f871b55b9937ac047df0ee3a4a45b8f0a766a94e"
+
 [marketplaces.openai-bundled]
 last_updated = "2026-08-20T13:00:30Z"
 source_type = "local"
@@ -73,6 +95,26 @@ source = "/Users/bruno/.codex/.tmp/bundled-marketplaces/openai-bundled"
 last_updated = "2026-08-20T13:01:10Z"
 source_type = "local"
 source = "/Users/bruno/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[marketplaces.caveman]
+last_updated = "2026-08-21T18:00:37Z"
+source_type = "git"
+source = "https://github.com/JuliusBrussee/caveman.git"
+
+[marketplaces.claude-plugins-official]
+last_updated = "2026-08-21T18:00:39Z"
+source_type = "git"
+source = "https://github.com/anthropics/claude-plugins-official.git"
+
+[marketplaces.gq-marketplace]
+last_updated = "2026-08-21T18:00:42Z"
+source_type = "git"
+source = "git@github.com:GreatQuestion/claude-marketplace.git"
+
+[marketplaces.claude-cowork]
+last_updated = "2026-08-21T18:02:10Z"
+source_type = "local"
+source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
 [plugins."sites@openai-bundled"]
 enabled = true
@@ -96,6 +138,21 @@ enabled = true
 enabled = true
 
 [plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."caveman@caveman"]
+enabled = true
+
+[plugins."ruby-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."swift-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."gq-dev@gq-marketplace"]
+enabled = true
+
+[plugins."engineering@claude-cowork"]
 enabled = true
 
 [features]
@@ -123,16 +180,21 @@ CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.computer-use]
 command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
-args = ["mcp"]
+args = [ "mcp" ]
 cwd = "."
 enabled = false
+
+[shell_environment_policy]
+inherit = "core"
 
 [shell_environment_policy.set]
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+OBSIDIAN_VAULT_DIR = "/Volumes/NAS/bruno/vault"
 
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
 ambient-suggestions-enabled = true
 followUpQueueMode = "queue"
+external-agent-import-sync-enabled = true
