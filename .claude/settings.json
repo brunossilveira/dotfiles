@@ -61,6 +61,7 @@
   "effortLevel": "high",
   "tui": "default",
   "skipWorkflowUsageWarning": true,
+  "verbose": false,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true
 }
