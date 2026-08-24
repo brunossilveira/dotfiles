@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Stop hook: block finishing when code was edited but never verified.
 
-Reads the session transcript, tracks which code files were edited and whether a
-recognized test/lint/build/typecheck command has passed since the last edit. If
-edits are outstanding, returns a `block` decision carrying a nudge that names the
-changed paths and the verification commands this workspace actually has.
+Claude reads its session transcript. Codex records supported PostToolUse events
+in the same session ledger because its transcript format is not a stable hook
+interface. If edits are outstanding, returns a `block` decision carrying a nudge
+that names the changed paths and the verification commands this workspace has.
 
 Deliberately passive elsewhere: it never runs a command itself, never inspects
 the working tree, and never claims a repo is green.
@@ -18,19 +18,26 @@ Config via env:
                                verify command (default)
   CLAUDE_VERIFY_ON_STOP=adhoc  also nudge when none is detectable, asking for a
                                throwaway verification script instead
+  AGENT_VERIFY_ON_STOP_STATE_DIR=/path  override state storage (mainly for tests)
 """
 
+import fcntl
 import hashlib
 import json
 import os
 import re
 import sys
+import tempfile
+from contextlib import contextmanager
 from pathlib import Path
 
 MAX_ATTEMPTS = 2
 MAX_PATHS_IN_NUDGE = 8
 MAX_COMMANDS_IN_NUDGE = 3
-STATE_DIR = Path.home() / ".claude" / "state" / "verify-on-stop"
+STATE_DIR = Path(os.environ.get(
+    "AGENT_VERIFY_ON_STOP_STATE_DIR",
+    Path.home() / ".claude" / "state" / "verify-on-stop",
+))
 
 EDIT_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
 PATH_KEYS = ("file_path", "notebook_path", "path")
@@ -49,6 +56,7 @@ NON_CODE_NAMES = frozenset({
 SCRATCH_PREFIXES = ("/tmp/", "/private/tmp/", "/var/folders/")
 
 HEREDOC_START_RE = re.compile(r"<<-?\s*[\"']?([A-Za-z_][A-Za-z0-9_]*)[\"']?")
+PATCH_PATH_RE = re.compile(r"^\*\*\* (?:Add|Delete|Update) File: (.+)$", re.MULTILINE)
 
 # A Bash command counts as verification evidence when it matches one of these.
 VERIFY_COMMAND_RE = re.compile(
@@ -94,7 +102,9 @@ def is_non_code(raw):
     return not p.suffix and p.name.lower() in NON_CODE_NAMES
 
 
-def is_scratch(raw):
+def is_scratch(raw, cwd=None):
+    if cwd and not Path(raw).is_absolute():
+        raw = str((Path(cwd) / raw).resolve())
     return raw.startswith(SCRATCH_PREFIXES)
 
 
@@ -113,6 +123,30 @@ def result_failed(block):
             c.get("text", "") for c in content if isinstance(c, dict)
         )
     return isinstance(content, str) and content.lstrip().startswith("Exit code ")
+
+
+def codex_result_failed(response):
+    if isinstance(response, dict):
+        if (
+            response.get("is_error")
+            or response.get("isError")
+            or response.get("status") in ("failed", "error")
+        ):
+            return True
+        exit_code = response.get("exit_code")
+        if isinstance(exit_code, int):
+            return exit_code != 0
+        response = response.get("output", response.get("content", ""))
+    if isinstance(response, list):
+        response = " ".join(
+            item.get("text", "") for item in response if isinstance(item, dict)
+        )
+    return isinstance(response, str) and bool(re.search(
+        r"(?:^Exit code [1-9]|Process exited with code [1-9]|^Script failed\b|"
+        r"^Error\b|apply_patch verification failed)",
+        response,
+        re.IGNORECASE | re.MULTILINE,
+    ))
 
 
 def unverified_paths(transcript_path):
@@ -217,23 +251,99 @@ def detect_verify_commands(root):
     return commands
 
 
-def attempts_for(session_id, signature):
-    state_file = STATE_DIR / ("%s.json" % (session_id or "unknown"))
+def state_file_for(session_id):
+    return STATE_DIR / ("%s.json" % (session_id or "unknown"))
+
+
+def read_state(session_id):
     try:
-        state = json.loads(state_file.read_text())
+        return json.loads(state_file_for(session_id).read_text())
     except (OSError, ValueError):
-        state = {}
-    # A different set of unverified paths is a different ask — reset the budget.
-    return 0 if state.get("signature") != signature else int(state.get("attempts", 0))
+        return {}
 
 
-def record_attempt(session_id, signature, attempts):
-    state_file = STATE_DIR / ("%s.json" % (session_id or "unknown"))
+@contextmanager
+def state_lock(session_id):
     try:
         STATE_DIR.mkdir(parents=True, exist_ok=True)
-        state_file.write_text(json.dumps({"signature": signature, "attempts": attempts}))
+        lock_file = state_file_for(session_id).with_suffix(".lock").open("a")
     except OSError:
-        pass
+        yield
+        return
+
+    try:
+        fcntl.flock(lock_file, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(lock_file, fcntl.LOCK_UN)
+        lock_file.close()
+
+
+def write_state(session_id, state):
+    temp_path = None
+    try:
+        STATE_DIR.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile("w", dir=STATE_DIR, delete=False) as temp_file:
+            json.dump(state, temp_file)
+            temp_path = Path(temp_file.name)
+        os.replace(temp_path, state_file_for(session_id))
+    except OSError:
+        if temp_path:
+            try:
+                temp_path.unlink(missing_ok=True)
+            except OSError:
+                pass
+
+
+def claim_attempt(session_id, signature):
+    with state_lock(session_id):
+        state = read_state(session_id)
+        # A different set of unverified paths is a different ask.
+        attempts = 0 if state.get("signature") != signature else int(
+            state.get("attempts", 0)
+        )
+        if attempts >= MAX_ATTEMPTS:
+            return False
+        state.update({"signature": signature, "attempts": attempts + 1})
+        write_state(session_id, state)
+    return True
+
+
+def codex_pending_paths(session_id):
+    state = read_state(session_id)
+    return state.get("pending") if "pending" in state else None
+
+
+def record_codex_event(payload):
+    session_id = payload.get("session_id")
+    tool_name = payload.get("tool_name")
+    tool_input = payload.get("tool_input") or {}
+    response = payload.get("tool_response")
+    if codex_result_failed(response):
+        return
+
+    with state_lock(session_id):
+        state = read_state(session_id)
+        if tool_name == "apply_patch":
+            command = tool_input.get("command", "")
+            pending = state.get("pending", [])
+            for raw in PATCH_PATH_RE.findall(command):
+                if (
+                    is_non_code(raw)
+                    or is_scratch(raw, payload.get("cwd"))
+                    or raw in pending
+                ):
+                    continue
+                pending.append(raw)
+            if pending:
+                state["pending"] = pending
+                write_state(session_id, state)
+        elif tool_name == "Bash":
+            command = tool_input.get("command", tool_input.get("cmd", ""))
+            if isinstance(command, str) and VERIFY_COMMAND_RE.search(
+                strip_heredocs(command)
+            ):
+                write_state(session_id, {"pending": []})
 
 
 def format_paths(paths):
@@ -282,29 +392,31 @@ def main():
     except ValueError:
         return 0
 
+    if payload.get("hook_event_name") == "PostToolUse":
+        record_codex_event(payload)
+        return 0
+
     # Already continuing because of a stop hook — do not stack another block.
     if payload.get("stop_hook_active"):
         return 0
 
-    transcript = payload.get("transcript_path")
-    if not transcript:
-        return 0
-
-    paths = unverified_paths(transcript)
+    paths = codex_pending_paths(payload.get("session_id"))
+    if paths is None:
+        transcript = payload.get("transcript_path")
+        if not transcript:
+            return 0
+        paths = unverified_paths(transcript)
     if not paths:
         return 0
 
     signature = hashlib.sha256("\n".join(sorted(paths)).encode()).hexdigest()[:16]
-    attempts = attempts_for(payload.get("session_id"), signature)
-    if attempts >= MAX_ATTEMPTS:
-        return 0
-
     root = git_root(payload.get("cwd") or os.getcwd())
     nudge = build_nudge(paths, detect_verify_commands(root), allow_adhoc=(mode == "adhoc"))
     if not nudge:
         return 0
 
-    record_attempt(payload.get("session_id"), signature, attempts + 1)
+    if not claim_attempt(payload.get("session_id"), signature):
+        return 0
     json.dump({"decision": "block", "reason": nudge}, sys.stdout)
     return 0
 

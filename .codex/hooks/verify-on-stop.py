@@ -1,0 +1,1 @@
+../../.claude/hooks/verify-on-stop.py

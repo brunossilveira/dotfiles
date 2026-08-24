@@ -12,6 +12,19 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 /Users/bruno/.codex/hooks/verify-on-stop.py",
+            "statusMessage": "Recording verification evidence",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
@@ -30,6 +43,18 @@
             "command": "cat \"$HOME/.config/caveman/rules.md\"",
             "statusMessage": "Loading shared Caveman rules",
             "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 /Users/bruno/.codex/hooks/verify-on-stop.py",
+            "statusMessage": "Checking verification evidence",
+            "timeout": 15
           }
         ]
       }

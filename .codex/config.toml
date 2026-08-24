@@ -7,8 +7,8 @@
 #
 # Codex rewrites this file at runtime and drops every comment below the header,
 # along with machine-local state ([projects.*] trust records, [hooks.state.*]
-# hashes, [tui.*] flags). Those lines show up in git diff — discard them unless
-# you actually want them on every machine.
+# hashes, and onboarding flags). Those lines show up in git diff — discard them
+# unless you actually want them on every machine.
 
 model_reasoning_effort = "max"
 approval_policy = "on-request"
@@ -192,6 +192,11 @@ BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 OBSIDIAN_VAULT_DIR = "/Volumes/NAS/bruno/vault"
+
+[tui]
+notifications = [ "agent-turn-complete", "approval-requested" ]
+status_line = [ "project-name", "git-branch", "total-input-tokens", "total-output-tokens", "estimated-thread-cost" ]
+status_line_use_colors = true
 
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
