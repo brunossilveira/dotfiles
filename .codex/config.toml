@@ -16,7 +16,7 @@ sandbox_mode = "workspace-write"
 notify = [ "/Users/bruno/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended" ]
 approvals_reviewer = "auto_review"
 service_tier = "default"
-model = "gpt-5.6-luna"
+model = "gpt-5.6-terra"
 
 [projects."/Users/bruno"]
 trust_level = "trusted"
@@ -112,7 +112,7 @@ source_type = "git"
 source = "git@github.com:GreatQuestion/claude-marketplace.git"
 
 [marketplaces.claude-cowork]
-last_updated = "2026-08-23T12:56:59Z"
+last_updated = "2026-08-24T00:56:59Z"
 source_type = "local"
 source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
