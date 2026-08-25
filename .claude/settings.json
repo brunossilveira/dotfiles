@@ -45,7 +45,6 @@
     "command": "bash /Users/bruno/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "gq-dev@gq-marketplace": true,
     "swift-lsp@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true,
     "caveman@caveman": true

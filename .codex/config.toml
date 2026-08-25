@@ -10,13 +10,13 @@
 # hashes, and onboarding flags). Those lines show up in git diff — discard them
 # unless you actually want them on every machine.
 
-model_reasoning_effort = "max"
+model_reasoning_effort = "high"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 notify = [ "/Users/bruno/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended" ]
 approvals_reviewer = "auto_review"
 service_tier = "default"
-model = "gpt-5.6-terra"
+model = "gpt-5.6-sol"
 
 [projects."/Users/bruno"]
 trust_level = "trusted"
@@ -77,14 +77,20 @@ trusted_hash = "sha256:7702a77a08eb066c11872f3cb0af55891df10e5c3bb8e1ce9933db24e
 [hooks.state."/Users/bruno/code/work/next/.codex/hooks.json:post_tool_use:0:0"]
 trusted_hash = "sha256:3da4c37a98aabc6fc4582f1a1e86d59455c82f73c746186deb6a54e2d0da283a"
 
-[hooks.state."gq-dev@gq-marketplace:hooks/hooks.json:pre_tool_use:0:0"]
-trusted_hash = "sha256:8d42c70ecc8c1fdc7f4eeb2a80e30949b0e4bfd09c89290e2ef49e23e9cba19a"
+[hooks.state."/Users/bruno/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:e69f0e71fbc640d76c584cf8f72d614e7374510b1e5717a158ed6f68dd268199"
 
-[hooks.state."gq-dev@gq-marketplace:hooks/hooks.json:session_start:0:0"]
-trusted_hash = "sha256:5b83b378b4a95593442ea997455f5fff224dc9ee49274b0f66f69aed9ecc8613"
+[hooks.state."/Users/bruno/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:548c96a0e6e28e3e5d024e8bbb61f381b15d8439b1ab45cdd90c365f98d18678"
 
-[hooks.state."gq-dev@gq-marketplace:hooks/hooks.json:session_start:0:1"]
-trusted_hash = "sha256:261bdfc55b73841fd55912f3f871b55b9937ac047df0ee3a4a45b8f0a766a94e"
+[hooks.state."/Users/bruno/.dotfiles/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:e69f0e71fbc640d76c584cf8f72d614e7374510b1e5717a158ed6f68dd268199"
+
+[hooks.state."/Users/bruno/.dotfiles/.codex/hooks.json:session_start:1:0"]
+trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c6194f77632"
+
+[hooks.state."/Users/bruno/.dotfiles/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:548c96a0e6e28e3e5d024e8bbb61f381b15d8439b1ab45cdd90c365f98d18678"
 
 [marketplaces.openai-bundled]
 last_updated = "2026-08-20T13:00:30Z"
@@ -97,22 +103,19 @@ source_type = "local"
 source = "/Users/bruno/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [marketplaces.caveman]
-last_updated = "2026-08-21T18:00:37Z"
+last_updated = "2026-08-24T21:55:25Z"
+last_revision = "7bb71309e8749a4f112aacd3a54b3941d8689905"
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-08-21T18:00:39Z"
+last_updated = "2026-08-24T21:55:28Z"
+last_revision = "0c87ada1bb2128a00a7cfed4ce2b0943067a3295"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
-[marketplaces.gq-marketplace]
-last_updated = "2026-08-21T18:00:42Z"
-source_type = "git"
-source = "git@github.com:GreatQuestion/claude-marketplace.git"
-
 [marketplaces.claude-cowork]
-last_updated = "2026-08-24T00:56:59Z"
+last_updated = "2026-08-25T02:04:54Z"
 source_type = "local"
 source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
@@ -147,9 +150,6 @@ enabled = true
 enabled = true
 
 [plugins."swift-lsp@claude-plugins-official"]
-enabled = true
-
-[plugins."gq-dev@gq-marketplace"]
 enabled = true
 
 [plugins."engineering@claude-cowork"]
