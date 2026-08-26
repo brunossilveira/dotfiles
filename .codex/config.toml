@@ -48,6 +48,9 @@ trust_level = "trusted"
 [projects."/Users/bruno/Documents/Codex/2026-08-21/tu"]
 trust_level = "trusted"
 
+[projects."/Users/bruno/code/personal/oracle"]
+trust_level = "trusted"
+
 [hooks.state]
 
 [hooks.state."/Users/bruno/.codex/hooks.json:pre_tool_use:0:0"]
@@ -103,19 +106,19 @@ source_type = "local"
 source = "/Users/bruno/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [marketplaces.caveman]
-last_updated = "2026-08-24T21:55:25Z"
-last_revision = "7bb71309e8749a4f112aacd3a54b3941d8689905"
+last_updated = "2026-08-25T14:53:23Z"
+last_revision = "81536f57b3303b7de7f5bc5b564cc344f9112d68"
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-08-24T21:55:28Z"
-last_revision = "0c87ada1bb2128a00a7cfed4ce2b0943067a3295"
+last_updated = "2026-08-25T14:53:25Z"
+last_revision = "b819188d2eea14e0400556ca29dbd1179a7c595b"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.claude-cowork]
-last_updated = "2026-08-25T02:04:54Z"
+last_updated = "2026-08-25T14:04:54Z"
 source_type = "local"
 source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
