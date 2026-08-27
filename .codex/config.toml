@@ -101,7 +101,7 @@ source_type = "local"
 source = "/Users/bruno/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-08-20T13:01:10Z"
+last_updated = "2026-08-27T09:30:49Z"
 source_type = "local"
 source = "/Users/bruno/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -118,7 +118,7 @@ source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.claude-cowork]
-last_updated = "2026-08-25T14:04:54Z"
+last_updated = "2026-08-27T02:47:48Z"
 source_type = "local"
 source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
