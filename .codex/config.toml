@@ -96,7 +96,7 @@ trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c619
 trusted_hash = "sha256:548c96a0e6e28e3e5d024e8bbb61f381b15d8439b1ab45cdd90c365f98d18678"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-08-20T13:00:30Z"
+last_updated = "2026-08-27T14:40:17Z"
 source_type = "local"
 source = "/Users/bruno/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -106,8 +106,8 @@ source_type = "local"
 source = "/Users/bruno/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [marketplaces.caveman]
-last_updated = "2026-08-25T14:53:23Z"
-last_revision = "81536f57b3303b7de7f5bc5b564cc344f9112d68"
+last_updated = "2026-08-27T14:40:19Z"
+last_revision = "17f9f2ec2377b0bfe16b52ee03a462e7f0a02bc8"
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
 
@@ -118,7 +118,7 @@ source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.claude-cowork]
-last_updated = "2026-08-27T02:47:48Z"
+last_updated = "2026-08-27T14:40:15Z"
 source_type = "local"
 source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
@@ -158,6 +158,9 @@ enabled = true
 [plugins."engineering@claude-cowork"]
 enabled = true
 
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
 [features]
 js_repl = false
 
@@ -172,13 +175,14 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_n
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 CODEX_HOME = "/Users/bruno/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_TINYSKY_ENABLED = "0"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.810.52044"
+BROWSER_USE_CODEX_APP_VERSION = "26.818.21641"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/bruno/.codex/plugins/cache/openai-bundled/browser/26.818.21641/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.computer-use]
@@ -191,9 +195,7 @@ enabled = false
 inherit = "core"
 
 [shell_environment_policy.set]
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
-NODE_REPL_TRUSTED_CODE_PATHS = "/Users/bruno/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 OBSIDIAN_VAULT_DIR = "/Volumes/NAS/bruno/vault"
 
 [tui]
