@@ -112,13 +112,13 @@ source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-08-25T14:53:25Z"
-last_revision = "b819188d2eea14e0400556ca29dbd1179a7c595b"
+last_updated = "2026-08-28T17:27:28Z"
+last_revision = "0620a687ddd518871772eefd78573baff2dcb8cb"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.claude-cowork]
-last_updated = "2026-08-27T14:40:15Z"
+last_updated = "2026-08-28T14:40:15Z"
 source_type = "local"
 source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
