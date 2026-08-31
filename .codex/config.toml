@@ -51,6 +51,15 @@ trust_level = "trusted"
 [projects."/Users/bruno/code/personal/oracle"]
 trust_level = "trusted"
 
+[projects."/Users/bruno/Documents/Codex/2026-08-31/z"]
+trust_level = "trusted"
+
+[projects."/Users/bruno/Documents/Codex/2026-08-31/z-2"]
+trust_level = "trusted"
+
+[projects."/Users/bruno/Documents/Codex/2026-08-31/z-3"]
+trust_level = "trusted"
+
 [hooks.state]
 
 [hooks.state."/Users/bruno/.codex/hooks.json:pre_tool_use:0:0"]
@@ -58,15 +67,18 @@ trusted_hash = "sha256:f6d4fa68657270d6713966c22c9495975bf7015459deb6a1f2da48d2b
 
 [hooks.state."/Users/bruno/.codex/hooks.json:session_start:0:0"]
 trusted_hash = "sha256:5a1199eafdbac4784cb56f72bcdeacbdb7871c9869a1095599a8d1557555d86b"
+enabled = false
 
 [hooks.state."/Users/bruno/.dotfiles/.codex/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:f6d4fa68657270d6713966c22c9495975bf7015459deb6a1f2da48d2b2911772"
 
 [hooks.state."/Users/bruno/.dotfiles/.codex/hooks.json:session_start:0:0"]
 trusted_hash = "sha256:5a1199eafdbac4784cb56f72bcdeacbdb7871c9869a1095599a8d1557555d86b"
+enabled = false
 
 [hooks.state."/Users/bruno/.codex/hooks.json:session_start:1:0"]
 trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c6194f77632"
+enabled = false
 
 [hooks.state."/Users/bruno/code/work/next/.codex/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:c6a257dace80848e23be1daf728e1db2adb32339c8cb728947efb63c0421be28"
@@ -96,7 +108,6 @@ trusted_hash = "sha256:15a79788dfc17d070bd4f502e7461bfdc792100c97f515e7f4772c619
 trusted_hash = "sha256:548c96a0e6e28e3e5d024e8bbb61f381b15d8439b1ab45cdd90c365f98d18678"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-08-27T14:40:17Z"
 source_type = "local"
 source = "/Users/bruno/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -181,14 +192,18 @@ NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunc
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.818.21641"
-NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/bruno/.codex/plugins/cache/openai-bundled/browser/26.818.21641/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+BROWSER_USE_CODEX_APP_VERSION = "26.825.32147"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/bruno/.codex/plugins/cache/openai-bundled/browser/26.825.32147/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.computer-use]
 command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
 args = [ "mcp" ]
 cwd = "."
+enabled = false
+
+[mcp_servers.cua_repl]
+command = "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
 enabled = false
 
 [shell_environment_policy]
