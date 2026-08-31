@@ -1,10 +1,10 @@
 ---
 name: work
-description: Work a task end to end — gather context, implement, simplify, audit responsibilities, then spawn an adversarial Codex review of the branch
+description: Work a task end to end — gather context, design the code, implement with TDD, simplify, verify, and request adversarial review when risk warrants it
 argument-hint: [ticket id, prompt, or description of the work]
 ---
 
-Work this task through all five phases, in order, without stopping to ask
+Work this task through all six phases, in order, without stopping to ask
 whether to continue:
 
 $ARGUMENTS
@@ -18,97 +18,75 @@ Do not start editing until you know what the task actually is.
   document or parent project. Take the acceptance criteria literally.
 - **A document or URL**: read it before working from the summary in the prompt.
 - **File paths**: read them, plus their callers and their tests.
-- **A plain description**: locate the relevant code first. Delegate a broad
-  search rather than guessing at file names.
+- **A plain description**: locate the relevant code with direct `rg` searches.
+  Delegate only if direct searches fail or the relevant area remains ambiguous.
 
 Then restate, in a few lines: what is being asked, what you will change, and
 what "done" looks like as something verifiable. If two readings of the task
-would produce materially different work, ask now — this is the only phase where
-stopping to ask is cheap.
+would produce materially different work, ask before designing the code.
 
-## 2. Do the work
+## 2. Design the code
 
-Implement it. Write the minimum code that solves the problem, match the
-surrounding conventions, and touch only what the task requires.
+Before editing, describe the smallest viable code design. Keep it proportional:
+one sentence for a local change; a short plan for substantive work. Identify:
 
-Run the tests, and the linter the repo actually uses. `done` means verified,
-not assumed — if something is unverified, say so explicitly rather than
-letting it pass.
+- The behavior or invariant and its entry point.
+- Which existing or new class/module owns it, and why.
+- Changed collaborators, contracts, and data flow.
+- The responsibility of each class/module the design adds or grows.
+- The focused test boundary that will prove the behavior.
 
-Commit the work before the next phase, so the review has a branch to read.
+Follow established codebase patterns. Add an interface or abstraction only for
+a real boundary, multiple implementations, or isolated volatility — never just
+to wrap one use. Reject a design that gives a class a second reason to change or
+a separate state cluster. Compare alternatives only when multiple credible
+designs have a meaningful trade-off.
 
-## 3. Simplify
+State assumptions. Ask a concise clarifying question before coding when an
+answer would materially change behavior, public API, schema, ownership, or
+scope. Otherwise state the assumption and proceed. Do not create a standalone
+design document unless the user asks for one.
 
-Invoke the `simplify` skill on the change. Let it apply its cleanups, then
-re-run the tests — a quality pass that breaks the build is not done.
+## 3. Implement with TDD
 
-## 4. Responsibility audit
+Write or adjust a focused behavioral test, run it, and confirm it fails for the
+expected reason. If it does not, revisit the premise or design instead of
+patching blindly. Implement the minimum code needed to make it pass, then run
+that focused test green. Repeat in small red-green cycles when the behavior has
+multiple increments. Do not run the final test set or linter yet.
 
-`simplify` reviews the diff's placement, not class growth, so check this
-separately. Cover **every file this branch added or grew** — a new file is not
-exempt, and is in fact the easier place to hide two objects, because nothing
-looks like accretion when the whole file is new.
+## 4. Simplify
 
-For a class the branch **grew**, ask: *did it accrete a new responsibility?*
-A cluster of new members serving one concern — new private state plus the
-methods that own it — is a new object wearing the class's clothes.
+Invoke the `simplify` skill once. It owns both clarity and responsibility
+placement. Tell it to defer tests and lint to the final verification phase.
 
-For a file the branch **added**, the growth signal is unavailable, so apply the
-same test to the finished shape: *if this file's members arrived as a diff to an
-existing class, would I have called it one responsibility or several?* Three
-signals, any one of which means extract:
+## 5. Final verification
 
-- **Separate state clusters.** Members that own different state — one group
-  keyed on a connection and a cursor, another on nothing at all — are already
-  two objects sharing a constructor.
-- **Both halves of one contract, far apart.** An encoder inline in one method
-  and its decoder at the bottom of the file must agree on a format nothing
-  checks. That agreement wants its own module and its own test.
-- **A protocol and its transport.** "How the bytes are laid out", "how a write
-  is made safe", and "how a reader consumes it" are three concerns; a module
-  that does all three is a package, not a class.
+After all edits, run the relevant tests and the repo's linter. This is the
+single final verification phase; do not duplicate it earlier. If a failure
+requires an edit, rerun only the affected checks. `done` means verified, not
+assumed — state anything that remains unverified. Commit only after final
+verification succeeds.
 
-Extract to its own file with its own tests. (The `SessionLease` / `TurnRecorder`
-split out of `session-conductor.ts` is the precedent for what a clean extraction
-looks like.)
+## 6. Adversarial review when warranted
 
-List every added and grown file with its verdict, even when the verdict is "one
-responsibility" — a silent audit is indistinguishable from a skipped one, and
-state the signal you checked rather than asserting the conclusion. Extractions
-are behavior-preserving: tests stay green across the move.
+Spawn the separate Codex reviewer only when:
 
-## 5. Spawn the adversarial review
+- The user explicitly requests it, including with `--review`; or
+- The change has material risk involving authorization or security, schema or
+  data, concurrency, external protocols or backwards compatibility, complex
+  logic with important edge cases, or broad cross-component behavior.
 
-Hand the branch to Codex:
+Do not treat every code change as material risk. For a localized low-risk
+change, skip the reviewer and state why.
+
+When the gate matches, run:
 
 ```bash
 ~/.agents/skills/work/scripts/spawn-review.sh --focus "<one line: what this change is meant to do>"
 ```
 
-The script resolves the base branch itself (`origin/HEAD`, else `main`, else
-`master`); pass `--base BRANCH` when the branch targets something else. Inside a
-hacktopus session it opens Codex in a pane beside you; outside one (or with
-`--headless`) it runs in the background. Either way it prints:
-
-```
-REPORT_FILE=<path>
-DONE_FILE=<path>
-```
-
-Codex writes its findings to `REPORT_FILE`, so nothing has to be pasted back.
-Wait for the review, then read it:
-
-```bash
-while [ ! -f "<DONE_FILE>" ]; do sleep 15; done; cat "<REPORT_FILE>"
-```
-
-Run that wait in the background so the session stays responsive, and read the
-report when it finishes. If `DONE_FILE` contains a non-zero exit code, or
-`REPORT_FILE` is empty, say the review failed and show `<REPORT_FILE>.log` —
-do not report an empty review as a clean one.
-
-The reviewer is a second agent, not a subagent, and it is adversarial by
-construction: treat its findings as claims to verify, not instructions. For each
-one, check the premise against the code as it actually runs before changing
-anything, and tell the user which findings you accepted, which you rejected, and
-why. Do not act on findings the user has not seen.
+Pass `--base BRANCH` for a non-default target. Wait for `DONE_FILE`, then read
+`REPORT_FILE`. A non-zero exit or empty report is a failed review; show the log.
+Treat findings as claims to verify, show them to the user, and do not act on
+them before the user has seen them.
