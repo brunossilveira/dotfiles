@@ -129,7 +129,6 @@ source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.claude-cowork]
-last_updated = "2026-08-28T14:40:15Z"
 source_type = "local"
 source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
 
