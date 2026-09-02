@@ -60,6 +60,12 @@ trust_level = "trusted"
 [projects."/Users/bruno/Documents/Codex/2026-08-31/z-3"]
 trust_level = "trusted"
 
+[projects."/Users/bruno/Documents/Codex/2026-09-01/z"]
+trust_level = "trusted"
+
+[projects."/Users/bruno/Documents/Codex/2026-09-01/z-2"]
+trust_level = "trusted"
+
 [hooks.state]
 
 [hooks.state."/Users/bruno/.codex/hooks.json:pre_tool_use:0:0"]
