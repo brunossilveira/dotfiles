@@ -5,6 +5,7 @@
   "attribution": {
     "commit": ""
   },
+  "model": "claude-fable-5-1[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -63,5 +64,5 @@
   "verbose": false,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "model": "claude-fable-5-1[1m]"
+  "skipDangerousModePermissionPrompt": true
 }
