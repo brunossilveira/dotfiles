@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/python3 /Users/bruno/.claude/hooks/verify-on-stop.py",
+            "command": "python3 $HOME/.claude/hooks/verify-on-stop.py",
             "timeout": 15
           }
         ]
@@ -43,7 +43,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash /Users/bruno/.claude/statusline-command.sh"
+    "command": "bash $HOME/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,

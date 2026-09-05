@@ -39,10 +39,13 @@ done
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="$HOME"
 
+is_osx() {
+    [ "$(uname -s)" = Darwin ]
+}
+
 # Files to link - whitelist approach
 DOTFILES_TO_LINK=(
     # Shell configuration
-    "config/zshrc"
     "config/alias"
     "config/env"
 
@@ -54,9 +57,7 @@ DOTFILES_TO_LINK=(
     "config/ctags"
     "config/ackrc"
     "config/curlrc"
-    "config/tmux.conf"
     "config/railsrc"
-    "config/aerospace.toml"
     "config/default-gems"
 
     # Claude Code configuration
@@ -74,29 +75,47 @@ DOTFILES_TO_LINK=(
     ".codex/hooks.json"
 )
 
+# macOS-only files. On Linux (Omarchy) the shell is bash, the terminal config is
+# theme-managed by Omarchy, and tmux/AeroSpace are not used.
+OSX_DOTFILES_TO_LINK=(
+    "config/zshrc"
+    "config/tmux.conf"
+    "config/aerospace.toml"
+)
+
 # Directories to link recursively (individual files get symlinked)
 DIRECTORIES_TO_LINK=(
     "config/nvim"
-    "config/alacritty"
-    "config/ghostty"
     "config/herdr"
     "config/scripts"
     "config/caveman"
+)
+
+# macOS-only directories (see OSX_DOTFILES_TO_LINK)
+OSX_DIRECTORIES_TO_LINK=(
+    "config/alacritty"
+    "config/ghostty"
+)
+
+# Directories whose immediate children get symlinked individually into an
+# existing target directory. Used for skill dirs so entries managed by others
+# (e.g. Omarchy's ~/.claude/skills/omarchy) survive alongside ours.
+DIRECTORY_CHILDREN_TO_LINK=(
+    ".claude/skills"
+    ".pi/agent/skills"
+    # Symlink into .claude/skills — Claude Code and Codex share one skill set
+    ".codex/skills"
 )
 
 # Directories to link as a single symlink (entire directory)
 DIRECTORY_SYMLINKS=(
     ".claude/commands"
     ".claude/hooks"
-    ".claude/skills"
     ".pi/agent/extensions"
     ".pi/agent/agents"
-    ".pi/agent/skills"
     ".codex/hooks"
     # Shared always-on rules; Codex reads the linked config/caveman source.
     ".claude/rules"
-    # Symlink into .claude/skills — Claude Code and Codex share one skill set
-    ".codex/skills"
     # .claude/commands re-exposed as skills. Codex dropped custom prompts, and
     # ~/.agents/skills is read by Codex but not by Claude, so these reach Codex
     # without showing up twice in Claude. Linked per skill to leave any
@@ -289,6 +308,26 @@ link_directory() {
     done < <(find "$source_dir" -type f -print0)
 }
 
+link_directory_children() {
+    local relative_path="$1"
+    local source_dir="$DOTFILES_DIR/$relative_path"
+
+    if [ ! -d "$source_dir" ]; then
+        echo "Warning: Source directory does not exist: $source_dir"
+        return 1
+    fi
+
+    log_verbose "Linking children of directory: $relative_path"
+
+    local child
+    for child in "$source_dir"/*; do
+        [ -e "$child" ] || continue
+        local child_relative="${child#$DOTFILES_DIR/}"
+        local target="$(get_target_path "$child_relative")"
+        create_symlink "$child" "$target" "$child_relative"
+    done
+}
+
 link_directory_as_symlink() {
     local relative_path="$1"
     local source="$DOTFILES_DIR/$relative_path"
@@ -357,6 +396,13 @@ fi
 log_info "Linking dotfiles..."
 echo ""
 
+if is_osx; then
+    DOTFILES_TO_LINK+=("${OSX_DOTFILES_TO_LINK[@]}")
+    DIRECTORIES_TO_LINK+=("${OSX_DIRECTORIES_TO_LINK[@]}")
+else
+    log_verbose "Not macOS: skipping ${OSX_DOTFILES_TO_LINK[*]} ${OSX_DIRECTORIES_TO_LINK[*]}"
+fi
+
 # Link individual files
 for file in "${DOTFILES_TO_LINK[@]}"; do
     link_file "$file"
@@ -365,6 +411,11 @@ done
 # Link directories (individual files)
 for dir in "${DIRECTORIES_TO_LINK[@]}"; do
     link_directory "$dir"
+done
+
+# Link directory children individually
+for dir in "${DIRECTORY_CHILDREN_TO_LINK[@]}"; do
+    link_directory_children "$dir"
 done
 
 # Link directories as symlinks (entire directory)

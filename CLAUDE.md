@@ -5,6 +5,10 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
 ## Non-obvious
 
 - `link.sh` uses a **whitelist** — new files must be added to its whitelist array before they'll be linked.
+- `link.sh` is OS-aware: entries in the `OSX_*` arrays (zshrc, tmux.conf, aerospace, alacritty,
+  ghostty) are skipped on Linux. On Omarchy the shell is bash and Ghostty is theme-managed.
+- Skill dirs (`.claude/skills`, `.pi/agent/skills`, `.codex/skills`) are linked **per child**, not as
+  one directory symlink, so Omarchy's own `omarchy`/`diagnose-crash` skill symlinks survive in place.
 - `./link.sh --dry-run` to preview changes before applying.
 - Secrets live in `~/.secrets/vars` (never tracked, never commit).
 - After `brew install <pkg>`, add it to `Brewfile` to persist across machines.
