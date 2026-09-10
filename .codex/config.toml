@@ -222,6 +222,9 @@ notifications = [ "agent-turn-complete", "approval-requested" ]
 status_line = [ "project-name", "git-branch", "total-input-tokens", "total-output-tokens", "estimated-thread-cost" ]
 status_line_use_colors = true
 
+[tui.model_availability_nux]
+gpt-6-astra = 1
+
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
 ambient-suggestions-enabled = true
