@@ -125,6 +125,7 @@ DIRECTORY_SYMLINKS=(
     ".agents/skills/open-pr"
     ".agents/skills/work"
     ".agents/skills/swarm"
+    ".agents/skills/quick-win"
 )
 
 log_info() {

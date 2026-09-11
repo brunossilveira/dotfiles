@@ -16,7 +16,7 @@ sandbox_mode = "workspace-write"
 notify = [ "/Users/bruno/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended" ]
 approvals_reviewer = "auto_review"
 service_tier = "default"
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 
 [projects."/Users/bruno"]
 trust_level = "trusted"
@@ -223,7 +223,7 @@ status_line = [ "project-name", "git-branch", "total-input-tokens", "total-outpu
 status_line_use_colors = true
 
 [tui.model_availability_nux]
-gpt-6-astra = 1
+gpt-6-astra = 4
 
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
