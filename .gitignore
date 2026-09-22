@@ -2,6 +2,9 @@
 # resolves here through .codex/skills -> .claude/skills. Codex owns them.
 .claude/skills/.system/
 
+# Anthropic's synced skills are managed outside this repo.
+.claude/skills/synced/
+
 # Codex's external-agent-import-sync copies .claude/skills/<name> into
 # .agents/skills/<name> as real files — the duplication CLAUDE.md forbids.
 # Ignore everything here and un-ignore the skills this repo actually authors.
