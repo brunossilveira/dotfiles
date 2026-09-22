@@ -124,7 +124,6 @@ DIRECTORY_SYMLINKS=(
     ".agents/skills/log-session-note"
     ".agents/skills/open-pr"
     ".agents/skills/work"
-    ".agents/skills/swarm"
     ".agents/skills/quick-win"
 )
 

@@ -1,9 +1,0 @@
-role: analyst
-stage: shaping
-runs_in: repository root, read-only
-may_web_search: true
-may_spawn: false
-may_talk_to_user: false
-writes: story-records story-narratives
-forbidden_writes: production-code unit-tests
-records_with: swarm_story.sh add
