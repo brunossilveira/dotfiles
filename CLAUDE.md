@@ -29,6 +29,7 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
   `SKILL.md` must be a real file or the skill vanishes with no error.
 - Codex refuses to run a non-managed hook until it is trusted — run `/hooks` inside Codex after
   a fresh install, otherwise `.codex/hooks.json` silently does nothing.
-- Codex writes machine-local state back into `~/.codex/config.toml` (project trust, TUI first-run
-  flags). That file is a symlink into this repo, so expect diff noise to discard.
+- `~/.codex/config.toml` is deliberately **not** tracked or linked: Codex rewrites it with
+  machine-local state (project trust, hook hashes, app paths), which conflicted between macOS and
+  Linux. Each machine keeps its own real file.
 - Tag directories (`tag-ruby/`, `tag-nvim/`, `tag-software/`) each have their own setup scripts.

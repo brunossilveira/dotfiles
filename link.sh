@@ -70,7 +70,6 @@ DOTFILES_TO_LINK=(
     ".pi/agent/AGENTS.md"
 
     # Codex CLI configuration
-    ".codex/config.toml"
     ".codex/AGENTS.md"
     ".codex/hooks.json"
 )

@@ -19,7 +19,7 @@ fi
 
 info "Codex $(codex --version) ready"
 
-# link.sh symlinks ~/.codex/{config.toml,AGENTS.md,hooks.json,prompts,hooks,skills}.
+# link.sh symlinks ~/.codex/{AGENTS.md,hooks.json,prompts,hooks,skills}.
 # Codex won't run a non-managed hook until it is trusted — review and approve
 # them once with the /hooks command inside Codex.
 info "Reminder: run /hooks inside Codex once to trust ~/.codex/hooks.json"
