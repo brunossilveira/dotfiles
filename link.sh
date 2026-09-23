@@ -381,6 +381,42 @@ link_directory_as_symlink() {
     fi
 }
 
+SECRETS_FILE="$TARGET_DIR/.secrets/vars"
+
+uses_bash() {
+    [ "$(basename "${SHELL:-}")" = bash ]
+}
+
+# Ensure ~/.secrets/vars exists (never tracked, never overwritten) and that
+# bash sources it. zsh loads it from config/zshrc.
+setup_secrets() {
+    if [ ! -e "$SECRETS_FILE" ]; then
+        if [ "$DRY_RUN" = true ]; then
+            log_dry_run "Would create secrets file: $SECRETS_FILE"
+        else
+            mkdir -p "$(dirname "$SECRETS_FILE")"
+            chmod 700 "$(dirname "$SECRETS_FILE")"
+            (umask 077 && echo "# export NAME=value" > "$SECRETS_FILE")
+            log_info "Created secrets file: $SECRETS_FILE"
+        fi
+    else
+        log_verbose "Secrets file exists: $SECRETS_FILE"
+    fi
+
+    uses_bash || return 0
+
+    local bashrc="$TARGET_DIR/.bashrc"
+    local source_line='[[ -r ~/.secrets/vars ]] && source ~/.secrets/vars'
+    if [ -f "$bashrc" ] && grep -Fqx "$source_line" "$bashrc"; then
+        log_verbose "Secrets already sourced in $bashrc"
+    elif [ "$DRY_RUN" = true ]; then
+        log_dry_run "Would append secrets source line to $bashrc"
+    else
+        printf '\n# Secrets (not tracked in dotfiles)\n%s\n' "$source_line" >> "$bashrc"
+        log_info "Added secrets source line to $bashrc"
+    fi
+}
+
 # Main execution
 if [ "$DRY_RUN" = true ]; then
     echo "=== DRY RUN MODE - No changes will be made ==="
@@ -422,6 +458,8 @@ done
 for dir in "${DIRECTORY_SYMLINKS[@]}"; do
     link_directory_as_symlink "$dir"
 done
+
+setup_secrets
 
 echo ""
 if [ "$DRY_RUN" = true ]; then

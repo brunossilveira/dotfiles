@@ -1,7 +1,7 @@
 ---
 name: log-session
 description: Summarize the conversation and log it to daily work notes
-allowed-tools: ["Bash(/Users/bruno/.config/scripts/claude-session-log.sh:*)"]
+allowed-tools: ["Bash($HOME/.config/scripts/claude-session-log.sh:*)"]
 ---
 
 Review our entire conversation and create a concise summary in the following format:
@@ -13,7 +13,7 @@ Review our entire conversation and create a concise summary in the following for
 Then run this command to log it to my daily Obsidian work notes:
 
 ```bash
-echo 'YOUR_SUMMARY_HERE' | /Users/bruno/.config/scripts/claude-session-log.sh
+echo 'YOUR_SUMMARY_HERE' | "$HOME/.config/scripts/claude-session-log.sh"
 ```
 
 Replace YOUR_SUMMARY_HERE with the complete formatted summary (including tags and summary text). Make sure to properly escape any quotes or special characters in the summary.

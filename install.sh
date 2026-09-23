@@ -48,7 +48,8 @@ if is_osx; then
   fi
 fi
 
-if ! echo "$SHELL" | grep -Fq zsh; then
+# zsh is the default on macOS only; on Linux (Omarchy) the shell stays bash.
+if is_osx && ! echo "$SHELL" | grep -Fq zsh; then
   info "Your shell is not Zsh. Changing it to Zsh..."
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   chsh -s /bin/zsh
@@ -59,9 +60,11 @@ info "Linking dotfiles into ~..."
 # Use the standalone link.sh script
 "$DOTFILES_DIR/link.sh"
 
-info "Installing zsh-syntax-highlighting..."
-if [ ! -d ~/.zsh-plugins/zsh-syntax-highlighting ]; then
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh-plugins/zsh-syntax-highlighting
+if is_osx; then
+  info "Installing zsh-syntax-highlighting..."
+  if [ ! -d ~/.zsh-plugins/zsh-syntax-highlighting ]; then
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh-plugins/zsh-syntax-highlighting
+  fi
 fi
 
 info "Installing tmux plugin manager..."
@@ -69,18 +72,20 @@ if [ ! -d ~/.tmux/plugins/tpm ]; then
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
-info "Installing oh my zsh..."
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  if ! sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; then
-    echo "Warning: oh-my-zsh installation failed, continuing..."
+if is_osx; then
+  info "Installing oh my zsh..."
+  if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    if ! sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; then
+      echo "Warning: oh-my-zsh installation failed, continuing..."
+    fi
+  else
+    info "Oh My Zsh already installed, skipping..."
   fi
-else
-  info "Oh My Zsh already installed, skipping..."
-fi
 
-info "Installing wd..."
-if ! curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh; then
-  echo "Warning: wd installation failed, continuing..."
+  info "Installing wd..."
+  if ! curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh; then
+    echo "Warning: wd installation failed, continuing..."
+  fi
 fi
 
 info "Running install scripts..."
