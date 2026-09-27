@@ -78,8 +78,14 @@ DOTFILES_TO_LINK=(
 # theme-managed by Omarchy, and tmux/AeroSpace are not used.
 OSX_DOTFILES_TO_LINK=(
     "config/zshrc"
+    "config/gitconfig.macos"
     "config/tmux.conf"
     "config/aerospace.toml"
+)
+
+# Linux-only files (see OSX_DOTFILES_TO_LINK)
+LINUX_DOTFILES_TO_LINK=(
+    "config/gitconfig.linux"
 )
 
 # Directories to link recursively (individual files get symlinked)
@@ -185,6 +191,10 @@ get_target_path() {
             ;;
         config/gitconfig)
             echo "$TARGET_DIR/.gitconfig"
+            ;;
+        config/gitconfig.macos|config/gitconfig.linux)
+            # Both land on the same path; ~/.gitconfig includes it
+            echo "$TARGET_DIR/.gitconfig.os"
             ;;
         config/gitignore)
             echo "$TARGET_DIR/.gitignore"
@@ -435,6 +445,7 @@ if is_osx; then
     DOTFILES_TO_LINK+=("${OSX_DOTFILES_TO_LINK[@]}")
     DIRECTORIES_TO_LINK+=("${OSX_DIRECTORIES_TO_LINK[@]}")
 else
+    DOTFILES_TO_LINK+=("${LINUX_DOTFILES_TO_LINK[@]}")
     log_verbose "Not macOS: skipping ${OSX_DOTFILES_TO_LINK[*]} ${OSX_DIRECTORIES_TO_LINK[*]}"
 fi
 

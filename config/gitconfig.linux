@@ -1,0 +1,3 @@
+# Linux-only git settings, linked to ~/.gitconfig.os by link.sh
+[credential "https://github.com"]
+  helper = !gh auth git-credential

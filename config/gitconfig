@@ -31,6 +31,11 @@
 [rerere]
   enabled = 1
 
+# OS-specific settings (credential helper). link.sh picks gitconfig.macos or
+# gitconfig.linux and links it to ~/.gitconfig.os
+[include]
+  path = ~/.gitconfig.os
+
 [commit]
   verbose = true
 

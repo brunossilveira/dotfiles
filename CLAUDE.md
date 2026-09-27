@@ -9,6 +9,9 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
   ghostty) are skipped on Linux. On Omarchy the shell is bash and Ghostty is theme-managed.
 - Skill dirs (`.claude/skills`, `.pi/agent/skills`, `.codex/skills`) are linked **per child**, not as
   one directory symlink, so Omarchy's own `omarchy`/`diagnose-crash` skill symlinks survive in place.
+- Git credential helper is OS-specific: `config/gitconfig` includes `~/.gitconfig.os`, which
+  `link.sh` points at `config/gitconfig.macos` (osxkeychain) or `config/gitconfig.linux`
+  (`gh auth git-credential`). Put other OS-only git settings there, not in `config/gitconfig`.
 - `./link.sh --dry-run` to preview changes before applying.
 - Secrets live in `~/.secrets/vars` (never tracked, never commit).
 - After `brew install <pkg>`, add it to `Brewfile` to persist across machines.
