@@ -1,0 +1,9 @@
+[marketplaces.claude-cowork]
+source_type = "local"
+source = "/Users/bruno/.codex/plugins/cache/claude-cowork"
+
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+OBSIDIAN_VAULT_DIR = "/Volumes/NAS/bruno/vault"
