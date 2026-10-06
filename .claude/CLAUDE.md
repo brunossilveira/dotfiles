@@ -1,35 +1,19 @@
 # Global Claude Code Instructions
 
-## Shell & Tools
-
-I use zsh (oh-my-zsh). Editor is nvim. Terminal multiplexer is tmux (prefix C-a, vim keys).
-
-Available tools:
-- `gh` for all GitHub interactions (PRs, issues, CI)
-- `lazygit` for interactive git (my primary git UI)
-- `mise` for runtime version management (replaces rbenv, nvm)
-- `fzf` for fuzzy finding
-- `rg` (ripgrep) for searching
-- AeroSpace for tiling window management
-
 ## Git
 
 Safe by default: `git status/diff/log` freely. Push only when asked.
 
 Destructive ops (`reset --hard`, `clean`, `restore .`, `push --force`) forbidden unless I explicitly ask.
 
-I have these aliases: `g` (status or git), `gd` (diff), `ga` (add), `gpr` (gh pr create), `amend` (commit --amend -Chead).
-
 ## Ruby / Rails
 
-My main work project is a Rails app using Docker (OrbStack). Development commands use `make`:
+My main work project is a Rails app using Docker. Development commands use `make`:
 - `make start` / `make stop` / `make restart`
 - `make console` (Rails console)
 - `make rspec <spec_files>` / `make tests <test_files>` -- always specify files
 - `make rubocop app/models/` -- run on specific paths
 - `make bash` (shell into container)
-
-Bundler: `be` is aliased to `bundle exec`.
 
 ## Session Logging
 
@@ -43,7 +27,7 @@ Write the minimum code that solves the problem. No speculative features, no abst
 
 Touch only what you must. Don't "improve" adjacent code, comments, or formatting. Don't refactor what isn't broken. Match existing style. Every changed line should trace directly to my request.
 
-Clean up only your own mess. Remove imports/variables/functions that YOUR changes made unused. Leave pre-existing dead code alone — mention it, don't delete it unless I ask.
+Unused code must go. Remove imports, variables, and functions that your changes made unused, and delete pre-existing dead code you come across.
 
 Read surrounding code before adding to a file — exports, callers, shared utilities. Don't add code that duplicates or conflicts with existing code nearby.
 
@@ -117,5 +101,3 @@ What belongs in memory:
 ## Preferences
 
 - Don't add AI attribution to commits or PRs.
-- `vim` is aliased to `nvim` -- use nvim directly.
-- `rm` is aliased to `rm -iv` in my shell, but Claude's Bash tool bypasses aliases. Be careful with destructive commands.

@@ -93,7 +93,6 @@ DIRECTORIES_TO_LINK=(
     "config/nvim"
     "config/herdr"
     "config/scripts"
-    "config/caveman"
 )
 
 # macOS-only directories (see OSX_DOTFILES_TO_LINK)
@@ -119,8 +118,6 @@ DIRECTORY_SYMLINKS=(
     ".pi/agent/extensions"
     ".pi/agent/agents"
     ".codex/hooks"
-    # Shared always-on rules; Codex reads the linked config/caveman source.
-    ".claude/rules"
     # .claude/commands re-exposed as skills. Codex dropped custom prompts, and
     # ~/.agents/skills is read by Codex but not by Claude, so these reach Codex
     # without showing up twice in Claude. Linked per skill to leave any
@@ -183,10 +180,6 @@ get_target_path() {
             ;;
         config/herdr/*)
             # Herdr config goes to ~/.config/herdr/
-            echo "$TARGET_DIR/.${relative_path}"
-            ;;
-        config/caveman/*)
-            # Caveman default-mode config goes to ~/.config/caveman/
             echo "$TARGET_DIR/.${relative_path}"
             ;;
         config/gitconfig)

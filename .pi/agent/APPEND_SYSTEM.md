@@ -65,10 +65,6 @@ Prefer safe alternatives:
 
 Never use destructive git commands (`reset --hard`, `clean -f`, `push --force`, `checkout .`) unless explicitly asked. Never skip hooks (`--no-verify`).
 
-## Output
-
-- Shared output policy loads from `~/.config/caveman/rules.md`.
-
 ## Git
 
 - Never modify git config.

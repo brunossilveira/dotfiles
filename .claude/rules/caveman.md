@@ -1,1 +1,0 @@
-../../config/caveman/rules.md

@@ -46,15 +46,11 @@
   },
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true,
-    "caveman@caveman": true
+    "ruby-lsp@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
+  "pluginConfigs": {
+    "cc-plugin-agents-md@builtin": {
+      "options": { "instructionFiles": "claude-md-and-agents-md" }
     }
   },
   "effortLevel": "high",

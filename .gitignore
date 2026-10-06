@@ -6,7 +6,7 @@
 .claude/skills/synced/
 
 # Codex's external-agent-import-sync copies .claude/skills/<name> into
-# .agents/skills/<name> as real files — the duplication CLAUDE.md forbids.
+# .agents/skills/<name> as real files — the duplication AGENTS.md forbids.
 # Ignore everything here and un-ignore the skills this repo actually authors.
 .agents/skills/*
 !.agents/skills/log-session/
