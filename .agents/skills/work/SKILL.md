@@ -1,11 +1,11 @@
 ---
 name: work
-description: Work a task end to end — gather context, design the code, implement with TDD, simplify, verify, and request adversarial review when risk warrants it
+description: Work a task end to end — gather context, design the code, implement with TDD, simplify, verify, request adversarial review when risk warrants it, and drive tickets to a merge-ready PR
 argument-hint: [ticket id, prompt, or description of the work]
 ---
 
-Work this task through all six phases, in order, without stopping to ask
-whether to continue:
+Work this task through the phases below, in order, without stopping to ask
+whether to continue. Check in only for a real scope decision:
 
 $ARGUMENTS
 
@@ -13,9 +13,14 @@ $ARGUMENTS
 
 Do not start editing until you know what the task actually is.
 
-- **Linear ticket** (an id like `ABC-123`, or a `linear.app` URL): read it with
-  the Linear tools — the issue, its description, its comments, and any linked
-  document or parent project. Take the acceptance criteria literally.
+- **Ticket** (an id like `ABC-123` or `#123`, or a tracker URL — Linear,
+  GitHub Issues, Jira, etc.): read it with whatever tool reaches that tracker
+  (an MCP server, or a CLI like `gh issue view`) — the issue, its description,
+  its comments, and any linked document or parent project. If no tool reaches
+  it, ask the user to paste it. Take the acceptance criteria literally. Verify
+  the ticket's premise against the code and, if relevant, the production
+  telemetry (e.g. Datadog via `pup`). If the premise is wrong or already
+  solved, comment on the ticket and stop.
 - **A document or URL**: read it before working from the summary in the prompt.
 - **File paths**: read them, plus their callers and their tests.
 - **A plain description**: locate the relevant code with direct `rg` searches.
@@ -62,11 +67,12 @@ placement. Tell it to defer tests and lint to the final verification phase.
 
 ## 5. Final verification
 
-After all edits, run the relevant tests and the repo's linter. This is the
-single final verification phase; do not duplicate it earlier. If a failure
-requires an edit, rerun only the affected checks. `done` means verified, not
-assumed — state anything that remains unverified. Commit only after final
-verification succeeds.
+After all edits, run the full local check suite: typecheck for every affected
+package, the Ruby, Python, and TS tests, lint/qlty, and diff coverage. This is
+the single final verification phase; do not duplicate it earlier. If a failure
+requires an edit, fix it and rerun the full suite before committing. `done`
+means verified, not assumed — state anything that remains unverified. Commit
+only after final verification succeeds.
 
 ## 6. Adversarial review when warranted
 
@@ -90,3 +96,22 @@ Pass `--base BRANCH` for a non-default target. Wait for `DONE_FILE`, then read
 `REPORT_FILE`. A non-zero exit or empty report is a failed review; show the log.
 Treat findings as claims to verify, show them to the user, and do not act on
 them before the user has seen them.
+
+## 7. Drive the PR to green (tickets, or when asked for a PR)
+
+Open the PR with the `open-pr` skill. Then loop until every check is green:
+wait for CI and bot reviews (e.g. Copilot) with `gh pr checks --watch`, run
+the `fix-pr` skill to fix every valid comment, reply to and resolve each
+thread, and push.
+
+Two kinds of red are acceptable: a check that also fails on the base branch
+(prove it with a link to the failing base-branch run), and the human-approval
+Review Policy check.
+
+## 8. Close out
+
+If the task came from a ticket, update its description (not a comment) with
+what changed, the decisions made, and any follow-ups. File follow-ups as linked
+sub-issues, or linked issues if the tracker has no sub-issues. If no tool can
+write to the tracker, put that update in your summary for the user to paste.
+End with a 5-line summary.
