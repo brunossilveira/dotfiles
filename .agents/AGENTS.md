@@ -19,6 +19,11 @@ Write `--since` dates as `YYYY-MM-DD 00:00`. A bare date uses the current time o
 - When adding a field to a type, grep for hand-built fixtures and test factories and update them too.
 - Stage files explicitly. Check `git status` before each commit so unrelated staged changes do not end up in the wrong commit.
 
+### Pull requests
+
+- Never use unbounded values (tool-call IDs, session IDs, user IDs) as Datadog metric tags or attribute keys.
+- Before opening a PR, self-review the diff the way Copilot would: check for unbounded cardinality, race conditions, muted/skipped edge cases, duplicate prompt content, and missing fixture updates.
+
 ## Verify, don't assume
 
 - Never claim a process is running, a deploy is live, or a fix works without checking it first (ps/pgrep, Datadog via pup, a reload test).
