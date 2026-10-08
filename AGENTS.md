@@ -25,8 +25,9 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
 - Three agents share one config set: `.claude/` (Claude Code), `.pi/` (PI), `.codex/` (Codex CLI).
   **Nothing is copied between them — every shared thing is a symlink, so editing the one real file
   updates all three.** Keep it that way when adding anything new.
-  - Global instructions: `.claude/CLAUDE.md` is canonical. `.pi/agent/AGENTS.md` and `.codex/AGENTS.md`
-    symlink to it.
+  - Global instructions: `.agents/AGENTS.md` is the one real file. `.claude/CLAUDE.md`,
+    `.codex/AGENTS.md`, and `.pi/agent/AGENTS.md` symlink to it. The `CLAUDE.md` name has to stay:
+    Claude Code reads `AGENTS.md` only at project level, never `~/.claude/AGENTS.md`.
   - Project instructions: this file (`AGENTS.md`). There is no root `CLAUDE.md`; Claude Code reads
     `AGENTS.md` because `.claude/settings.json` sets the `cc-plugin-agents-md@builtin` option
     `instructionFiles` to `claude-md-and-agents-md` (the repo's `.claude/CLAUDE.md` would otherwise

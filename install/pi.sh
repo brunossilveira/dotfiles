@@ -24,7 +24,7 @@ fi
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 # ~/.pi/agent/AGENTS.md is handled by link.sh — .pi/agent/AGENTS.md is a repo
-# symlink to .claude/CLAUDE.md, same as .codex/AGENTS.md.
+# symlink to .agents/AGENTS.md, same as .codex/AGENTS.md.
 
 # Apply patches
 PI_ROOT="$(npm root -g)/@mariozechner/pi-coding-agent"
