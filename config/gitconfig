@@ -36,6 +36,12 @@
 [include]
   path = ~/.gitconfig.os
 
+# Claude Code writes /model and /effort choices into ~/.claude/settings.json,
+# which links into the dotfiles repo. Hide those keys from git there
+# (applied via the repo's .gitattributes).
+[filter "claude-settings"]
+  clean = jq --indent 2 'del(.model, .modelSettings)'
+
 [commit]
   verbose = true
 

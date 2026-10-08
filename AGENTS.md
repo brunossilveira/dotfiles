@@ -46,4 +46,7 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
 - `~/.codex/config.toml` is deliberately **not** tracked or linked: Codex rewrites it with
   machine-local state (project trust, hook hashes, app paths), which conflicted between macOS and
   Linux. Each machine keeps its own real file.
+- `.claude/settings.json` is tracked, but a git clean filter (`.gitattributes` + `[filter
+  "claude-settings"]` in `config/gitconfig`) strips `model` and `modelSettings`, so `/model` and
+  `/effort` choices never show as diffs and can't be committed from that file.
 - Tag directories (`tag-ruby/`, `tag-nvim/`, `tag-software/`) each have their own setup scripts.
