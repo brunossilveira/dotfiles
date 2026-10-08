@@ -1,10 +1,28 @@
 # Global Claude Code Instructions
 
+## Communication
+
+- When posting to Linear, drafting status messages, or explaining something, default to short plain English. Lead with the answer in 2-4 sentences. Include only what the reader needs to act. Leave out paging context, internal traces, and side details unless asked.
+- When I ask to update a Linear ticket's description, edit the description. Do not add a comment instead.
+
 ## Git
 
 Safe by default: `git status/diff/log` freely. Push only when asked.
 
 Destructive ops (`reset --hard`, `clean`, `restore .`, `push --force`) forbidden unless I explicitly ask.
+
+Write `--since` dates as `YYYY-MM-DD 00:00`. A bare date uses the current time of day.
+
+### Before committing
+
+- Run the full relevant test suite AND the typecheck for every package touched before every commit. Do not run only the new tests. This includes the Python suite in plugin repos and the AI-package typecheck in the monorepo.
+- When adding a field to a type, grep for hand-built fixtures and test factories and update them too.
+- Stage files explicitly. Check `git status` before each commit so unrelated staged changes do not end up in the wrong commit.
+
+## Verify, don't assume
+
+- Never claim a process is running, a deploy is live, or a fix works without checking it first (ps/pgrep, Datadog via pup, a reload test).
+- Surface uncertainty. "Done" means verified, not assumed. If you skipped something or aren't sure it worked, say so explicitly.
 
 ## Ruby / Rails
 
@@ -29,6 +47,8 @@ Touch only what you must. Don't "improve" adjacent code, comments, or formatting
 
 Unused code must go. Remove imports, variables, and functions that your changes made unused, and delete pre-existing dead code you come across.
 
+If you find a broken thing adjacent to your change (e.g., a broken CLI command), fix it or flag it explicitly. Do not silently leave it.
+
 Read surrounding code before adding to a file — exports, callers, shared utilities. Don't add code that duplicates or conflicts with existing code nearby.
 
 Match the codebase's conventions, even if you disagree. If the codebase uses one pattern, don't introduce another. Disagreement is a separate conversation — don't fork it silently.
@@ -50,8 +70,6 @@ Before calling something a bug, verify the premise. Most confident-but-wrong fix
 Bar to clear: point at the exact line where the bug manifests AND show the fix changes that line's behavior. A reproduction beats a plausible rationale.
 
 On multi-step tasks, checkpoint: summarize what's done, what's verified, what's left. Don't continue from a state you can't describe.
-
-Surface uncertainty. "Done" means verified, not assumed. If you skipped something or aren't sure it worked, say so explicitly.
 
 Reframe vague tasks as verifiable goals before starting — a clear done-condition lets you loop independently instead of asking me to confirm:
 - "Add validation" → "Write tests for invalid inputs, then make them pass"

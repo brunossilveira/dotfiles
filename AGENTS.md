@@ -2,6 +2,12 @@
 
 Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
 
+## Dotfiles / config
+
+- These dotfiles run on BOTH macOS and Omarchy (Arch Linux). Never put OS-specific settings (credential helpers, paths, shells, zsh) in shared files. Use per-OS includes or conditionals (see the `link.sh` and git credential notes below).
+- Prefer the simplest fix (untrack a file, remove a symlink) over new system-level layers or anything that needs sudo.
+- Stay strictly in scope. Do not change aliases or unrelated config unless asked.
+
 ## Non-obvious
 
 - `link.sh` uses a **whitelist** — new files must be added to its whitelist array before they'll be linked.
