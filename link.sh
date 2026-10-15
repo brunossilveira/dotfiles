@@ -429,6 +429,21 @@ setup_secrets() {
     fi
 }
 
+setup_bash_aliases() {
+    uses_bash || return 0
+
+    local bashrc="$TARGET_DIR/.bashrc"
+    local source_line='[[ -r ~/.alias ]] && source ~/.alias'
+    if [ -f "$bashrc" ] && grep -Fqx "$source_line" "$bashrc"; then
+        log_verbose "Aliases already sourced in $bashrc"
+    elif [ "$DRY_RUN" = true ]; then
+        log_dry_run "Would append alias source line to $bashrc"
+    else
+        printf '\n# Dotfiles aliases\n%s\n' "$source_line" >> "$bashrc"
+        log_info "Added alias source line to $bashrc"
+    fi
+}
+
 # Main execution
 if [ "$DRY_RUN" = true ]; then
     echo "=== DRY RUN MODE - No changes will be made ==="
@@ -473,6 +488,7 @@ for dir in "${DIRECTORY_SYMLINKS[@]}"; do
 done
 
 setup_secrets
+setup_bash_aliases
 
 # Never link editable plugin source into the running OpenCode service.
 if [ "$DRY_RUN" = true ]; then
