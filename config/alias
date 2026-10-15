@@ -11,6 +11,8 @@ alias grep="egrep --color=auto"
 
 # Git
 alias gd="git diff"
+alias gco="git checkout"
+alias gst="git status"
 
 # Grep with grouped output like Ack
 alias gg="git g"
