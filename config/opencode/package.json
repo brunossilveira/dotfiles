@@ -1,0 +1,14 @@
+{
+  "name": "dotfiles-opencode-checks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit && node --test tests/*.test.mjs",
+    "deploy": "node deploy-plugin.mjs"
+  },
+  "devDependencies": {
+    "@opencode/plugin": "2.0.29",
+    "@types/node": "26.6.5",
+    "typescript": "7.0.2"
+  }
+}

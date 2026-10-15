@@ -22,9 +22,11 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
 - Secrets live in `~/.secrets/vars` (never tracked, never commit).
 - After `brew install <pkg>`, add it to `Brewfile` to persist across machines.
 - Neovim uses Lazy.nvim with modular plugin specs in `config/nvim/lua/plugins/`.
-- Three agents share one config set: `.claude/` (Claude Code), `.pi/` (PI), `.codex/` (Codex CLI).
+- Four agents share one config set: `.claude/` (Claude Code), `.pi/` (PI), `.codex/` (Codex CLI),
+  `config/opencode/` (OpenCode V2).
   **Nothing is copied between them — every shared thing is a symlink, so editing the one real file
-  updates all three.** Keep it that way when adding anything new.
+  updates all four.** Keep it that way when adding anything new.
+  Executable plugins are the exception: OpenCode loads validated release snapshots, never editable source.
   - Global instructions: `.agents/AGENTS.md` is the one real file. `.claude/CLAUDE.md`,
     `.codex/AGENTS.md`, and `.pi/agent/AGENTS.md` symlink to it. The `CLAUDE.md` name has to stay:
     Claude Code reads `AGENTS.md` only at project level, never `~/.claude/AGENTS.md`.
@@ -39,6 +41,21 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
     `~/.agents/skills` instead — which Claude does not read, so they don't list twice in Claude.
   - Hooks: `.claude/hooks/deny-rm-rf.jq` is canonical; `.codex/hooks/` symlinks to it. Both
     harnesses take the same payload and the same `hookSpecificOutput.permissionDecision` reply.
+  - OpenCode: `config/opencode/AGENTS.md` and `commands` symlink to the shared sources.
+    Skills are discovered natively from `~/.claude/skills` and `~/.agents/skills`; do not add
+    another skill tree. Its `shared-harness` plugin reads PI's agent prompts and invokes the
+    existing jq/Python hooks. Verification is a pre-response reminder, not a blocking Stop hook.
+    Memory indexes reuse `.pi/memory/MEMORY.md` (global and project); no new memory store.
+    Native web/worktree tools remain native. PI's `.worktreeinclude` and automatic cleanup,
+    custom UI, Claude LSP plugins, and app-specific computer-use integrations are not ported.
+    Install check tools with `npm ci --prefix config/opencode --ignore-scripts`.
+    Validate with `npm --prefix config/opencode run check`; deploy with
+    `node config/opencode/deploy-plugin.mjs` (also called by `link.sh`). Deployment stages a
+    snapshot, typechecks it, runs adapter and shared-hook tests, then atomically switches the
+    live symlink. Failed checks leave the active release unchanged. `--check` validates only.
+    Never point `~/.config/opencode/plugins/shared-harness.js` at editable repository source or
+    edit files under `~/.local/share/opencode/dotfiles-plugins/`. A pre-response hook previously
+    crashed every prompt after an untested live edit; preserve this activation gate.
 - Codex follows *directory* symlinks but silently skips a symlinked `SKILL.md` — a skill's
   `SKILL.md` must be a real file or the skill vanishes with no error.
 - Codex refuses to run a non-managed hook until it is trusted — run `/hooks` inside Codex after

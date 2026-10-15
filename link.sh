@@ -72,6 +72,11 @@ DOTFILES_TO_LINK=(
     # Codex CLI configuration
     ".codex/AGENTS.md"
     ".codex/hooks.json"
+
+    # OpenCode configuration (shared instructions and commands stay symlinked)
+    "config/opencode/opencode.json"
+    "config/opencode/cli.json"
+    "config/opencode/AGENTS.md"
 )
 
 # macOS-only files. On Linux (Omarchy) the shell is bash, the terminal config is
@@ -118,6 +123,7 @@ DIRECTORY_SYMLINKS=(
     ".pi/agent/extensions"
     ".pi/agent/agents"
     ".codex/hooks"
+    "config/opencode/commands"
     # .claude/commands re-exposed as skills. Codex dropped custom prompts, and
     # ~/.agents/skills is read by Codex but not by Claude, so these reach Codex
     # without showing up twice in Claude. Linked per skill to leave any
@@ -169,6 +175,9 @@ get_target_path() {
             ;;
         config/nvim/*)
             # Neovim config goes to ~/.config/nvim/
+            echo "$TARGET_DIR/.${relative_path}"
+            ;;
+        config/opencode/*)
             echo "$TARGET_DIR/.${relative_path}"
             ;;
         config/scripts/*)
@@ -464,6 +473,13 @@ for dir in "${DIRECTORY_SYMLINKS[@]}"; do
 done
 
 setup_secrets
+
+# Never link editable plugin source into the running OpenCode service.
+if [ "$DRY_RUN" = true ]; then
+    log_dry_run "Would validate and activate an isolated OpenCode plugin release"
+else
+    node "$DOTFILES_DIR/config/opencode/deploy-plugin.mjs"
+fi
 
 echo ""
 if [ "$DRY_RUN" = true ]; then

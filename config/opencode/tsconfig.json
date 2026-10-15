@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "module": "nodenext",
+    "target": "esnext",
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "files": ["plugins/shared-harness/index.js"]
+}

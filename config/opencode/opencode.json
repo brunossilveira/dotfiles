@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "update": "disable",
+  "instructions": [
+    "~/.pi/memory/MEMORY.md",
+    ".pi/memory/MEMORY.md"
+  ],
+  "agents": {
+    "reviewer": { "mode": "subagent" },
+    "debugger": { "mode": "subagent" }
+  }
+}

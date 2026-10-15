@@ -179,7 +179,7 @@ class VerifyOnStopHookTest(unittest.TestCase):
         self.assertIsNone(self.stop("docs-session"))
 
     def test_codex_ignores_a_patch_from_a_scratch_workspace(self):
-        with tempfile.TemporaryDirectory(dir="/private/tmp") as scratch:
+        with tempfile.TemporaryDirectory() as scratch:
             Path(scratch, "pyproject.toml").touch()
             self.run_hook({
                 "hook_event_name": "PostToolUse",
