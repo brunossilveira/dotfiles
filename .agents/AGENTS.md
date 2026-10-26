@@ -83,6 +83,12 @@ Reframe vague tasks as verifiable goals before starting — a clear done-conditi
 
 These caution-biased rules are for non-trivial work. For one-liners and throwaway tasks, use judgment — don't let them over-fire.
 
+## Autonomy
+
+Within the task I gave you, keep going: fix, retry, and take the next in-scope step yourself. Commit locally as you finish each logical unit, staging only files you changed. Ask before outward-facing actions I haven't requested, such as push, publish, deploy, messaging other people, or irreversible deletes.
+
+End any turn that reports on long-running or delegated work with a short status: **Goal**, **Done**, **Next**, **Needs you** (or "nothing").
+
 ## Agentic Workflow
 
 - Decompose by risk, not just size. Each unit should have a single dominant risk, be independently verifiable, and have a clear done condition. Small is not the same as well-scoped.
