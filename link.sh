@@ -91,6 +91,7 @@ OSX_DOTFILES_TO_LINK=(
 # Linux-only files (see OSX_DOTFILES_TO_LINK)
 LINUX_DOTFILES_TO_LINK=(
     "config/gitconfig.linux"
+    "config/starship.toml.tpl"
 )
 
 # Directories to link recursively (individual files get symlinked)
@@ -198,6 +199,10 @@ get_target_path() {
         config/gitconfig.macos|config/gitconfig.linux)
             # Both land on the same path; ~/.gitconfig includes it
             echo "$TARGET_DIR/.gitconfig.os"
+            ;;
+        config/starship.toml.tpl)
+            # Omarchy renders user templates from here on each theme change
+            echo "$TARGET_DIR/.config/omarchy/themed/starship.toml.tpl"
             ;;
         config/gitignore)
             echo "$TARGET_DIR/.gitignore"
@@ -444,6 +449,15 @@ setup_bash_aliases() {
     fi
 }
 
+# Starship (Omarchy's bash prompt) reads the copy Omarchy renders from
+# config/starship.toml.tpl, so it follows the current theme's colors.
+link_starship_config() {
+    is_osx && return 0
+
+    create_symlink "$TARGET_DIR/.local/state/omarchy/current/theme/starship.toml" \
+        "$TARGET_DIR/.config/starship.toml" "starship.toml (rendered by Omarchy)"
+}
+
 # Main execution
 if [ "$DRY_RUN" = true ]; then
     echo "=== DRY RUN MODE - No changes will be made ==="
@@ -489,6 +503,7 @@ done
 
 setup_secrets
 setup_bash_aliases
+link_starship_config
 
 # Never link editable plugin source into the running OpenCode service.
 if [ "$DRY_RUN" = true ]; then

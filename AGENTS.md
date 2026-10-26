@@ -13,6 +13,10 @@ Personal dotfiles repo. Config files are symlinked to `$HOME` via `link.sh`.
 - `link.sh` uses a **whitelist** — new files must be added to its whitelist array before they'll be linked.
 - `link.sh` is OS-aware: entries in the `OSX_*` arrays (zshrc, tmux.conf, aerospace, alacritty,
   ghostty) are skipped on Linux. On Omarchy the shell is bash and Ghostty is theme-managed.
+- The Omarchy bash prompt is starship. `config/starship.toml.tpl` is an Omarchy user template
+  (linked into `~/.config/omarchy/themed/`), so `{{ accent }}` etc. are filled from the theme on
+  every `omarchy theme set` into `~/.local/state/omarchy/current/theme/starship.toml`, which
+  `~/.config/starship.toml` symlinks to. Edit the template, then re-set the theme to apply.
 - Skill dirs (`.claude/skills`, `.pi/agent/skills`, `.codex/skills`) are linked **per child**, not as
   one directory symlink, so Omarchy's own `omarchy`/`diagnose-crash` skill symlinks survive in place.
 - Git credential helper is OS-specific: `config/gitconfig` includes `~/.gitconfig.os`, which
