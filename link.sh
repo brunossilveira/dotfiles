@@ -135,6 +135,9 @@ DIRECTORY_SYMLINKS=(
     ".agents/skills/work"
     ".agents/skills/quick-win"
     ".agents/skills/fix-pr"
+    ".agents/skills/correct"
+    ".agents/skills/blast-radius"
+    ".agents/skills/no-comments"
 )
 
 log_info() {
