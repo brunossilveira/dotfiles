@@ -19,6 +19,9 @@ placement. Apply only behavior-preserving refinements.
    - Consolidate related logic
    - Remove comments that describe obvious code
    - Prefer explicit readable code over compact clever code
+   - Inline wrappers with one caller and layers that only pass through
+   - Shrink mutable state: locals over fields, and derive instead of sync
+   - Check that a new reader can quickly answer "where does X come from?" and "what can change X?"
 
 4. **Keep responsibilities coherent**: For each class or module the change
    added or grew, check whether it gained a concern with its own state or reason

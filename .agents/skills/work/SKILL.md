@@ -47,6 +47,11 @@ to wrap one use. Reject a design that gives a class a second reason to change or
 a separate state cluster. Compare alternatives only when multiple credible
 designs have a meaningful trade-off.
 
+If the change would grow a conditional chain or add a second boolean that must
+stay in sync with the first, encode the domain in a structure instead: a state
+machine, typed model, or lookup table. Keep plain code when its shape is clear,
+local, and unlikely to grow.
+
 State assumptions. Ask a concise clarifying question before coding when an
 answer would materially change behavior, public API, schema, ownership, or
 scope. Otherwise state the assumption and proceed. Do not create a standalone

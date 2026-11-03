@@ -61,6 +61,10 @@ Match the codebase's conventions, even if you disagree. If the codebase uses one
 
 When two patterns in a codebase contradict, pick one (the more recent or more tested) and flag the other. Don't blend them.
 
+Validate at system boundaries (CLI args, config, network, external APIs) and trust internal types after that. If the data isn't crossing a boundary right now, another check is redundant. Keep business logic in functions that run without the framework.
+
+For anything that mutates state, ask what happens if it runs twice, or if the last run crashed at any point. Derive each step from the state that exists, not from what the last run meant to do, and make anything a run leaves behind recognizable as stale.
+
 Tests must encode why behavior matters, not just what it does. A test that can't fail when business logic changes is worthless. Check each test against two imagined edits: break the behavior and it must fail; change only the internals and it must still pass.
 
 Two banned test shapes:
@@ -74,6 +78,8 @@ Before calling something a bug, verify the premise. Most confident-but-wrong fix
 - Scope creep that revives an approach already abandoned.
 
 Bar to clear: point at the exact line where the bug manifests AND show the fix changes that line's behavior. A reproduction beats a plausible rationale.
+
+Fix the first wrong decision, not where the symptom showed up. Ask whether the triggering state is legitimate: if so, handle it where it broke. If it should never exist, a guard hides the bug, so find what produced it. Then check for the same fault elsewhere.
 
 When two fixes that share a premise have failed the same check, write the premise down and test it directly before trying a third.
 
