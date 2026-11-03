@@ -37,6 +37,7 @@ alias tagit='/usr/local/bin/ctags -R'
 
 # Claude Code
 alias cw="claude --worktree"
+alias claude-virgin='claude --setting-sources project --mcp-config <(jq "{mcpServers}" ~/.claude.json)'
 
 # Typos
 alias vim="nvim"
