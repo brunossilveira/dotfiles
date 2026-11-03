@@ -11,8 +11,12 @@ set -Eeuo pipefail
 # Usage: spawn-review.sh [--base BRANCH] [--title TITLE] [--focus TEXT]
 #                        [--out FILE] [--headless]
 #
-# Prints REPORT_FILE=<path> and DONE_FILE=<path>. The review is finished when
-# DONE_FILE exists; its contents are the codex exit code.
+# Codex runs in a disposable worktree holding this branch plus uncommitted work,
+# so it can write and run repros without touching the checkout.
+#
+# Prints REPORT_FILE=<path>, DONE_FILE=<path> and WORKTREE_DIR=<path>. The review
+# is finished when DONE_FILE exists; its contents are the codex exit code. The
+# caller reruns findings in WORKTREE_DIR, then removes it.
 
 BASE=""
 TITLE="review"
@@ -66,11 +70,17 @@ mkdir -p "$REVIEW_DIR"
 if [[ -z "$REPORT" ]]; then
     REPORT="$REVIEW_DIR/$(echo "$BRANCH" | tr '/' '-')-$$.md"
 fi
+[[ "$REPORT" == /* ]] || REPORT="$PWD/$REPORT"
 DONE_FILE="$REPORT.done"
 LOG_FILE="$REPORT.log"
 rm -f "$REPORT" "$DONE_FILE" "$LOG_FILE"
 
 PROMPT_FILE="$REVIEW_DIR/prompt-$$.txt"
+
+WORKTREE=$(mktemp -d "$REVIEW_DIR/worktree-XXXXXX")
+git worktree add --quiet --detach "$WORKTREE" HEAD
+git diff --quiet HEAD || git diff --binary HEAD | git -C "$WORKTREE" apply
+(cd "$(git rev-parse --show-toplevel)" && git ls-files -z --others --exclude-standard | tar --null -T - -cf - | tar -C "$WORKTREE" -xf -)
 
 {
     echo "Adversarial code review. Branch \`$BRANCH\` against \`$BASE\`."
@@ -90,6 +100,11 @@ PROMPT_FILE="$REVIEW_DIR/prompt-$$.txt"
     echo "- Assume the author is wrong. Verify each premise against the code as it"
     echo "  actually runs — read the surrounding files and the callers, not just the diff."
     echo "- Every finding points at an exact file:line, says how it breaks, and gives the fix."
+    echo "- Prove each finding with a run against the real code: a failing test, a repro"
+    echo "  script, or command output. Report the exact command, the output it printed, and"
+    echo "  the output the change requires."
+    echo "- A finding you could not run goes in a final Unproven section, with what stopped"
+    echo "  the run. Leave out risks that need a future change to matter."
     echo "- No praise. No style nits unless they change meaning."
     echo "- If nothing real is wrong, say that plainly instead of inventing findings."
     echo
@@ -97,12 +112,13 @@ PROMPT_FILE="$REVIEW_DIR/prompt-$$.txt"
         echo "What the change is meant to do: $FOCUS"
         echo
     fi
-    echo "Do not edit any files."
+    echo "This is a disposable worktree. Write repros here. Do not fix the code or commit."
     echo "Your final message IS the report: markdown, findings ordered by severity,"
-    echo "one section per finding with file:line, how it breaks, and the fix."
+    echo "one section per finding with file:line, how it breaks, the command, its output,"
+    echo "the required output, and the fix."
 } > "$PROMPT_FILE"
 
-RUN="codex exec --sandbox read-only -o '$REPORT' \"\$(cat '$PROMPT_FILE')\"; echo \$? > '$DONE_FILE'"
+RUN="codex exec -C '$WORKTREE' --sandbox workspace-write -o '$REPORT' \"\$(cat '$PROMPT_FILE')\"; echo \$? > '$DONE_FILE'"
 
 if [[ "$HEADLESS" -eq 1 ]]; then
     nohup bash -c "$RUN" >"$LOG_FILE" 2>&1 &
@@ -119,3 +135,4 @@ fi
 
 echo "REPORT_FILE=$REPORT"
 echo "DONE_FILE=$DONE_FILE"
+echo "WORKTREE_DIR=$WORKTREE"

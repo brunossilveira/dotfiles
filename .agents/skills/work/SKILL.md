@@ -20,7 +20,7 @@ Do not start editing until you know what the task actually is.
   it, ask the user to paste it. Take the acceptance criteria literally. Verify
   the ticket's premise against the code and, if relevant, the production
   telemetry (e.g. Datadog via `pup`). If the premise is wrong or already
-  solved, comment on the ticket and stop.
+  solved, draft a ticket comment for the user to approve, and stop.
 - **A document or URL**: read it before working from the summary in the prompt.
 - **File paths**: read them, plus their callers and their tests.
 - **A plain description**: locate the relevant code with direct `rg` searches.
@@ -60,19 +60,31 @@ patching blindly. Implement the minimum code needed to make it pass, then run
 that focused test green. Repeat in small red-green cycles when the behavior has
 multiple increments. Do not run the final test set or linter yet.
 
+For a bug, reproduce it first on the surface where it was reported, then find
+the root cause. If no cheap test path exists, use the closest executable check
+instead of a brittle test. Keep the failing and passing output for the summary.
+Revert anything the evidence refuted.
+
 ## 4. Simplify
 
-Invoke the `simplify` skill once. It owns both clarity and responsibility
-placement. Tell it to defer tests and lint to the final verification phase.
+Invoke the `no-comments` skill once, then the `simplify` skill once. `simplify`
+owns both clarity and responsibility placement. Tell it to defer tests and lint
+to the final verification phase.
 
 ## 5. Final verification
 
 After all edits, run the full local check suite: typecheck for every affected
 package, the Ruby, Python, and TS tests, lint/qlty, and diff coverage. This is
 the single final verification phase; do not duplicate it earlier. If a failure
-requires an edit, fix it and rerun the full suite before committing. `done`
-means verified, not assumed — state anything that remains unverified. Commit
-only after final verification succeeds.
+requires an edit, fix it and rerun the full suite before committing.
+
+Then exercise the change the way a user would: run the real command, walk the
+flow in the running app, or read back the stored value. Tests show branch
+behavior, not that the feature works. Report this check as passed, failed, or
+inconclusive; inconclusive or the wrong surface is not a pass.
+
+`done` means verified, not assumed — state anything that remains unverified.
+Commit only after final verification succeeds.
 
 ## 6. Adversarial review when warranted
 
@@ -94,15 +106,19 @@ When the gate matches, run:
 
 Pass `--base BRANCH` for a non-default target. Wait for `DONE_FILE`, then read
 `REPORT_FILE`. A non-zero exit or empty report is a failed review; show the log.
-Treat findings as claims to verify, show them to the user, and do not act on
-them before the user has seen them.
+Treat findings as claims to verify: rerun each finding's command in
+`WORKTREE_DIR` and drop it if the failure does not reproduce or does not break
+the intent. Show the user the proven findings, the Unproven section labeled as
+unproven, and the count of dropped findings with why. Do not act on them before
+the user has seen them. Afterwards run `git worktree remove --force
+"$WORKTREE_DIR"`.
 
 ## 7. Drive the PR to green (tickets, or when asked for a PR)
 
 Open the PR with the `open-pr` skill. Then loop until every check is green:
-wait for CI and bot reviews (e.g. Copilot) with `gh pr checks --watch`, run
-the `fix-pr` skill to fix every valid comment, reply to and resolve each
-thread, and push.
+wait for CI and bot reviews (e.g. Copilot) with `gh pr checks --watch`, then run
+the `fix-pr` skill, which fixes valid comments, pushes, and drafts thread replies
+for the user to approve.
 
 Two kinds of red are acceptable: a check that also fails on the base branch
 (prove it with a link to the failing base-branch run), and the human-approval
@@ -110,8 +126,9 @@ Review Policy check.
 
 ## 8. Close out
 
-If the task came from a ticket, update its description (not a comment) with
-what changed, the decisions made, and any follow-ups. File follow-ups as linked
-sub-issues, or linked issues if the tracker has no sub-issues. If no tool can
-write to the tracker, put that update in your summary for the user to paste.
-End with a 5-line summary.
+If the task came from a ticket, draft an update to its description (not a
+comment) with what changed, the decisions made, and any follow-ups, plus each
+follow-up as a linked sub-issue, or linked issue if the tracker has no
+sub-issues. Show the drafts and write them to the tracker only after the user
+approves. If no tool can write to the tracker, put them in your summary for the
+user to paste. End with a 5-line summary.
