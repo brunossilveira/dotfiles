@@ -28,6 +28,7 @@ Write `--since` dates as `YYYY-MM-DD 00:00`. A bare date uses the current time o
 
 - Never claim a process is running, a deploy is live, or a fix works without checking it first (ps/pgrep, Datadog via pup, a reload test).
 - Surface uncertainty. "Done" means verified, not assumed. If you skipped something or aren't sure it worked, say so explicitly.
+- Label each claim in a report as measured, inferred, or a guess. Don't hand me a check you could run yourself.
 
 ## Ruby / Rails
 
@@ -60,7 +61,7 @@ Match the codebase's conventions, even if you disagree. If the codebase uses one
 
 When two patterns in a codebase contradict, pick one (the more recent or more tested) and flag the other. Don't blend them.
 
-Tests must encode why behavior matters, not just what it does. A test that can't fail when business logic changes is worthless.
+Tests must encode why behavior matters, not just what it does. A test that can't fail when business logic changes is worthless. Check each test against two imagined edits: break the behavior and it must fail; change only the internals and it must still pass.
 
 Two banned test shapes:
 - **Change-detector tests** — assert on data that is *expected* to change: model catalogs, config version literals, enumeration counts, hardcoded name lists. If the test reads like a snapshot of current data, delete it. If it reads like a contract about how two pieces of data must relate, keep it. `assert len(providers) == 8` ✗ / `assert every catalog entry has a context length` ✓.
@@ -73,6 +74,8 @@ Before calling something a bug, verify the premise. Most confident-but-wrong fix
 - Scope creep that revives an approach already abandoned.
 
 Bar to clear: point at the exact line where the bug manifests AND show the fix changes that line's behavior. A reproduction beats a plausible rationale.
+
+When two fixes that share a premise have failed the same check, write the premise down and test it directly before trying a third.
 
 On multi-step tasks, checkpoint: summarize what's done, what's verified, what's left. Don't continue from a state you can't describe.
 
