@@ -49,6 +49,8 @@ State assumptions before acting. If a simpler approach exists, push back. Ask be
 
 Write the minimum code that solves the problem. No speculative features, no abstractions for single-use code, no premature generalization.
 
+Make the code explain itself instead of writing a comment. Before adding one, fix what made it necessary: rename the symbol, extract a well-named function or class, introduce a type, or enforce the constraint with a check or test. An extraction that names a concept and replaces a comment isn't the premature abstraction banned above, even with one caller. Comment only what code can't say: a constraint forced by something outside our control, a directive a tool reads, a license header, or a public API contract. Never narrate what the code does or why you changed it.
+
 Touch only what you must. Don't "improve" adjacent code, comments, or formatting. Don't refactor what isn't broken. Match existing style. Every changed line should trace directly to my request.
 
 Unused code must go. Remove imports, variables, and functions that your changes made unused, and delete pre-existing dead code you come across.
