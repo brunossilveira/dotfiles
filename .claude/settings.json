@@ -15,6 +15,15 @@
             "command": "$HOME/.claude/hooks/deny-rm-rf.jq"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event pre-tool-use --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
       }
     ],
     "SessionStart": [
@@ -23,6 +32,15 @@
           {
             "type": "command",
             "command": "echo '💡 Reminder: Use /log-session at the end of this session to save a summary to your work notes.'"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event session-start --agent claude-code --server-url http://127.0.0.1:49374"
           }
         ]
       }
@@ -35,6 +53,82 @@
             "type": "command",
             "command": "python3 $HOME/.claude/hooks/verify-on-stop.py",
             "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event stop --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event user-prompt-submit --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event post-tool-use --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event pre-compact --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event session-end --agent claude-code --server-url http://127.0.0.1:49374",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event subagent-start --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/ai-memory --data-dir /home/brunosilveira/.local/share/ai-memory hook --event subagent-stop --agent claude-code --server-url http://127.0.0.1:49374"
           }
         ]
       }
