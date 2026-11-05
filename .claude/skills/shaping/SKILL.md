@@ -50,6 +50,18 @@ When kicking off a new shaping session, offer the user both entry points:
 
 There is no required order. Shaping is iterative — R and S inform each other throughout.
 
+Ask about decisions whose prerequisites are already settled. Resolve a storage
+choice before asking questions that assume one of its alternatives. Group
+independent questions into a concise round, include a recommended answer, and
+wait for the decisions that affect later questions. Look up repository facts
+instead of asking the user to rediscover them. Reuse settled decisions; ask
+only when the answer changes the shape or its scope.
+
+When terminology is overloaded or a consequential decision needs to outlive
+the shaping documents, read [domain-docs.md](references/domain-docs.md).
+It defines when to update an existing glossary or record a decision, and when
+neither needs a new document.
+
 ## Working with an Existing Shaping Doc
 
 When the shaping doc already has a selected shape:
@@ -120,7 +132,7 @@ Shaping → Slicing
 | Phase | Purpose | Output |
 |-------|---------|--------|
 | **Shaping** | Explore the problem and solution space, select and detail a shape | Shaping doc with R, shapes, fit checks, breadboard |
-| **Slicing** | Break down for implementation | Vertical slices with demo-able UI |
+| **Slicing** | Break down for implementation | Independently verifiable vertical slices |
 
 ### Phase Transition
 
@@ -308,7 +320,9 @@ Avoid:
 
 ## Breadboards
 
-Use the `/breadboarding` skill to map existing systems or detail a shape into concrete affordances. Breadboarding produces:
+Use [breadboarding.md](references/breadboarding.md) to map an existing system
+or detail a selected shape into concrete affordances. It defines the tables,
+wiring, and completion criteria. Breadboarding produces:
 - UI Affordances table
 - Non-UI Affordances table
 - Wiring diagram grouped by Place
@@ -446,7 +460,7 @@ Use "Detail X" (not a new letter) to show this is a breakdown of Shape X, not an
 
 ### What Detailing Produces
 
-Use the `/breadboarding` skill to produce:
+Use the [breadboarding reference](references/breadboarding.md) to produce:
 - **UI Affordances table** — Things users see and interact with (inputs, buttons, displays)
 - **Non-UI Affordances table** — Data stores, handlers, queries, services
 - **Wiring diagram** — How affordances connect across places
@@ -547,14 +561,19 @@ See **Multi-Level Consistency** at the top of this document. Changes at any leve
 
 ## Slicing
 
-After a shape is breadboarded, slice it into vertical implementation increments. Use the `/breadboarding` skill for the slicing process — it defines what vertical slices are, the procedure for creating them, and visualization formats.
+After a shape is breadboarded, slice it into vertical implementation increments
+using the [slicing procedure](references/breadboarding.md#slicing). If tracker
+tickets are requested, use `to-tickets` to turn those agreed slices into tickets
+with acceptance criteria and blockers.
 
 **The flow:**
 1. **Parts** → high-level mechanisms in the shape
-2. **Breadboard** → concrete affordances with wiring (use `/breadboarding`)
-3. **Slices** → vertical increments that can each be demoed (use `/breadboarding` slicing section)
+2. **Breadboard** → concrete affordances with wiring (use the breadboarding reference)
+3. **Slices** → vertical increments that can each be demonstrated or verified
 
-**Key principle:** Every slice must end in demo-able UI. A slice without visible output is a horizontal layer, not a vertical slice.
+**Key principle:** Every slice must deliver observable behavior through its
+responsible layers. UI, CLI, API, and backend outcomes all qualify; an isolated
+layer with no verifiable outcome is not a complete slice.
 
 **Document outputs:**
 - **Slices doc** — slice definitions, per-slice affordance tables, sliced breadboard

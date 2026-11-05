@@ -66,9 +66,14 @@ that focused test green. Repeat in small red-green cycles when the behavior has
 multiple increments. Do not run the final test set or linter yet.
 
 For a bug, reproduce it first on the surface where it was reported, then find
-the root cause. If no cheap test path exists, use the closest executable check
-instead of a brittle test. Keep the failing and passing output for the summary.
-Revert anything the evidence refuted.
+the root cause. Reduce the reproduction one input, configuration choice, or
+step at a time, keeping only reductions that preserve the reported failure.
+Keep the original scenario to replay after the fix. For an intermittent bug,
+measure the failure rate under repeatable conditions before and after; for a
+performance regression, compare the same workload against a measured baseline.
+If no cheap test path exists, use the closest executable check instead of a
+brittle test. Keep the failing and passing output for the summary. Revert
+anything the evidence refuted.
 
 ## 4. Simplify
 

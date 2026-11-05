@@ -138,6 +138,8 @@ DIRECTORY_SYMLINKS=(
     ".agents/skills/correct"
     ".agents/skills/blast-radius"
     ".agents/skills/no-comments"
+    ".agents/skills/handoff"
+    ".agents/skills/to-tickets"
 )
 
 log_info() {
@@ -338,6 +340,23 @@ link_directory_children() {
     fi
 
     log_verbose "Linking children of directory: $relative_path"
+
+    local target current_link
+    for target in "$TARGET_DIR/$relative_path"/*; do
+        [ -L "$target" ] || continue
+        current_link="$(readlink "$target")"
+        case "$current_link" in
+            "$source_dir"/*)
+                [ -e "$current_link" ] && continue
+                if [ "$DRY_RUN" = true ]; then
+                    log_dry_run "Would remove stale symlink: $target -> $current_link"
+                else
+                    rm "$target"
+                    log_verbose "Removed stale symlink: $target"
+                fi
+                ;;
+        esac
+    done
 
     local child
     for child in "$source_dir"/*; do

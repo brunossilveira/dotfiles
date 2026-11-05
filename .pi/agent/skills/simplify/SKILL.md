@@ -28,7 +28,10 @@ placement. Apply only behavior-preserving refinements.
    to change. Strong extraction signals include separate state clusters, both
    sides of a shared contract living far apart, and protocol logic mixed with
    transport. Extract only when the concern is genuinely independent; new files
-   receive the same scrutiny as existing ones.
+   receive the same scrutiny as existing ones. Consider removing an abstraction:
+   if complexity disappears, it may be unnecessary; if the same knowledge and
+   decisions spread across callers, it is doing useful work. Judge the interface
+   by how much callers must know, not by the number of implementation lines.
 
 5. **Don't over-simplify**:
    - Don't create overly clever solutions that are hard to understand

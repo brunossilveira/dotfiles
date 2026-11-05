@@ -1,7 +1,7 @@
 ---
 name: log-session-note
 description: Create a standalone note for this coding session
-allowed-tools: ["Bash(/Users/bruno/.config/scripts/claude-session-note.sh:*)"]
+allowed-tools: ["Bash($HOME/.config/scripts/claude-session-note.sh:*)"]
 ---
 
 Review our entire conversation and create a comprehensive standalone session note. Since this is a standalone note (not a daily log entry), provide thorough documentation including context, code snippets, and details that would be valuable for future reference.
@@ -38,7 +38,7 @@ Use proper markdown formatting with headings (##, ###), code blocks with syntax 
 Then run this command to create the standalone note in your Obsidian vault:
 
 ```bash
-echo 'YOUR_CONTENT_HERE' | /Users/bruno/.config/scripts/claude-session-note.sh
+echo 'YOUR_CONTENT_HERE' | "$HOME/.config/scripts/claude-session-note.sh"
 ```
 
 Replace YOUR_CONTENT_HERE with the complete formatted content (including title, tags, and the comprehensive summary). Make sure to properly escape any quotes or special characters.

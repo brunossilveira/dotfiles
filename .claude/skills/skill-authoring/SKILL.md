@@ -1,12 +1,12 @@
 ---
-name: skill-creator
-description: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.
+name: skill-authoring
+description: Author shared skills and agent instructions across coding harnesses. Use when creating or updating portable SKILL.md files, their references, or shared AGENTS.md guidance.
 license: MIT
 ---
 
-# Skill Creator
+# Skill Authoring
 
-This skill provides guidance for creating effective skills.
+Create portable shared skills with one authoritative source across harnesses.
 
 ## About Skills
 
@@ -42,6 +42,11 @@ skill-name/
 #### SKILL.md (required)
 
 **Metadata Quality:** The `name` and `description` in YAML frontmatter determine when Claude will use the skill. Be specific about what the skill does and when to use it. Use the third-person (e.g. "This skill should be used when..." instead of "Use this skill when...").
+
+Describe the distinct situations that should reach the skill, then check nearby
+skills for overlapping purposes and names, including bundled skills. Record
+whether it is a workflow entry point or reusable guidance. Preserve existing
+invocation policy; keep helpers reachable by the workflows that call them.
 
 #### Bundled Resources (optional)
 
@@ -114,9 +119,24 @@ To complete SKILL.md, answer:
 2. When should the skill be used?
 3. In practice, how should Claude use the skill? All reusable skill contents should be referenced.
 
+Give each substantial phase a checkable completion criterion: the artifact,
+observed result, or resolved decision that lets the agent proceed. Scale the
+criterion to the task; a simple edit needs no ceremony. Define completion in
+terms of the requested behavior rather than an output length or fixed count.
+
+Keep definitions and caveats beside the step that uses them. Keep common
+guidance in the entrypoint; move detail needed only by some branches to a
+reference. Each reference pointer must say what it contains and when to read
+it. A path alone does not explain when the material matters.
+
 ### Step 5: Iterate
 
 1. Use the skill on real tasks
 2. Notice struggles or inefficiencies
 3. Identify how SKILL.md or bundled resources should be updated
 4. Implement changes and test again
+
+Validate substantial workflow changes with a realistic request and inspect the
+resulting behavior. A structural metadata check cannot establish that the
+instructions produce the right result. Keep evaluation artifacts outside the
+working tree and preserve the task's authorization boundaries.
