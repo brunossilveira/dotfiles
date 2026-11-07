@@ -67,6 +67,8 @@ Validate at system boundaries (CLI args, config, network, external APIs) and tru
 
 For anything that mutates state, ask what happens if it runs twice, or if the last run crashed at any point. Derive each step from the state that exists, not from what the last run meant to do, and make anything a run leaves behind recognizable as stale.
 
+No implicit state machines. When something moves through states, name them: one explicit status field (an enum) with the allowed transitions defined in one place. Don't let a set of booleans, nullable timestamps, or "if X is set and Y isn't" checks together imply the state. Those allow combinations that mean nothing and spread the transition rules across every caller.
+
 Tests must encode why behavior matters, not just what it does. A test that can't fail when business logic changes is worthless. Check each test against two imagined edits: break the behavior and it must fail; change only the internals and it must still pass.
 
 Two banned test shapes:
