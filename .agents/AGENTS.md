@@ -18,6 +18,7 @@ Write `--since` dates as `YYYY-MM-DD 00:00`. A bare date uses the current time o
 - Run the full relevant test suite AND the typecheck for every package touched before every commit. Do not run only the new tests. This includes the Python suite in plugin repos and the AI-package typecheck in the monorepo.
 - When adding a field to a type, grep for hand-built fixtures and test factories and update them too.
 - Stage files explicitly. Check `git status` before each commit so unrelated staged changes do not end up in the wrong commit.
+- Each commit message says why, what changed, and how you proved it works (the tests or checks you ran).
 
 ### Pull requests
 
@@ -53,6 +54,8 @@ Make the code explain itself instead of writing a comment. Before adding one, fi
 
 Touch only what you must. Don't "improve" adjacent code, comments, or formatting. Don't refactor what isn't broken. Match existing style. Every changed line should trace directly to my request.
 
+When a new requirement doesn't fit the existing design, don't bolt it on. Ask what you would have built if the requirement had been there from the start, then deliver that in small pieces. This overrides touching only what you must, so say you're doing it before you start.
+
 Unused code must go. Remove imports, variables, and functions that your changes made unused, and delete pre-existing dead code you come across.
 
 If you find a broken thing adjacent to your change (e.g., a broken CLI command), fix it or flag it explicitly. Do not silently leave it.
@@ -65,7 +68,11 @@ When two patterns in a codebase contradict, pick one (the more recent or more te
 
 Validate at system boundaries (CLI args, config, network, external APIs) and trust internal types after that. If the data isn't crossing a boundary right now, another check is redundant. Keep business logic in functions that run without the framework.
 
+Don't silence a checker to get green: no `rubocop:disable`, `# type: ignore`, `as any`, `@ts-expect-error`, or skipped tests. Fix what it flagged. If the checker is wrong, say so and ask.
+
 For anything that mutates state, ask what happens if it runs twice, or if the last run crashed at any point. Derive each step from the state that exists, not from what the last run meant to do, and make anything a run leaves behind recognizable as stale.
+
+Don't share mutable state that doesn't need sharing: give each thread, job, or caller its own. When it must be shared, allow one writer and enforce that in the structure (a single owner, a lock, a queue), not by convention.
 
 No implicit state machines. When something moves through states, name them: one explicit status field (an enum) with the allowed transitions defined in one place. Don't let a set of booleans, nullable timestamps, or "if X is set and Y isn't" checks together imply the state. Those allow combinations that mean nothing and spread the transition rules across every caller.
 
@@ -74,6 +81,8 @@ Tests must encode why behavior matters, not just what it does. A test that can't
 Two banned test shapes:
 - **Change-detector tests** — assert on data that is *expected* to change: model catalogs, config version literals, enumeration counts, hardcoded name lists. If the test reads like a snapshot of current data, delete it. If it reads like a contract about how two pieces of data must relate, keep it. `assert len(providers) == 8` ✗ / `assert every catalog entry has a context length` ✓.
 - **Tests that read source text** — regexing a file's contents tests the shape of the source, not its behavior. It passes when the wiring is subtly broken and fails on correct refactors, so it blocks cleanups and gives false confidence. If the logic only exists inline in a god-file, extracting it into a callable unit is the fix, not a tighter regex.
+
+If an honest test is impractical, don't write a bad one just to have a test. Say what you couldn't test and how you verified it instead.
 
 Before calling something a bug, verify the premise. Most confident-but-wrong fixes rest on one of these:
 - The limitation is intentional design, not a gap — the isolation IS the feature.
@@ -107,7 +116,7 @@ End any turn that reports on long-running or delegated work with a short status:
 - Decompose by risk, not just size. Each unit should have a single dominant risk, be independently verifiable, and have a clear done condition. Small is not the same as well-scoped.
 - TDD red must actually run. A test that's written but never executed doesn't count as failing — watch it fail before you make it pass.
 - Parallelize by write surface, not by task. Run lanes concurrently only when their write surfaces are disjoint. Never parallelize migrations, same-table writes, or destructive commands without an explicit gate.
-- Don't build for one-shots. Keep a one-off inline; only extract a script or skill once the task actually recurs.
+- Don't build for one-shots. Keep a one-off inline; only extract a script or skill once the task actually recurs. Then do one unit by hand first and make the tool reproduce that unit.
 - Repeated self-agreement isn't verification. An agent re-confirming its own answer across rollouts is not approval — gate destructive or outward-facing actions on an independent recheck, and default to dry-run.
 - Compact at boundaries, not mid-debug. Compact after a milestone or phase transition, never during active debugging (you lose in-flight variable names and file paths). Continue a session for closely-coupled work; start fresh after a major phase change.
 - For high-assurance changes (risky migrations, auth/security), run two independent review passes with clean context and ship only if both pass.
